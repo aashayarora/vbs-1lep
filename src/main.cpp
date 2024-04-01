@@ -15,7 +15,11 @@ using ROOT::RDF::RSampleInfo;
 
 int main(int argc, char** argv) {
     // Config
-    std::string input_spec = "configs/input.json";
+    if (argc != 2) {
+        cout << "Usage: " << argv[0] << " <input_spec>" << endl;
+        return 1;
+    }
+    std::string input_spec = argv[1];
     
     // golden json lumimask
     const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325175_13TeV_allRun2_JSON.json");
@@ -24,14 +28,13 @@ int main(int argc, char** argv) {
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
 
-    auto df = df_.DefinePerSample("xsec_weights", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weights");})
-                 .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");});
+    auto df = df_.DefinePerSample("xsec_weight", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weight");})
+                 .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");})
+                 .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");});
     
-    auto df1 = electronSelections(df);
-    auto df2 = muonSelections(df1);
-    auto df3 = eventSelections(df2);
-
-    saveSnapshot(df3, "output.root");
+    auto df1 = analysisSelections(df);
+    
+    saveSnapshot(df1, "output.root");
     
     auto report = df_.Report();
     report->Print();
