@@ -1,4 +1,6 @@
-// RDF Includes
+#ifndef SELECTIONS_H
+#define SELECTIONS_H
+
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RDFHelpers.hxx"
 #include "ROOT/RVec.hxx"
@@ -12,3 +14,5 @@ using RNode = ROOT::RDF::RNode;
 using ROOT::VecOps::RVec;
 
 RNode analysisSelections(RNode df);
+
+#endif

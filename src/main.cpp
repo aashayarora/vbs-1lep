@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     // golden json lumimask
     const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325175_13TeV_allRun2_JSON.json");
 
-    ROOT::EnableImplicitMT(32); // enable multithreaded rdfs
+    ROOT::EnableImplicitMT(16); // enable multithreaded rdfs
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
 
@@ -33,8 +33,6 @@ int main(int argc, char** argv) {
                  .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");});
     
     auto df1 = analysisSelections(df);
-    
-    saveSnapshot(df1, "output.root");
     
     auto report = df_.Report();
     report->Print();

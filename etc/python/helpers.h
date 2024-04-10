@@ -1,4 +1,14 @@
-#include "utils.h"
+#include <string>
+#include <vector>
+
+#include "ROOT/RDataFrame.hxx"
+#include "ROOT/RDFHelpers.hxx"
+#include "ROOT/RVec.hxx"
+
+#include "TString.h"
+
+using RNode = ROOT::RDF::RNode;
+using ROOT::VecOps::RVec;
 
 double get_btag_workingpoint(const std::string& year, const std::string& wp){
     if(year == "2016preVFP"){
@@ -32,14 +42,14 @@ double tightDFBtagWP(std::string year){
     return get_btag_workingpoint(year, "tight");
 }
 
-float lepselect(bool is_el, float el_var, float mu_var) {
+RVec<float> lepselect(bool is_el, RVec<float> el_var, RVec<float> mu_var) {
     return is_el ? el_var : mu_var;
 }
 
-RVec<int> noJetOverlap8 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
+RVec<int> noJetOverlap8 (RVec<float> obj_eta, RVec<float> obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
     RVec<bool> noOverlap = {};
     for (size_t i = 0; i < jet_eta.size(); i++) {
-        if (ROOT::VecOps::DeltaR(obj_eta, jet_eta[i], obj_phi, jet_phi[i]) < 0.8) {
+        if (ROOT::VecOps::DeltaR(obj_eta[0], jet_eta[i], obj_phi[0], jet_phi[i]) < 0.8) {
             noOverlap.push_back(0);
         }
         else {
@@ -49,10 +59,10 @@ RVec<int> noJetOverlap8 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec
     return noOverlap;
 }
 
-RVec<int> noJetOverlap4 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
+RVec<int> noJetOverlap4 (RVec<float> obj_eta, RVec<float> obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
     RVec<bool> noOverlap = {};
     for (size_t i = 0; i < jet_eta.size(); i++) {
-        if (ROOT::VecOps::DeltaR(obj_eta, jet_eta[i], obj_phi, jet_phi[i]) < 0.4) {
+        if (ROOT::VecOps::DeltaR(obj_eta[0], jet_eta[i], obj_phi[0], jet_phi[i]) < 0.4) {
             noOverlap.push_back(0);
         }
         else {
@@ -60,23 +70,6 @@ RVec<int> noJetOverlap4 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec
         }
     }
     return noOverlap;
-}
-
-RVec<int> MyArgMax(const RVec<float> &v){
-    RVec<int> idx = {};
-    if (v.size() != 0){
-        idx.push_back(std::distance(v.begin(), std::max_element(v.begin(), v.end())));
-    }
-    return idx;
-}
-
-RVec<float> MyMax(const RVec<float> &v){
-    RVec<float> max = {};
-    if (v.size() != 0){
-        max.push_back(*std::max_element(v.begin(), v.end()));
-    }
-    return max;
-
 }
 
 void saveSnapshot(RNode df, const std::string& finalFile) {
