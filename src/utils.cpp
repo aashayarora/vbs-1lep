@@ -1,82 +1,89 @@
 #include "utils.h"
 
-double get_btag_workingpoint(const std::string& year, const std::string& wp){
-    if(year == "2016preVFP"){
-        if(wp == "loose") return 0.5426;
-        if(wp == "medium") return 0.8484;
-        if(wp == "tight") return 0.9535;
+/*
+    LUMIMASK
+*/
+
+bool operator< ( const lumiMask::LumiBlockRange& lh, const lumiMask::LumiBlockRange& rh )
+{
+    return ( lh.run() == rh.run() ) ? ( lh.lastLumi() < rh.firstLumi() ) : lh.run() < rh.run();
+}
+
+lumiMask lumiMask::fromJSON(const std::string& file, lumiMask::Run firstRun, lumiMask::Run lastRun)
+{
+  const bool noRunFilter = ( firstRun == 0 ) && ( lastRun == 0 );
+  boost::property_tree::ptree ptree;
+  boost::property_tree::read_json(file, ptree);
+
+  std::vector<lumiMask::LumiBlockRange> accept;
+  for ( const auto& runEntry : ptree ) {
+    const lumiMask::Run run = std::stoul(runEntry.first);
+    if ( noRunFilter || ( ( firstRun <= run ) && ( run <= lastRun ) ) ) {
+      for ( const auto& lrEntry : runEntry.second ) {
+        const auto lrNd = lrEntry.second;
+        const lumiMask::LumiBlock firstLumi = std::stoul(lrNd.begin()->second.data());
+        const lumiMask::LumiBlock lastLumi  = std::stoul((++lrNd.begin())->second.data());
+        accept.emplace_back(run, firstLumi, lastLumi);
+      }
     }
-    if(year == "2016postVFP"){
-        if(wp == "loose") return 0.5426;
-        if(wp == "medium") return 0.8484;
-        if(wp == "tight") return 0.9535;
-    }
-    if(year == "2017"){
-        if(wp == "loose") return 0.5803;
-        if(wp == "medium") return 0.8838;
-        if(wp == "tight") return 0.9693;
-    }
-    if(year == "2018"){
-        if(wp == "loose") return 0.1241;
-        if(wp == "medium") return 0.4184;
-        if(wp == "tight") return 0.7527;
-    }
+  }
+  return lumiMask(accept);
+}
+
+/*
+    DUPLICATE REMOVAL
+*/
+
+RNode removeDuplicates(RNode df){
+    return df.Filter(FilterOnePerKind(), {"run", "luminosityBlock", "event"}, "REMOVED DUPLICATES");
+}
+
+/*
+    SELECTION UTILS
+*/
+
+double looseDFBtagWP(std::string year){
+    if(year == "2016preVFP")
+        return 0.0508;
+    if(year == "2016postVFP")
+        return 0.0480;
+    if(year == "2017")
+        return 0.0532;
+    if(year == "2018")
+        return 0.0490;
     return -1;
 }
 
 double mediumDFBtagWP(std::string year){
-    return get_btag_workingpoint(year, "medium");
+    if(year == "2016preVFP")
+        return 0.2598;
+    if(year == "2016postVFP")
+        return 0.2489;
+    if(year == "2017")
+        return 0.3040;
+    if(year == "2018")
+        return 0.2783;
+    return -1;
 }
 
 double tightDFBtagWP(std::string year){
-    return get_btag_workingpoint(year, "tight");
+    if(year == "2016preVFP")
+        return 0.6502;
+    if(year == "2016postVFP")
+        return 0.6377;
+    if(year == "2017")
+        return 0.7476;
+    if(year == "2018")
+        return 0.7100;
+    return -1;
 }
 
-float lepselect(bool is_el, float el_var, float mu_var) {
-    return is_el ? el_var : mu_var;
-}
-
-RVec<int> noJetOverlap8 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
-    RVec<bool> noOverlap = {};
+RVec<float> fDeltaR (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
+    RVec<float> deltaR = {};
     for (size_t i = 0; i < jet_eta.size(); i++) {
-        if (ROOT::VecOps::DeltaR(obj_eta, jet_eta[i], obj_phi, jet_phi[i]) < 0.8) {
-            noOverlap.push_back(0);
-        }
-        else {
-            noOverlap.push_back(1);
-        }
+        deltaR.push_back(sqrt((obj_eta - jet_eta[i]) * (obj_eta - jet_eta[i])) + ((obj_phi - jet_phi[i]) * (obj_phi - jet_phi[i])));
     }
-    return noOverlap;
-}
-
-RVec<int> noJetOverlap4 (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
-    RVec<bool> noOverlap = {};
-    for (size_t i = 0; i < jet_eta.size(); i++) {
-        if (ROOT::VecOps::DeltaR(obj_eta, jet_eta[i], obj_phi, jet_phi[i]) < 0.4) {
-            noOverlap.push_back(0);
-        }
-        else {
-            noOverlap.push_back(1);
-        }
-    }
-    return noOverlap;
-}
-
-RVec<int> MyArgMax(const RVec<float> &v){
-    RVec<int> idx = {};
-    if (v.size() != 0){
-        idx.push_back(std::distance(v.begin(), std::max_element(v.begin(), v.end())));
-    }
-    return idx;
-}
-
-RVec<float> MyMax(const RVec<float> &v){
-    RVec<float> max = {};
-    if (v.size() != 0){
-        max.push_back(*std::max_element(v.begin(), v.end()));
-    }
-    return max;
-
+    return deltaR;
 }
 
 void saveSnapshot(RNode df, const std::string& finalFile) {
@@ -105,3 +112,4 @@ void saveSnapshot(RNode df, const std::string& finalFile) {
     final_variables.push_back("nJet");
     df.Snapshot("Events", std::string("output/") + finalFile, final_variables);
 }
+

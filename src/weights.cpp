@@ -43,7 +43,8 @@ RNode leptonScaleFactors(RNode df){
 
 RNode goodRun(lumiMask golden, RNode df){
     auto goldenjson = [golden](unsigned int &run, unsigned int &luminosityBlock){return golden.accept(run, luminosityBlock);};
-    return df.Define("weights", goldenjson, {"run", "luminosityBlock"}); 
+    return df.Define("goodRun", goldenjson, {"run", "luminosityBlock"})
+             .Filter("(!isData) || (isData && goodRun)", "PASSES GOLDEN JSON");
 }
 
 // RNode jetEnergyCorrections(RNode df, std::string era, int era_hash){

@@ -10,8 +10,10 @@ def selections(df):
     df = df.DefinePerSample("sample_year", 'rdfsampleinfo_.GetS("sample_year")')
 
     df = df.Define("isData", "sample_category == \"data\"") \
-           .Define("is2017or2018", "sample_year == \"2017\" || sample_year == \"2018\"") \
-           .Filter("Flag_goodVertices && "
+            .Define("is2016", "sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\"") \
+            .Define("is2017", "sample_year == \"2017\"") \
+            .Define("is2018", "sample_year == \"2018\"") \
+            .Filter("Flag_goodVertices && "
                 "((isData && Flag_globalSuperTightHalo2016Filter) || !isData) && "
                 "Flag_HBHENoiseFilter && "
                 "Flag_HBHENoiseIsoFilter && "
@@ -19,15 +21,17 @@ def selections(df):
                 "Flag_BadPFMuonFilter &&"
                 "Flag_eeBadScFilter && "
                 "Flag_BadPFMuonDzFilter && "
-                "(is2017or2018 && Flag_ecalBadCalibFilter) || !is2017or2018", "passes flags")
+                "(!(is2017 || is2018) || Flag_ecalBadCalibFilter)", "PASSED FLAGS")
 
-    df = df.Filter("(sample_year == \"2018\" && (HLT_Ele32_WPTight_Gsf || HLT_IsoMu24)) || "
-        "(sample_year == \"2017\" && (HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_IsoMu27)) ||"
-        "((sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\") && (HLT_Ele27_eta2p1_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24))", "passes triggers")
+    df = df.Filter("(is2018 && (HLT_Ele32_WPTight_Gsf || HLT_IsoMu24)) || "
+        "(is2017 && (HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_IsoMu27)) ||"
+        "(is2016 && (HLT_Ele27_eta2p1_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24))", 
+        "PASSED TRIGGERS")
 
-    df = df.Define("vetoElectrons", 
+    df = df.Define("SC_absEta", "abs(Electron_eta + Electron_deltaEtaSC)") \
+            .Define("vetoElectrons", 
                 "Electron_pt > 7 &&"
-                "abs(Electron_eta + Electron_deltaEtaSC) < 2.5 && "
+                "SC_absEta < 2.5 && "
                 "abs(Electron_dxy) <= 0.05 && abs(Electron_dz) < 0.1 && "
                 "abs(Electron_sip3d) < 8 && "
                 "Electron_miniPFRelIso_all < 0.4 && "
@@ -36,7 +40,7 @@ def selections(df):
             .Define("nVetoElectrons", "Sum(vetoElectrons)") \
             .Define("SC_absEta", "abs(Electron_eta + Electron_deltaEtaSC)") \
             .Define("electronBjetScore", "mediumDFBtagWP(sample_year)") \
-            .Define("electronNotFromBJet", "Jet_btagDeepFlavB[Take(Electron_jetIdx, vetoElectrons)[0]] < electronBjetScore") \
+            .Define("electronNotFromBJet", "Jet_btagDeepFlavB[Electron_jetIdx[vetoElectrons][0]] < electronBjetScore") \
             .Define("tightElectrons", "vetoElectrons &&" 
                 "Electron_pt > 10 && "
                 "Electron_convVeto == 1 && "
@@ -48,11 +52,11 @@ def selections(df):
                 "(SC_absEta <= 1.479 && Electron_sieie < 0.011) || ((SC_absEta > 1.479 && SC_absEta < 2.5) && Electron_sieie < 0.030) &&"
                 "Electron_jetIdx == 0 || (Electron_jetIdx >= 0 && Electron_jetIdx < nJet && electronNotFromBJet)") \
             .Define("nTightElectrons", "Sum(tightElectrons)") \
-            .Define("GElectron_pt", "Take(Electron_pt, tightElectrons)") \
-            .Define("GElectron_eta", "Take(Electron_eta, tightElectrons)") \
-            .Define("GElectron_phi", "Take(Electron_phi, tightElectrons)") \
-            .Define("GElectron_mass", "Take(Electron_mass, tightElectrons)") \
-            .Define("isElectron", "nTightElectrons == 1")
+            .Define("GElectron_pt", "Electron_pt[tightElectrons][0]") \
+            .Define("GElectron_eta", "Electron_eta[tightElectrons][0]") \
+            .Define("GElectron_phi", "Electron_phi[tightElectrons][0]") \
+            .Define("GElectron_mass", "Electron_mass[tightElectrons][0]") \
+            .Define("isElectron", "nVetoElectrons == 1 && nTightElectrons == 1")
     
     df = df.Define("vetoMuons", "Muon_pt > 5 && "
                 "abs(Muon_eta) < 2.4 && "
@@ -62,23 +66,22 @@ def selections(df):
                 "Muon_looseId == 1") \
             .Define("nVetoMuons", "Sum(vetoMuons)") \
             .Define("muonBjetScore", "mediumDFBtagWP(sample_year)") \
-            .Define("muNotFromBJet", "Jet_btagDeepFlavB[Take(Muon_jetIdx, vetoMuons)[0]] < muonBjetScore") \
+            .Define("muNotFromBJet", "Jet_btagDeepFlavB[Muon_jetIdx[vetoMuons][0]] < muonBjetScore") \
             .Define("tightMuons", "vetoMuons && "
                 "Muon_pt > 10 && "
                 "Muon_jetIdx == 0 || (Muon_jetIdx >= 0 && Muon_jetIdx < nJet && muNotFromBJet)") \
             .Define("nTightMuons", "Sum(tightMuons)") \
-            .Define("GMuon_pt", "Take(Muon_pt, tightMuons)") \
-            .Define("GMuon_eta", "Take(Muon_eta, tightMuons)") \
-            .Define("GMuon_phi", "Take(Muon_phi, tightMuons)") \
-            .Define("GMuon_mass", "Take(Muon_mass, tightMuons)") \
-            .Define("isMuon", "nTightMuons == 1") \
+            .Define("GMuon_pt", "Muon_pt[tightMuons][0]") \
+            .Define("GMuon_eta", "Muon_eta[tightMuons][0]") \
+            .Define("GMuon_phi", "Muon_phi[tightMuons][0]") \
+            .Define("GMuon_mass", "Muon_mass[tightMuons][0]") \
+            .Define("isMuon", "nVetoMuons == 1 && nTightMuons == 1") \
 
-    df = df.Define("nGLepton", "nTightElectrons + nTightMuons") \
-            .Define("GLepton_pt", "lepselect(isElectron, GElectron_pt, GMuon_pt)") \
+    df = df.Define("GLepton_pt", "lepselect(isElectron, GElectron_pt, GMuon_pt)") \
             .Define("GLepton_eta", "lepselect(isElectron, GElectron_eta, GMuon_eta)") \
             .Define("GLepton_phi", "lepselect(isElectron, GElectron_phi, GMuon_phi)") \
             .Define("GLepton_mass", "lepselect(isElectron, GElectron_mass, GMuon_mass)") \
-            .Filter("nGLepton == 1 && GLepton_pt[0] > 40", "only one lepton with pt > 40") 
+            .Filter("(isElectron != isMuon) && (GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40") 
 
     df = df.Define("noHLepOverlap", "noJetOverlap8(GLepton_eta, GLepton_phi, FatJet_eta, FatJet_phi)") \
             .Define("HCandidateJets", "FatJet_pt > 250 && "

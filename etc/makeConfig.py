@@ -468,7 +468,7 @@ def get_xsec_weight(InputYear):
 
 def make_config(args):
     if args.sample_year is None:
-        config_name = "config.json"
+        config_name = "input.json"
     else:
         config_name = f"config_{args.sample_year}.json"
     with open(config_name, "w+") as f:
@@ -480,9 +480,9 @@ def make_config(args):
             config = {"samples": {}}
         # bkg
         if "bkg" in args.categories.split(","):
-            sample_list_bkg = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_bkg = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/*"))
             for sample in sample_list_bkg:
-                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
+                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
                 sample_year = extract_sample_year(sample)
                 xsec = get_xsec_weight(sample_name + "," + sample_year)
                 if xsec == 0:
@@ -504,9 +504,9 @@ def make_config(args):
                 )
         # data
         if "data" in args.categories.split(","):
-            sample_list_data = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_data = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/*"))
             for sample in sample_list_data:
-                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
+                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
@@ -525,9 +525,9 @@ def make_config(args):
                 )
         # sig
         if "sig" in args.categories.split(","):
-            sample_list_sig = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_sig = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*"))
             for sample in sample_list_sig:
-                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
+                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
