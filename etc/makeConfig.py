@@ -497,6 +497,7 @@ def make_config(args):
                             "metadata": {
                                 "sample_category": "bkg",
                                 "sample_year" : sample_year,
+                                "sample_type": "bkg_mc",
                                 "xsec_weight": xsec
                             }
                         }
@@ -510,6 +511,7 @@ def make_config(args):
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
+                data_sample_type = "SingleMuon" if "SingleMuon" in sample_name else "SingleElectron"
                 config["samples"].update(
                     {
                         sample_name + "_" + sample_year: {
@@ -518,6 +520,7 @@ def make_config(args):
                             "metadata": {
                                 "sample_category": "data",
                                 "sample_year" : sample_year,
+                                "sample_type": data_sample_type,
                                 "xsec_weight": 1.0
                             }
                         }
@@ -543,6 +546,7 @@ def make_config(args):
                             "metadata": {
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,
+                                "sample_type": "sig_mc",
                                 "xsec_weight": xsec
                             }
                         }

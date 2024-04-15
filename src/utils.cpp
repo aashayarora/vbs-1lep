@@ -42,7 +42,7 @@ RNode removeDuplicates(RNode df){
     SELECTION UTILS
 */
 
-double looseDFBtagWP(std::string year){
+float looseDFBtagWP(std::string year){
     if(year == "2016preVFP")
         return 0.0508;
     if(year == "2016postVFP")
@@ -54,7 +54,7 @@ double looseDFBtagWP(std::string year){
     return -1;
 }
 
-double mediumDFBtagWP(std::string year){
+float mediumDFBtagWP(std::string year){
     if(year == "2016preVFP")
         return 0.2598;
     if(year == "2016postVFP")
@@ -66,7 +66,7 @@ double mediumDFBtagWP(std::string year){
     return -1;
 }
 
-double tightDFBtagWP(std::string year){
+float tightDFBtagWP(std::string year){
     if(year == "2016preVFP")
         return 0.6502;
     if(year == "2016postVFP")
@@ -78,10 +78,10 @@ double tightDFBtagWP(std::string year){
     return -1;
 }
 
-RVec<float> fDeltaR (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi) { 
+RVec<float> fDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, float obj_phi) { 
     RVec<float> deltaR = {};
-    for (size_t i = 0; i < jet_eta.size(); i++) {
-        deltaR.push_back(sqrt((obj_eta - jet_eta[i]) * (obj_eta - jet_eta[i])) + ((obj_phi - jet_phi[i]) * (obj_phi - jet_phi[i])));
+    for (size_t i = 0; i < vec_eta.size(); i++) {
+        deltaR.push_back(ROOT::VecOps::DeltaR(vec_eta[i], obj_eta, vec_phi[i], obj_phi));
     }
     return deltaR;
 }
@@ -89,27 +89,13 @@ RVec<float> fDeltaR (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<flo
 void saveSnapshot(RNode df, const std::string& finalFile) {
     auto ColNames = df.GetColumnNames();
     std::vector<std::string> final_variables;
-    // for (auto &&ColName : ColNames)
-    //     {
-    //         TString colName = ColName;
-    //         if(colName.Contains("P4")) continue;
-    //         if(colName.Contains("LHE")) continue;
-    //         if(colName.BeginsWith("FatJet")) continue;
-    //         if(colName.BeginsWith("PPS")) continue;
-    //         if(colName.BeginsWith("Gen")) continue;
-    //         if(colName.BeginsWith("Sub")) continue;
-    //         if(colName.BeginsWith("HLT")) continue;
-    //         if(colName.BeginsWith("Flag")) continue;
-    //         if(colName.BeginsWith("PS")) continue;
-    //         if(colName.BeginsWith("nCorr")) continue;
-    //         if(colName.BeginsWith("nGen")) continue;
-    //         if(colName.BeginsWith("nOther")) continue;
-    //         if(colName.BeginsWith("nSV")) continue;
-
-    //         std::string name = colName.Data();
-    //         final_variables.push_back(name);
-    //     }
-    final_variables.push_back("nJet");
+    for (auto &&ColName : ColNames)
+        {
+            TString colName = ColName;
+            std::string name = colName.Data();
+            final_variables.push_back(name);
+        }
+    // final_variables.push_back("nJet");
     df.Snapshot("Events", std::string("output/") + finalFile, final_variables);
 }
 

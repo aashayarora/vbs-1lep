@@ -89,13 +89,12 @@ RNode removeDuplicates(RNode df);
     SELECTION UTILS
 */
 
-double looseDFBtagWP(std::string year);
-double mediumDFBtagWP(std::string year);
-double tightDFBtagWP(std::string year);
+float looseDFBtagWP(std::string year);
+float mediumDFBtagWP(std::string year);
+float tightDFBtagWP(std::string year);
 
-RVec<float> fDeltaR (float obj_eta, float obj_phi, RVec<float> jet_eta, RVec<float> jet_phi);
+RVec<float> fDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, float obj_phi);
 
 void saveSnapshot(RNode df, const std::string& finalFile);
-
 
 #endif

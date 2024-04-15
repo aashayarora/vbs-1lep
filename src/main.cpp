@@ -24,14 +24,15 @@ int main(int argc, char** argv) {
     // golden json lumimask
     const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325175_13TeV_allRun2_JSON.json");
 
-    ROOT::EnableImplicitMT(16);
+    ROOT::EnableImplicitMT();
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
-    // ROOT::RDF::Experimental::AddProgressBar(df_);
+    ROOT::RDF::Experimental::AddProgressBar(df_);
 
     std::cout << "Running dataframe" << std::endl;
 
     auto df = df_.DefinePerSample("xsec_weight", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weight");})
                 .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");})
+                .DefinePerSample("sample_type", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_type");})
                 .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");})
                 .Define("isData", "sample_category == \"data\"")
                 .Define("is2016", "sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\"")
@@ -40,8 +41,10 @@ int main(int argc, char** argv) {
     
     std::cout << "Defined meta columns, running selections" << std::endl;
 
-    // auto df1 = goodRun(LumiMask, df);
-    auto df1 = analysisSelections(df);
+    auto df1 = goodRun(LumiMask, df);
+    auto df2 = analysisSelections(df1);
+
+    df2.Snapshot("Events", "output/output.root", {"run", "luminosityBlock", "event"});
     
     // auto df3 = removeDuplicates(df2);
 
