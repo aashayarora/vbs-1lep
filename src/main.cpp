@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
     
     // golden json lumimask
     const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325175_13TeV_allRun2_JSON.json");
+    // const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325175_13TeV_preLegacy_allRun2_JSON.json");
 
     ROOT::EnableImplicitMT();
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
@@ -44,8 +45,6 @@ int main(int argc, char** argv) {
     auto df1 = goodRun(LumiMask, df);
     auto df2 = analysisSelections(df1);
 
-    df2.Snapshot("Events", "output/output.root", {"run", "luminosityBlock", "event"});
-    
     // auto df3 = removeDuplicates(df2);
 
     auto report = df_.Report();

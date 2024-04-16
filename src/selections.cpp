@@ -21,8 +21,8 @@ RNode analysisSelections(RNode df) {
         "(isData && "
         "(is2018 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf) || (sample_type == \"SingleMuon\" && HLT_IsoMu24))) || "
         "(is2017 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf_L1DoubleEG) || (sample_type == \"SingleMuon\" && HLT_IsoMu27))) ||"
-        "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 || HLT_IsoTkMu24)))))"
-        ,"PASSED TRIGGERS");
+        "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 || HLT_IsoTkMu24)))))",
+        "PASSED TRIGGERS");
 
     auto df_el = df_triggers.Define("SC_absEta", "Electron_eta + Electron_deltaEtaSC")
             .Define("vetoElectrons", 
