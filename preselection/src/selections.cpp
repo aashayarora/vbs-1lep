@@ -15,14 +15,14 @@ RNode analysisSelections(RNode df) {
                 "PASSED FLAGS");
 
     auto df_triggers = df_flags.Filter("((!isData) && "
-        "(is2018 && (HLT_Ele32_WPTight_Gsf || HLT_IsoMu24)) || "
-        "(is2017 && (HLT_Ele32_WPTight_Gsf_L1DoubleEG || HLT_IsoMu27)) ||"
-        "(is2016 && (HLT_Ele27_eta2p1_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24))) || "
-        "(isData && "
-        "(is2018 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf) || (sample_type == \"SingleMuon\" && HLT_IsoMu24))) || "
-        "(is2017 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf_L1DoubleEG) || (sample_type == \"SingleMuon\" && HLT_IsoMu27))) ||"
-        "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 || HLT_IsoTkMu24)))))",
-        "PASSED TRIGGERS");
+                "((is2018 && (HLT_Ele32_WPTight_Gsf == true || HLT_IsoMu24 == true)) || "
+                "(is2017 && (HLT_Ele32_WPTight_Gsf_L1DoubleEG == true || HLT_IsoMu27 == true)) || "
+                "(is2016 && (HLT_Ele27_eta2p1_WPTight_Gsf == true || HLT_IsoMu24 == true || HLT_IsoTkMu24 == true)))) || "
+                "(isData && "
+                "((is2018 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && HLT_IsoMu24 == true))) || "
+                "(is2017 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf_L1DoubleEG == true) || (sample_type == \"SingleMuon\" && HLT_IsoMu27 == true))) || "
+                "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 == true || HLT_IsoTkMu24 == true))))))",
+                "PASSED TRIGGERS");
 
     auto df_el = df_triggers.Define("SC_absEta", "Electron_eta + Electron_deltaEtaSC")
             .Define("vetoElectrons", 
@@ -113,6 +113,9 @@ RNode analysisSelections(RNode df) {
             .Define("WScore", "(FatJet_particleNetMD_Xqq + FatJet_particleNetMD_Xcc) / (FatJet_particleNetMD_Xqq + FatJet_particleNetMD_Xcc + FatJet_particleNetMD_QCD)")
             .Define("HighestWjetScoreIdx", "WScore.size() != 0 ? ArgMax(WScore[WZCandidateJets]) : -1")
             .Define("HighestWjetScore", "HighestWjetScoreIdx != -1 ? WScore[WZCandidateJets][HighestWjetScoreIdx] : -1")
+            .Define("ZScore", "FatJet_particleNetMD_Xbb / (FatJet_particleNetMD_Xbb + FatJet_particleNetMD_QCD)")
+            .Define("HighestZjetScoreIdx", "ZScore.size() != 0 ? ArgMax(ZScore[WZCandidateJets]) : -1")
+            .Define("HighestZjetScore", "HighestZjetScoreIdx != -1 ? ZScore[WZCandidateJets][HighestZjetScoreIdx] : -1")
             .Filter("HighestWjetScore > 0", "W CANDIDATE EXISTS")
             .Define("GW_pt", "FatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")

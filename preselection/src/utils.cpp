@@ -87,7 +87,7 @@ RVec<float> fDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, fl
 }
 
 void saveSnapshot(RNode df, const std::string& finalFile) {
-    auto ColNames = df.GetColumnNames();
+    auto ColNames = df.GetDefinedColumnNames();
     std::vector<std::string> final_variables;
     for (auto &&ColName : ColNames)
         {
