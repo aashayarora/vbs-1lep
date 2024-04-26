@@ -39,6 +39,21 @@ RNode removeDuplicates(RNode df){
 }
 
 /*
+    DEFINE METADATA
+*/
+
+RNode defineMetadata(RNode df){
+    return df.DefinePerSample("xsec_weight", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weight");})
+            .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");})
+            .DefinePerSample("sample_type", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_type");})
+            .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");})
+            .Define("isData", "sample_category == \"data\"")
+            .Define("is2016", "sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\"")
+            .Define("is2017", "sample_year == \"2017\"")
+            .Define("is2018", "sample_year == \"2018\"");
+}
+
+/*
     SELECTION UTILS
 */
 

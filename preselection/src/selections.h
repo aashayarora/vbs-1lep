@@ -2,17 +2,20 @@
 #define SELECTIONS_H
 
 #include "ROOT/RDataFrame.hxx"
-#include "ROOT/RDFHelpers.hxx"
-#include "ROOT/RVec.hxx"
-
-#include "Math/Vector4D.h"
-#include "Math/VectorUtil.h"
 
 #include "utils.h"
 
 using RNode = ROOT::RDF::RNode;
-using ROOT::VecOps::RVec;
 
-RNode analysisSelections(RNode df);
+RNode flagSelections(RNode df);
+RNode triggerSelections(RNode df);
+RNode electronSelections(RNode df);
+RNode muonSelections(RNode df);
+RNode leptonSelections(RNode df);
+RNode higgsSelections(RNode df);
+RNode WZSelections(RNode df);
+RNode AK4Selections(RNode df);
+RNode VBSJetsSelections(RNode df);
+RNode finalSelections(RNode df);
 
-#endif
+#endif // SELECTIONS_H

@@ -1,15 +1,45 @@
 #include "weights.h"
-    
-RNode pileupCorrection(RNode df){
-    auto cset = CorrectionSet::from_file("configs/pileup/puWeights.json");
-    auto pileupweights = cset->at("Collisions2022_359022_362760_eraEFG_GoldenJson");
 
-    auto eval_correction = [pileupweights] (float ntrueint, double weights) {
-        return weights * pileupweights->evaluate({ntrueint, "nominal"});
-    };
-
-    return df.Redefine("weights", eval_correction, {"Pileup_nTrueInt", "weights"});
+class pileupCorrections {
+public:
+    2016preVFP_pileup_cset = CorrectionSet::from_file("corrections/pileup/2016preVFP_puWeights.json");
+    2016postVFP_pileup_cset = CorrectionSet::from_file("corrections/pileup/2016postVFP_puWeights.json");
+    2017_pileup_cset = CorrectionSet::from_file("corrections/pileup/2017_puWeights.json");
+    2018_pileup_cset = CorrectionSet::from_file("corrections/pileup/2018_puWeights.json");
 }
+
+// Pileup corrections
+float pileupCorrection(std::string year, float ntrueint){
+    if (year == "\"2016preVFP\"") {
+        auto cset = CorrectionSet::from_file("corrections/pileup/2016preVFP_puWeights.json");
+        auto pileupweights = cset->at("Collisions16_UltraLegacy_goldenJSON");
+        return pileupweights->evaluate({ntrueint, "nominal"});
+    }
+    if (year == "\"2016postVFP\"") {
+        auto cset = CorrectionSet::from_file("corrections/pileup/2016postVFP_puWeights.json");
+        auto pileupweights = cset->at("Collisions16_UltraLegacy_goldenJSON");
+        return pileupweights->evaluate({ntrueint, "nominal"});
+    }
+    if (year == "\"2017\"") {
+        auto cset = CorrectionSet::from_file("corrections/pileup/2017_puWeights.json");
+        auto pileupweights = cset->at("Collisions17_UltraLegacy_goldenJSON");
+        return pileupweights->evaluate({ntrueint, "nominal"});
+    }
+    if (year == "\"2018\"") {
+        auto cset = CorrectionSet::from_file("corrections/pileup/2018_puWeights.json");
+        auto pileupweights = cset->at("Collisions18_UltraLegacy_goldenJSON");
+        return pileupweights->evaluate({ntrueint, "nominal"});
+    }
+}
+
+RNode pileupCorrection(RNode df){
+    return df.Define("pileup_weight", pileupCorrection, {"year", "Pileup_nTrueInt"});
+}
+
+// Lepton scale factors
+
+RecoAbove20
+
 
 RNode leptonScaleFactors(RNode df){
     auto electron_cset = CorrectionSet::from_file("configs/scalefactors/electron/electron.json");

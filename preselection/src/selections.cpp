@@ -1,8 +1,6 @@
 #include "selections.h"
 
-#include <iostream>
-
-RNode analysisSelections(RNode df) {
+RNode flagSelections(RNode df) {
     auto df_flags = df.Filter("Flag_goodVertices && "
                 "(!isData || Flag_globalSuperTightHalo2016Filter) && "
                 "Flag_HBHENoiseFilter && "
@@ -14,7 +12,11 @@ RNode analysisSelections(RNode df) {
                 "(!(is2017 || is2018) || Flag_ecalBadCalibFilter)", 
                 "PASSED FLAGS");
 
-    auto df_triggers = df_flags.Filter("((!isData) && "
+    return df_flags;
+}
+
+RNode triggerSelections(RNode df) {
+    auto df_triggers = df.Filter("((!isData) && "
                 "((is2018 && (HLT_Ele32_WPTight_Gsf == true || HLT_IsoMu24 == true)) || "
                 "(is2017 && (HLT_Ele32_WPTight_Gsf_L1DoubleEG == true || HLT_IsoMu27 == true)) || "
                 "(is2016 && (HLT_Ele27_eta2p1_WPTight_Gsf == true || HLT_IsoMu24 == true || HLT_IsoTkMu24 == true)))) || "
@@ -24,7 +26,11 @@ RNode analysisSelections(RNode df) {
                 "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 == true || HLT_IsoTkMu24 == true))))))",
                 "PASSED TRIGGERS");
 
-    auto df_el = df_triggers.Define("SC_absEta", "Electron_eta + Electron_deltaEtaSC")
+    return df_triggers;
+}
+
+RNode electronSelections(RNode df) {
+    auto df_el = df.Define("SC_absEta", "Electron_eta + Electron_deltaEtaSC")
             .Define("vetoElectrons", 
                 "Electron_pt > 7 &&"
                 "abs(SC_absEta) < 2.5 && "
@@ -52,8 +58,12 @@ RNode analysisSelections(RNode df) {
             .Define("GElectron_phi", "Electron_phi[tightElectrons]")
             .Define("GElectron_mass", "Electron_mass[tightElectrons]")
             .Define("isElectron", "nVetoElectrons == 1 && nTightElectrons == 1");
-    
-    auto df_mu = df_el.Define("vetoMuons", 
+        
+    return df_el;
+}
+
+RNode muonSelections(RNode df) {
+    auto df_mu = df.Define("vetoMuons", 
                 "Muon_pt > 5 && "
                 "abs(Muon_eta) < 2.4 && "
                 "abs(Muon_dxy) < 0.05 && "
@@ -75,6 +85,12 @@ RNode analysisSelections(RNode df) {
             .Define("GMuon_mass", "Muon_mass[tightMuons]")
             .Define("isMuon", "nVetoMuons == 1 && nTightMuons == 1");
         
+    return df_mu;
+}
+
+RNode leptonSelections(RNode df) {
+    auto df_el = electronSelections(df);
+    auto df_mu = muonSelections(df_el);
     auto df_leps = df_mu.Define("GLepton_pt", "isElectron ? GElectron_pt[0] : GMuon_pt[0]")
             .Define("GLepton_eta", "isElectron ? GElectron_eta[0] : GMuon_eta[0]")
             .Define("GLepton_phi", "isElectron ? GElectron_phi[0] : GMuon_phi[0]")
@@ -83,7 +99,11 @@ RNode analysisSelections(RNode df) {
             "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
             "(GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40");
 
-    auto df_higgs = df_leps.Define("HLepDeltaR", fDeltaR, {"FatJet_eta", "FatJet_phi", "GLepton_eta", "GLepton_phi"})
+    return df_leps;
+}
+
+RNode higgsSelections(RNode df) {
+    auto df_higgs = df.Define("HLepDeltaR", fDeltaR, {"FatJet_eta", "FatJet_phi", "GLepton_eta", "GLepton_phi"})
             .Define("HScore", "FatJet_particleNetMD_Xbb / (FatJet_particleNetMD_Xbb + FatJet_particleNetMD_QCD)")
             .Define("HCandidateJets", 
                 "FatJet_pt > 250 && "
@@ -100,7 +120,11 @@ RNode analysisSelections(RNode df) {
             .Define("GHiggs_phi", "FatJet_phi[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]");
 
-    auto df_wz = df_higgs.Define("WLepDeltaR", fDeltaR, {"FatJet_eta", "FatJet_phi", "GLepton_eta", "GLepton_phi"})
+    return df_higgs;
+}
+
+RNode WZSelections(RNode df) {
+    auto df_wz = df.Define("WLepDeltaR", fDeltaR, {"FatJet_eta", "FatJet_phi", "GLepton_eta", "GLepton_phi"})
             .Define("WHDeltaR", fDeltaR, {"FatJet_eta", "FatJet_phi", "GHiggs_eta", "GHiggs_phi"})
             .Define("WZCandidateJets", 
                 "FatJet_pt > 250 && "
@@ -121,8 +145,12 @@ RNode analysisSelections(RNode df) {
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_mass", "FatJet_mass[WZCandidateJets][HighestWjetScoreIdx]");
-    
-    auto df_ak4 = df_wz.Define("AK4LepDeltaR", fDeltaR, {"Jet_eta", "Jet_phi", "GLepton_eta", "GLepton_phi"})
+
+    return df_wz;
+}
+
+RNode AK4Selections(RNode df) {
+    auto df_ak4 = df.Define("AK4LepDeltaR", fDeltaR, {"Jet_eta", "Jet_phi", "GLepton_eta", "GLepton_phi"})
             .Define("AK4HDeltaR", fDeltaR, { "Jet_eta", "Jet_phi", "GHiggs_eta", "GHiggs_phi"})
             .Define("AK4WDeltaR", fDeltaR, {"Jet_eta", "Jet_phi", "GW_eta", "GW_phi"})
             .Define("ak4tightBjetScore", tightDFBtagWP, {"sample_year"})
@@ -135,8 +163,12 @@ RNode analysisSelections(RNode df) {
                 "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
             .Define("ak4FromBJet", "goodJets && Jet_btagDeepFlavB > ak4tightBjetScore")
             .Filter("Sum(ak4FromBJet) == 0", "NO B-TAGGED AK4 JETS");
-            
-    auto df_vbs = df_ak4.Define("goodVBSJets", "Jet_pt >= 30 && "
+
+    return df_ak4;
+}
+
+RNode VBSJetsSelections(RNode df) {
+    auto df_vbs = df.Define("goodVBSJets", "Jet_pt >= 30 && "
                 "abs(Jet_eta) <= 4.7 && "
                 "AK4LepDeltaR >= 0.4 && "
                 "AK4HDeltaR >= 0.8 && "
@@ -158,8 +190,17 @@ RNode analysisSelections(RNode df) {
             .Define("VBSJet1_mass", "VBSJets_mass[sortedVBSJets[0]]")
             .Define("VBSJet2_mass", "VBSJets_mass[sortedVBSJets[1]]");
 
-    auto df_st = df_vbs.Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + MET_pt")
+    return df_vbs;
+}
+
+RNode finalSelections(RNode df) {
+    auto df_st = df.Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + MET_pt")
             .Filter("ST > 1000", "ST > 1000");
 
     return df_st;
+
+    // auto df_pnet = df_st.Filter("HighestHScore > 0.5", "HScore cut")
+    //         .Filter("HighestWjetScore > 0.7", "WScore cut");
+
+    // return df_pnet;
 }

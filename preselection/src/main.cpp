@@ -11,7 +11,6 @@
 #include "utils.h"
 
 using std::cout, std::endl;
-using ROOT::RDF::RSampleInfo;
 
 int main(int argc, char** argv) {
     // Config
@@ -28,24 +27,32 @@ int main(int argc, char** argv) {
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
 
-    auto df = df_.DefinePerSample("xsec_weight", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weight");})
-                .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");})
-                .DefinePerSample("sample_type", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_type");})
-                .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");})
-                .Define("isData", "sample_category == \"data\"")
-                .Define("is2016", "sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\"")
-                .Define("is2017", "sample_year == \"2017\"")
-                .Define("is2018", "sample_year == \"2018\"");
+    auto df = defineMetadata(df_);
+    // selections
+    auto df1 = flagSelections(df);
+    auto df2 = triggerSelections(df1);
+    auto df3 = leptonSelections(df2);
+    auto df4 = higgsSelections(df3);
+    auto df5 = WZSelections(df4);
+    auto df6 = AK4Selections(df5);
+    auto df7 = VBSJetsSelections(df6);
+    auto df8 = finalSelections(df7);
+
+    // data only corrections
+    auto df_data = df8.Filter("isData");
+    auto df_data_final = goodRun(LumiMask, df_data);
+    saveSnapshot(df_data_final, "data.root");
+
+    // MC only corrections
+    auto df_mc = df9.Filter("!isData");
+    auto df_mc_final = pileupWeight(df_mc);
     
-    auto df1 = goodRun(LumiMask, df);
-    auto df2 = analysisSelections(df1);
+    saveSnapshot(df_mc_final, "mc.root");
 
-    saveSnapshot(df2, "data.root");
-
-    // auto df3 = removeDuplicates(df2);
-
+    // print cutflow
     auto report = df_.Report();
     report->Print();
+    
 
     return 0;
 }

@@ -20,6 +20,7 @@
 
 using RNode = ROOT::RDF::RNode;
 using ROOT::VecOps::RVec;
+using ROOT::RDF::RSampleInfo;
 
 /*
     LUMIMASK
@@ -84,6 +85,12 @@ public:
 };
 
 RNode removeDuplicates(RNode df);
+
+/*
+    METADATA DEFINE
+*/
+
+RNode defineMetadata(RNode df);
 
 /*
     SELECTION UTILS
