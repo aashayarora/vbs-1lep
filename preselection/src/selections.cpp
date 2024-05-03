@@ -11,7 +11,6 @@ RNode flagSelections(RNode df) {
                 "Flag_eeBadScFilter && "
                 "(!(is2017 || is2018) || Flag_ecalBadCalibFilter)", 
                 "PASSED FLAGS");
-
     return df_flags;
 }
 
@@ -25,7 +24,6 @@ RNode triggerSelections(RNode df) {
                 "(is2017 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf_L1DoubleEG == true) || (sample_type == \"SingleMuon\" && HLT_IsoMu27 == true))) || "
                 "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 == true || HLT_IsoTkMu24 == true))))))",
                 "PASSED TRIGGERS");
-
     return df_triggers;
 }
 
@@ -58,7 +56,6 @@ RNode electronSelections(RNode df) {
             .Define("GElectron_phi", "Electron_phi[tightElectrons]")
             .Define("GElectron_mass", "Electron_mass[tightElectrons]")
             .Define("isElectron", "nVetoElectrons == 1 && nTightElectrons == 1");
-        
     return df_el;
 }
 
@@ -84,7 +81,6 @@ RNode muonSelections(RNode df) {
             .Define("GMuon_phi", "Muon_phi[tightMuons]")
             .Define("GMuon_mass", "Muon_mass[tightMuons]")
             .Define("isMuon", "nVetoMuons == 1 && nTightMuons == 1");
-        
     return df_mu;
 }
 
@@ -98,7 +94,6 @@ RNode leptonSelections(RNode df) {
             .Filter("((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
             "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
             "(GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40");
-
     return df_leps;
 }
 
@@ -119,7 +114,6 @@ RNode higgsSelections(RNode df) {
             .Define("GHiggs_eta", "FatJet_eta[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_phi", "FatJet_phi[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]");
-
     return df_higgs;
 }
 
@@ -145,7 +139,6 @@ RNode WZSelections(RNode df) {
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_mass", "FatJet_mass[WZCandidateJets][HighestWjetScoreIdx]");
-
     return df_wz;
 }
 
@@ -163,7 +156,6 @@ RNode AK4Selections(RNode df) {
                 "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
             .Define("ak4FromBJet", "goodJets && Jet_btagDeepFlavB > ak4tightBjetScore")
             .Filter("Sum(ak4FromBJet) == 0", "NO B-TAGGED AK4 JETS");
-
     return df_ak4;
 }
 
@@ -189,18 +181,14 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSJet2_phi", "VBSJets_phi[sortedVBSJets[1]]")
             .Define("VBSJet1_mass", "VBSJets_mass[sortedVBSJets[0]]")
             .Define("VBSJet2_mass", "VBSJets_mass[sortedVBSJets[1]]");
-
     return df_vbs;
 }
 
 RNode finalSelections(RNode df) {
     auto df_st = df.Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + MET_pt")
             .Filter("ST > 1000", "ST > 1000");
-
     return df_st;
-
     // auto df_pnet = df_st.Filter("HighestHScore > 0.5", "HScore cut")
     //         .Filter("HighestWjetScore > 0.7", "WScore cut");
-
     // return df_pnet;
 }
