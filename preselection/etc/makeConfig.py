@@ -430,41 +430,55 @@ def get_xsec_weight(InputYear):
     elif(InputYear == "ttHTobb_M125,2018"):
         weight_xsec = 0.00157649
     # sig
-    elif(InputYear == "VBSOSWWH,2016postVFP"):
-        weight_xsec = 0.000475387
-    elif(InputYear == "VBSOSWWH,2016preVFP"):
-        weight_xsec = 0.000552026
-    elif(InputYear == "VBSOSWWH,2017"):
-        weight_xsec = 0.00117444
-    elif(InputYear == "VBSOSWWH,2018"):
-        weight_xsec = 0.00168832
-    elif(InputYear == "VBSWWH_SS,2016postVFP"):
-        weight_xsec = 0.000256521
-    elif(InputYear == "VBSWWH_SS,2016preVFP"):
-        weight_xsec = 0.000297875
-    elif(InputYear == "VBSWWH_SS,2017"):
-        weight_xsec = 0.000633733
-    elif(InputYear == "VBSWWH_SS,2018"):
-        weight_xsec = 0.000911022
+    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
+        weight_xsec = 0.00000647693
+    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
+        weight_xsec = 0.0000013031
+    elif(InputYear == "VBSWWH_OSWW,2017"):
+        weight_xsec = 0.0000116489
+    elif(InputYear == "VBSWWH_OSWW,2018"):
+        weight_xsec = 0.0000418646
+    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
+        weight_xsec = 0.00000229489
+    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
+        weight_xsec = 0.0000107406
+    elif(InputYear == "VBSWWH_SSWW,2017"):
+        weight_xsec = 0.0000048461
+    elif(InputYear == "VBSWWH_SSWW,2018"):
+        weight_xsec = 0.0000030188
     elif(InputYear == "VBSWZH,2016postVFP"):
-        weight_xsec = 0.00027518
+        weight_xsec = 0.0000074584
     elif(InputYear == "VBSWZH,2016preVFP"):
-        weight_xsec = 0.000319542
+        weight_xsec = 0.0000174737
     elif(InputYear == "VBSWZH,2017"):
-        weight_xsec = 0.00067983
+        weight_xsec = 0.0000135468
     elif(InputYear == "VBSWZH,2018"):
-        weight_xsec = 0.000977289
+        weight_xsec = 0.0000016788
     elif(InputYear == "VBSZZH,2016postVFP"):
-        weight_xsec = 0.000190289
+        weight_xsec = 0.0000205071
     elif(InputYear == "VBSZZH,2016preVFP"):
-        weight_xsec = 0.000220966
+        weight_xsec = 0.0000034354
     elif(InputYear == "VBSZZH,2017"):
-        weight_xsec = 0.000470108
+        weight_xsec = 0.0000015587
     elif(InputYear == "VBSZZH,2018"):
-        weight_xsec = 0.000675804
+        weight_xsec = 0.0000096032
     else:
         print("Error: xsec not found for " + InputYear)
     return weight_xsec
+
+def extract_mc_sample_type(sample_name):
+    if "DY" in sample_name:
+        return "DY"
+    elif sample_name.startswith("TTTo"):
+        return "ttbar"
+    elif "TT" in sample_name:
+        return "ttx"
+    elif "WJets" in sample_name:
+        return "WJets"
+    elif "EWK" in sample_name:
+        return "EWK"
+    else:
+        return "Other"
 
 def make_config(args):
     if args.sample_year is None:
@@ -497,7 +511,7 @@ def make_config(args):
                             "metadata": {
                                 "sample_category": "bkg",
                                 "sample_year" : sample_year,
-                                "sample_type": "bkg_mc",
+                                "sample_type": extract_mc_sample_type(sample_name),
                                 "xsec_weight": xsec
                             }
                         }
@@ -528,21 +542,21 @@ def make_config(args):
                 )
         # sig
         if "sig" in args.categories.split(","):
-            sample_list_sig = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_sig = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*/*/NANOAODSIM/*/*/skimmed/*.root"))
             for sample in sample_list_sig:
                 sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
-                xsec = get_xsec_weight(sample_name + "," + sample_year)
+                xsec = get_xsec_weight(sample_name.split("/")[1].split("_MJJ")[0] + "," + sample_year)
                 if xsec == 0:
                     print(sample)
                     continue
                 config["samples"].update(
                     {
-                        sample_name + "_" + sample_year: {
+                        sample_name.split("v9/")[1] + "_" + sample_year: {
                             "trees": ["Events"],
-                            "files": [sample + "/output*.root"],
+                            "files": [sample],
                             "metadata": {
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,

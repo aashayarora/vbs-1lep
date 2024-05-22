@@ -1,46 +1,98 @@
-from correctionlib import convert
-import json
+# %%
+import uproot
+import correctionlib.schemav2 as cs
+import correctionlib.convert
 
-def gen_tth_sfs(path, outname):
-    corr = convert.from_uproot_THx(path)
+# %%
+def json_from_root(path, outname):
+    with uproot.open(path) as h:
+        hist = h.to_hist()
 
-    for idx, c in enumerate(corr):
-        if c[0] == 'data':
-            corr_ = c[1]
+    hist.name = outname
+    hist.label= "ttH Scale Factors"
+    tth = correctionlib.convert.from_histogram(hist)
+    tth.description = "ttH Scale Factors"
+    tth.data.flow = "clamp"
 
-    corr_.__dict__["inputs"] = ["abs(eta)", "pt"]
-    corr_.__dict__["flow"] = 1
-    output_json = {}
+    corr = cs.Correction(
+        name=outname,
+        description="ttH Scale Factors",
+        version=1,
+        inputs=[
+            cs.Variable(
+                name="sf",
+                type="string",
+                description="sf",
+            ),
+            cs.Variable(
+                name="xaxis",
+                type="real",
+                description="abseta",
+            ),
+            cs.Variable(
+                name="yaxis",
+                type="real",
+                description="pt",
+            ),
+        ],
+        output=cs.Variable(
+            name="weight",
+            type="real",
+            description="weight",
+        ),
+        data=cs.Category(
+            nodetype="category",
+            input="sf",
+            content=[
+                cs.CategoryItem(
+                    key="ttHSF",
+                    value=tth.data,
+                ),
+            ],
+        )
+    )
 
-    output_json["schema_version"] = 2
-    output_json["description"] = "TTH Electron SFs"
-    output_json["corrections"] = {}
+    cset2 = cs.CorrectionSet(
+        schema_version=2,
+        description="ttH Scale Factors",
+        corrections=[
+            corr,
+        ],
+    )
+    
+    with open(f"{outname}.json", "w") as fout:
+        fout.write(cset2.model_dump_json(indent=4, exclude_unset=True))
 
-    output_json["corrections"]["name"] = "EGamma_SF2D"
-    output_json["corrections"]["description"] = "Electron SFs"
-    output_json["corrections"]["version"] = 2
-    output_json["corrections"]["inputs"] = [
-        {"name": "abs(eta)", "type": "real", "description": "Electron eta"},
-        {"name": "pt", "type": "real", "description": "Electron pT"},
-    ]
-    output_json["corrections"]["output"] = {"name": "weight", "type": "real", "description": "Electron SF"}
-
-
-    output_json["corrections"]["data"] = corr_.__dict__
-
-    with open(f"{outname}.json", "w") as f:
-        json.dump(output_json, f, indent=4)
-
+# %%
 if __name__ == "__main__":
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_ele_2016.root:EGamma_SF2D", "TTH_Electron_SF_2016_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_ele_2017.root:EGamma_SF2D", "TTH_Electron_SF_2017_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_ele_2018.root:EGamma_SF2D", "TTH_Electron_SF_2018_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_muon_2016.root:EGamma_SF2D", "TTH_Muon_SF_2016_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_muon_2017.root:EGamma_SF2D", "TTH_Muon_SF_2017_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_loose_muon_2018.root:EGamma_SF2D", "TTH_Muon_SF_2018_loose")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_ele_2016_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Electron_SF_2016_tight")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_ele_2017_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Electron_SF_2017_tight")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_ele_2018_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Electron_SF_2018_tight")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_muon_2016_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Muon_SF_2016_tight")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_muon_2017_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Muon_SF_2017_tight")
-    gen_tth_sfs("/home/users/aaarora/phys/analysis/YifanPrivatePackage/AnalysisFile/AnalysisFile_MC/Include/efficiency/ttHAnalysis/TnP_ttH_muon_2018_2lss/passttH/egammaEffi.txt_EGM2D.root:EGamma_SF2D", "TTH_Muon_SF_2018_tight")
+    # muon
+    json_from_root("junk/root_sf/muon/egammaEffi2016APV_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_MuonID_SF")
+    json_from_root("junk/root_sf/muon/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_MuonISO_SF")
+
+    json_from_root("junk/root_sf/muon/egammaEffi2016_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_MuonID_SF")
+    json_from_root("junk/root_sf/muon/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_MuonISO_SF")
+
+    json_from_root("junk/root_sf/muon/egammaEffi2017_EGM2D.root:EGamma_SF2D", "2017_ttH_MuonID_SF")
+    json_from_root("junk/root_sf/muon/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "2017_ttH_MuonISO_SF")
+
+    json_from_root("junk/root_sf/muon/egammaEffi2018_EGM2D.root:EGamma_SF2D", "2018_ttH_MuonID_SF")
+    json_from_root("junk/root_sf/muon/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D", "2018_ttH_MuonISO_SF")
+
+    # electron
+    json_from_root("junk/root_sf/elec/egammaEffi2016APV_2lss_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_ElectronID_SF")
+    json_from_root("junk/root_sf/elec/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_ElectronISO_SF")
+
+    json_from_root("junk/root_sf/elec/egammaEffi2016_2lss_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_ElectronID_SF")
+    json_from_root("junk/root_sf/elec/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_ElectronISO_SF")
+
+    json_from_root("junk/root_sf/elec/egammaEffi2017_2lss_EGM2D.root:EGamma_SF2D", "2017_ttH_ElectronID_SF")
+    json_from_root("junk/root_sf/elec/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "2017_ttH_ElectronISO_SF")
+
+    json_from_root("junk/root_sf/elec/egammaEffi2018_2lss_EGM2D.root:EGamma_SF2D", "2018_ttH_ElectronID_SF")
+    json_from_root("junk/root_sf/elec/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D", "2018_ttH_ElectronISO_SF")
+# %%
+import correctionlib
+
+ceval = correctionlib.CorrectionSet.from_file("2016preVFP_ttH_MuonID_SF.json")
+ceval["2016preVFP_ttH_MuonID_SF"].evaluate("2016preVFP_ttH_MuonID_SF", 0.9, 20.0)
+# %%

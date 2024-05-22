@@ -110,7 +110,6 @@ void saveSnapshot(RNode df, const std::string& finalFile) {
             std::string name = colName.Data();
             final_variables.push_back(name);
         }
-    // final_variables.push_back("nJet");
-    df.Snapshot("Events", std::string("output/") + finalFile, final_variables);
+    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables);
 }
 

@@ -173,14 +173,21 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSJets_phi", "Jet_phi[goodVBSJets]")
             .Define("VBSJets_mass", "Jet_mass[goodVBSJets]")
             .Define("sortedVBSJets", "Argsort(-VBSJets_pt)")
-            .Define("VBSJet1_pt", "VBSJets_pt[sortedVBSJets[0]]")
-            .Define("VBSJet2_pt", "VBSJets_pt[sortedVBSJets[1]]")
-            .Define("VBSJet1_eta", "VBSJets_eta[sortedVBSJets[0]]")
-            .Define("VBSJet2_eta", "VBSJets_eta[sortedVBSJets[1]]")
-            .Define("VBSJet1_phi", "VBSJets_phi[sortedVBSJets[0]]")
-            .Define("VBSJet2_phi", "VBSJets_phi[sortedVBSJets[1]]")
-            .Define("VBSJet1_mass", "VBSJets_mass[sortedVBSJets[0]]")
-            .Define("VBSJet2_mass", "VBSJets_mass[sortedVBSJets[1]]");
+            .Define("VBSjet1pt", "VBSJets_pt[sortedVBSJets[0]]")
+            .Define("VBSjet2pt", "VBSJets_pt[sortedVBSJets[1]]")
+            .Define("VBSjet1eta", "VBSJets_eta[sortedVBSJets[0]]")
+            .Define("VBSjet2eta", "VBSJets_eta[sortedVBSJets[1]]")
+            .Define("VBSjet1phi", "VBSJets_phi[sortedVBSJets[0]]")
+            .Define("VBSjet2phi", "VBSJets_phi[sortedVBSJets[1]]")
+            .Define("VBSjet1mass", "VBSJets_mass[sortedVBSJets[0]]")
+            .Define("VBSjet2mass", "VBSJets_mass[sortedVBSJets[1]]")
+            .Define("pt_first_two", "Take(Take(VBSJets_pt, sortedVBSJets), 2)")
+            .Define("eta_first_two", "Take(Take(VBSJets_eta, sortedVBSJets), 2)")
+            .Define("phi_first_two", "Take(Take(VBSJets_phi, sortedVBSJets), 2)")
+            .Define("mass_first_two", "Take(Take(VBSJets_mass, sortedVBSJets), 2)")
+            .Define("VBSptjj", "VBSjet1pt + VBSjet2pt")
+            .Define("VBSMjj", "InvariantMass(pt_first_two, eta_first_two, phi_first_two, mass_first_two)")
+            .Define("VBSdetajj", "abs(VBSjet1eta - VBSjet2eta)");
     return df_vbs;
 }
 

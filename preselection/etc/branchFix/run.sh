@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -f add_branches ]; then
-    g++ -o add_branches add_branches.cpp `root-config --cflags --glibs`
+    g++ -o add_branches add_branch.cpp `root-config --cflags --glibs`
 fi
 
 MAX_PROCESSES=10
