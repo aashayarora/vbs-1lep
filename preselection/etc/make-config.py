@@ -93,6 +93,38 @@ def get_xsec_weight(InputYear):
         weight_xsec = 0.0553893
     elif(InputYear == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2018"):
         weight_xsec = 0.0637956
+    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2016preVFP"):
+        weight_xsec = 0.000796498
+    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2016postVFP"):
+        weight_xsec = 0.000695234
+    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2017"):
+        weight_xsec = 0.000753276
+    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2018"):
+        weight_xsec = 0.000790311
+    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2016preVFP"):
+        weight_xsec = 0.000446377
+    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2016postVFP"):
+        weight_xsec = 0.000341075
+    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2017"):
+        weight_xsec = 0.000409094
+    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2018"):
+        weight_xsec = 0.000428382
+    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2016preVFP"):
+        weight_xsec = 0.00510646
+    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2016postVFP"):
+        weight_xsec = 0.00396013
+    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2017"):
+        weight_xsec = 0.00440381
+    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2018"):
+        weight_xsec = 0.00463542
+    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2016preVFP"):
+        weight_xsec = 0.00511616
+    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2016postVFP"):
+        weight_xsec = 0.00406806
+    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2017"):
+        weight_xsec = 0.00443171
+    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2018"):
+        weight_xsec = 0.00452345
     elif(InputYear == "TTTo2L2Nu,2016preVFP"):
         weight_xsec = 0.000637235
     elif(InputYear == "TTTo2L2Nu,2016postVFP"):
@@ -430,38 +462,38 @@ def get_xsec_weight(InputYear):
     elif(InputYear == "ttHTobb_M125,2018"):
         weight_xsec = 0.00157649
     # sig
-    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
-        weight_xsec = 0.00000647693
-    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
-        weight_xsec = 0.0000013031
-    elif(InputYear == "VBSWWH_OSWW,2017"):
-        weight_xsec = 0.0000116489
-    elif(InputYear == "VBSWWH_OSWW,2018"):
-        weight_xsec = 0.0000418646
-    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
-        weight_xsec = 0.00000229489
-    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
-        weight_xsec = 0.0000107406
-    elif(InputYear == "VBSWWH_SSWW,2017"):
-        weight_xsec = 0.0000048461
-    elif(InputYear == "VBSWWH_SSWW,2018"):
-        weight_xsec = 0.0000030188
-    elif(InputYear == "VBSWZH,2016postVFP"):
-        weight_xsec = 0.0000074584
-    elif(InputYear == "VBSWZH,2016preVFP"):
-        weight_xsec = 0.0000174737
-    elif(InputYear == "VBSWZH,2017"):
-        weight_xsec = 0.0000135468
-    elif(InputYear == "VBSWZH,2018"):
-        weight_xsec = 0.0000016788
-    elif(InputYear == "VBSZZH,2016postVFP"):
-        weight_xsec = 0.0000205071
-    elif(InputYear == "VBSZZH,2016preVFP"):
-        weight_xsec = 0.0000034354
     elif(InputYear == "VBSZZH,2017"):
-        weight_xsec = 0.0000015587
+        weight_xsec = 0.0000946592
+    elif(InputYear == "VBSWWH_SSWW,2017"):
+        weight_xsec = 0.0001259990
+    elif(InputYear == "VBSWZH,2017"):
+        weight_xsec = 0.0001357391
+    elif(InputYear == "VBSWWH_OSWW,2017"):
+        weight_xsec = 0.0002334446
     elif(InputYear == "VBSZZH,2018"):
-        weight_xsec = 0.0000096032
+        weight_xsec = 0.0000934940
+    elif(InputYear == "VBSWWH_SSWW,2018"):
+        weight_xsec = 0.0001240615
+    elif(InputYear == "VBSWZH,2018"):
+        weight_xsec = 0.0001333845
+    elif(InputYear == "VBSWWH_OSWW,2018"):
+        weight_xsec = 0.0002300254
+    elif(InputYear == "VBSZZH,2016postVFP"):
+        weight_xsec = 0.0000777209
+    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
+        weight_xsec = 0.0001023823
+    elif(InputYear == "VBSWZH,2016postVFP"):
+        weight_xsec = 0.0001100731
+    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
+        weight_xsec = 0.0001886082
+    elif(InputYear == "VBSZZH,2016preVFP"):
+        weight_xsec = 0.0000882407
+    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
+        weight_xsec = 0.0001184474
+    elif(InputYear == "VBSWZH,2016preVFP"):
+        weight_xsec = 0.0001273485
+    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
+        weight_xsec = 0.0002190144
     else:
         print("Error: xsec not found for " + InputYear)
     return weight_xsec
@@ -473,6 +505,8 @@ def extract_mc_sample_type(sample_name):
         return "ttbar"
     elif "TT" in sample_name:
         return "ttx"
+    elif "ST" in sample_name:
+        return "ST"
     elif "WJets" in sample_name:
         return "WJets"
     elif "EWK" in sample_name:
@@ -482,7 +516,7 @@ def extract_mc_sample_type(sample_name):
 
 def make_config(args):
     if args.sample_year is None:
-        config_name = "input.json"
+        config_name = args.output
     else:
         config_name = f"config_{args.sample_year}.json"
     with open(config_name, "w+") as f:
@@ -494,9 +528,9 @@ def make_config(args):
             config = {"samples": {}}
         # bkg
         if "bkg" in args.categories.split(","):
-            sample_list_bkg = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_bkg = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/*"))
             for sample in sample_list_bkg:
-                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
+                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
                 sample_year = extract_sample_year(sample)
                 xsec = get_xsec_weight(sample_name + "," + sample_year)
                 if xsec == 0:
@@ -519,9 +553,9 @@ def make_config(args):
                 )
         # data
         if "data" in args.categories.split(","):
-            sample_list_data = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/*"))
+            sample_list_data = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/*"))
             for sample in sample_list_data:
-                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
+                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/data_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_Tune")[0]
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
@@ -542,9 +576,9 @@ def make_config(args):
                 )
         # sig
         if "sig" in args.categories.split(","):
-            sample_list_sig = sorted(glob("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*/*/NANOAODSIM/*/*/skimmed/*.root"))
+            sample_list_sig = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*/*/NANOAODSIM/*/*/skimmed/*.root"))
             for sample in sample_list_sig:
-                sample_name = sample.split("/data/userdata/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
+                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
@@ -572,6 +606,7 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--categories", help="categories", default="bkg,data,sig")
     argparser.add_argument("--sample_year", help="sample year", default=None)
+    argparser.add_argument("--output", help="output config file", default="input.json")
     args = argparser.parse_args()
 
     config = make_config(args)

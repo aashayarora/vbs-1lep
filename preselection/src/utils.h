@@ -10,8 +10,9 @@
 #include <unordered_map>
 
 #include "ROOT/RDataFrame.hxx"
-#include "ROOT/RDFHelpers.hxx"
 #include "ROOT/RVec.hxx"
+
+#include "TLorentzVector.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -100,7 +101,11 @@ float looseDFBtagWP(std::string year);
 float mediumDFBtagWP(std::string year);
 float tightDFBtagWP(std::string year);
 
-RVec<float> fDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, float obj_phi);
+RVec<float> VfDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, float obj_phi);
+RVec<float> VfInvariantMass(RVec<float> vec_pt, RVec<float> vec_eta, RVec<float> vec_phi, RVec<float> vec_mass, float obj_pt, float obj_eta, float obj_phi, float obj_mass);
+float fInvariantMass(float obj1_pt, float obj1_eta, float obj1_phi, float obj1_mass, float obj2_pt, float obj2_eta, float obj2_phi, float obj2_mass);
+RVec<int> VBS_MaxE( RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_phi, RVec<float> Jet_mass );
+RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_phi, RVec<float> Jet_mass);
 
 void saveSnapshot(RNode df, const std::string& finalFile);
 

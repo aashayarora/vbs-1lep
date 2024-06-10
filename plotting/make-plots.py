@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # %%
 from dataclasses import dataclass
 import multiprocessing as mp
@@ -22,31 +23,38 @@ class MyHist:
 
 # %%
 hists = [
-    MyHist("GMuon_pt", r"Muon $p_T$ (GeV)", (50, 0, 200)),
-    MyHist("GMuon_eta", r"Muon $\eta$", (50, -2.5, 2.5)),
-    MyHist("GMuon_phi", r"Muon $\phi$", (50, -3.14, 3.14)),
-    MyHist("GElectron_pt", r"Electron $p_T$ (GeV)", (50, 0, 200)),
-    MyHist("GElectron_eta", r"Electron $\eta$", (50, -2.5, 2.5)),
-    MyHist("GElectron_phi", r"Electron $\phi$", (50, -3.14, 3.14)),
-    MyHist("GHiggs_pt", r"Higgs $p_T$ (GeV)", (50, 0, 1000)),
-    MyHist("GHiggs_eta", r"Higgs $\eta$", (50, -2.5, 2.5)),
-    MyHist("GHiggs_phi", r"Higgs $\phi$", (50, -3.14, 3.14)),
-    MyHist("GHiggs_mass", r"Higgs FatJet Softdrop Mass (GeV)", (50, 0, 200)),
-    MyHist("HighestHScore", r"Higgs Score", (50, 0, 1)),
-    MyHist("GW_pt", r"W $p_T$ (GeV)", (50, 0, 1000)),
-    MyHist("GW_eta", r"W $\eta$", (50, -2.5, 2.5)),
-    MyHist("GW_phi", r"W $\phi$", (50, -3.14, 3.14)),
-    MyHist("HighestWjetScore", r"W Score", (50, 0, 1)),
-    MyHist("VBSjet1pt", r"Leading VBS Jet $p_T$ (GeV)", (50, 0, 200)),
-    MyHist("VBSjet1eta", r"Leading VBS Jet $\eta$", (50, -2.5, 2.5)),
-    MyHist("VBSjet1phi", r"Leading VBS Jet $\phi$", (50, -3.14, 3.14)),
-    MyHist("VBSjet2pt", r"Subleading VBS Jet $p_T$ (GeV)", (50, 0, 200)),
-    MyHist("VBSjet2eta", r"Subleading VBS Jet $\eta$", (50, -2.5, 2.5)),
-    MyHist("VBSjet2phi", r"Subleading VBS Jet $\phi$", (50, -3.14, 3.14)),
-    MyHist("VBSptjj", r"$p_{T_{jj}}$ (GeV)", (50, 0, 200)),
-    MyHist("VBSMjj", r"$m_{jj}$ (GeV)", (80, 0, 800)),
-    MyHist("VBSdetajj", r"$\Delta\eta_{jj}$", (50, 0, 10)),
-    MyHist("ST", r"$S_T$ (GeV)", (50, 1000, 2000)),
+    # MyHist("GMuon_pt", r"Muon $p_T$ (GeV)", (50, 0, 200)),
+    # MyHist("GMuon_eta", r"Muon $\eta$", (50, -2.5, 2.5)),
+    # MyHist("GMuon_phi", r"Muon $\phi$", (50, -3.14, 3.14)),
+    # MyHist("GElectron_pt", r"Electron $p_T$ (GeV)", (50, 0, 200)),
+    # MyHist("GElectron_eta", r"Electron $\eta$", (50, -2.5, 2.5)),
+    # MyHist("GElectron_phi", r"Electron $\phi$", (50, -3.14, 3.14)),
+    # MyHist("GHiggs_pt", r"Higgs $p_T$ (GeV)", (50, 0, 1000)),
+    # MyHist("GHiggs_eta", r"Higgs $\eta$", (50, -2.5, 2.5)),
+    # MyHist("GHiggs_phi", r"Higgs $\phi$", (50, -3.14, 3.14)),
+    # MyHist("GHiggs_mass", r"Higgs FatJet Softdrop Mass (GeV)", (50, 0, 200)),
+    # MyHist("HighestHScore", r"Higgs Score", (50, 0, 1)),
+    # MyHist("GW_pt", r"W $p_T$ (GeV)", (50, 0, 1000)),
+    # MyHist("GW_eta", r"W $\eta$", (50, -2.5, 2.5)),
+    # MyHist("GW_phi", r"W $\phi$", (50, -3.14, 3.14)),
+    # MyHist("HighestWjetScore", r"W Score", (50, 0, 1)),
+    # MyHist("VBSjet1pt", r"Leading VBS Jet $p_T$ (GeV)", (50, 0, 200)),
+    # MyHist("VBSjet1eta", r"Leading VBS Jet $\eta$", (50, -2.5, 2.5)),
+    # MyHist("VBSjet1phi", r"Leading VBS Jet $\phi$", (50, -3.14, 3.14)),
+    # MyHist("VBSjet2pt", r"Subleading VBS Jet $p_T$ (GeV)", (50, 0, 200)),
+    # MyHist("VBSjet2eta", r"Subleading VBS Jet $\eta$", (50, -2.5, 2.5)),
+    # MyHist("VBSjet2phi", r"Subleading VBS Jet $\phi$", (50, -3.14, 3.14)),
+    # MyHist("VBSptjj", r"$p_{T_{jj}}$ (GeV)", (50, 0, 400)),
+    # MyHist("VBSMjj", r"$m_{jj}$ (GeV)", (80, 0, 800)),
+    # MyHist("VBSdetajj", r"$\Delta\eta_{jj}$", (50, 0, 10)),
+    # MyHist("ST", r"$S_T$ (GeV)", (50, 1000, 2000)),
+    # MyHist("Hbbmass", r"Higgs $b\bar{b}$ Mass (GeV)", (50, 0, 200)),
+    # MyHist("HbbPt", r"Higgs $b\bar{b}$ $p_T$ (GeV)", (50, 0, 2000)),
+    # MyHist("Wjetmass", r"W Jet Mass (GeV)", (50, 0, 200)),
+    # MyHist("WjetPt", r"W Jet $p_T$ (GeV)", (50, 0, 2000)),
+    # MyHist("MET", r"MET (GeV)", (50, 0, 200)),
+    # MyHist("Mlbminloose", r"Minimum $M_{lb}$ (GeV)", (50, 0, 200)),
+    MyHist("GLepton_pt", r"Lepton $p_T$ (GeV)", (50, 0, 200)),
 ]
 
 # %%
@@ -64,6 +72,7 @@ def plot(histogram):
         hist_bkgs = [
             df_bkg.Filter("sample_type == \"DY\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
             df_bkg.Filter("sample_type == \"ttbar\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+            df_bkg.Filter("sample_type == \"ST\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
             df_bkg.Filter("sample_type == \"WJets\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
             df_bkg.Filter("sample_type == \"ttx\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
             df_bkg.Filter("sample_type == \"Other\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue()
@@ -85,11 +94,12 @@ def plot(histogram):
         histogram.hist_data = from_pyroot(hist_data).to_hist()
         histogram.hist_bkg = hist.Stack.from_dict(
             {
-                "tt": from_pyroot(hist_bkgs[1]).to_hist(),
-                "WJets": from_pyroot(hist_bkgs[2]).to_hist(),
+                r"$t\bar{t}$": from_pyroot(hist_bkgs[1]).to_hist(),
+                "W+Jets": from_pyroot(hist_bkgs[3]).to_hist(),
                 "DY": from_pyroot(hist_bkgs[0]).to_hist(), 
-                "other": from_pyroot(hist_bkgs[4]).to_hist(),
-                "ttx": from_pyroot(hist_bkgs[3]).to_hist(),
+                "ST": from_pyroot(hist_bkgs[2]).to_hist(),
+                r"$t\bar{t} + X$": from_pyroot(hist_bkgs[4]).to_hist(),
+                "Other": from_pyroot(hist_bkgs[5]).to_hist(),
             })
         histogram.hist_ratio = from_pyroot(hist_ratio).to_hist()
         histogram.hist_sig = from_pyroot(hist_sig).to_hist()
@@ -114,6 +124,8 @@ def plot(histogram):
     except Exception as e:
         print("Error in", histogram.var)
         plt.close()
+
+
 # %%
 if __name__ == "__main__":
     mp.Pool(12).map(plot, hists)

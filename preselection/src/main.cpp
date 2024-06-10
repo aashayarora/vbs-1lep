@@ -1,5 +1,6 @@
 // RDF Includes
 #include "ROOT/RDataFrame.hxx"
+#include "ROOT/RDFHelpers.hxx"
 
 #include "weights.h"
 #include "selections.h"
@@ -18,7 +19,7 @@ int main(int argc, char** argv) {
     auto args = argparse::parse<MyArgs>(argc, argv);
     std::string input_spec = args.spec;
 
-    ROOT::EnableImplicitMT();
+    ROOT::EnableImplicitMT(64);
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
     
@@ -35,7 +36,6 @@ int main(int argc, char** argv) {
 
     if (args.isData) {
         auto df_data_final = goodRun(LumiMask, df8);
-        
         saveSnapshot(df_data_final, "data.root");
     }
     else {

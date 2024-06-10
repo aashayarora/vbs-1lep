@@ -7,3 +7,4 @@ junk/
 *.json
 add_branches
 plotting/plots/
+__pycache__/

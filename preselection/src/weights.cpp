@@ -2,8 +2,8 @@
 
 RNode goodRun(lumiMask golden, RNode df){
     auto goldenjson = [golden](unsigned int &run, unsigned int &luminosityBlock){return golden.accept(run, luminosityBlock);};
-    return df.Define("goodRun", goldenjson, {"run", "luminosityBlock"})
-             .Filter("goodRun", "PASSES GOLDEN JSON");
+    return df.Define("weight", goldenjson, {"run", "luminosityBlock"})
+             .Filter("weight", "PASSES GOLDEN JSON");
 }
 
 RNode pileupCorrection(correction::Correction::Ref cset_pileup_2016preVFP, correction::Correction::Ref cset_pileup_2016postVFP, correction::Correction::Ref cset_pileup_2017, correction::Correction::Ref cset_pileup_2018, RNode df){
