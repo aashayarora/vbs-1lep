@@ -171,6 +171,8 @@ RNode VBSJetsSelections(RNode df) {
     auto df_vbs = df.Define("goodVBSJets", "Jet_pt >= 30 && "
                 "abs(Jet_eta) <= 4.7 && "
                 "AK4LepDeltaR >= 0.4 && "
+                "AK4HDeltaR >= 0.8 && "
+                "AK4WDeltaR >= 0.8 && "
                 "((is2016 && Jet_jetId >= 1) || (!is2016 && Jet_jetId >= 2)) && "
                 "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
             .Filter("Sum(goodVBSJets) >= 2", "AT LEAST TWO VBS JETS")
