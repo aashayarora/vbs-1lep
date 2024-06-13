@@ -11,7 +11,7 @@ MAKEFLAGS := --jobs=8
 SRCS = $(wildcard *.cpp)
 OBJS = $(patsubst %.cpp,build/%.o,$(SRCS))
 
-TARGET = runTMVA
+TARGET = runMVA
 
 BUILD_DIR = build/
 

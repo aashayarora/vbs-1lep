@@ -113,7 +113,7 @@ RNode higgsSelections(RNode df) {
             .Define("GHiggs_pt", "FatJet_pt[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_eta", "FatJet_eta[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_phi", "FatJet_phi[HCandidateJets][HighestHScoreIdx]")
-            .Define("GHiggs_mass", "FatJet_msoftdrop[HCandidateJets][HighestHScoreIdx]");
+            .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]");
     return df_higgs;
 }
 
@@ -138,7 +138,7 @@ RNode WZSelections(RNode df) {
             .Define("GW_pt", "FatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("GW_mass", "FatJet_mass[WZCandidateJets][HighestWjetScoreIdx]");
+            .Define("GW_mass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]");
     return df_wz;
 }
 
@@ -155,6 +155,12 @@ RNode AK4Selections(RNode df) {
                 "AK4WDeltaR >= 0.8 && "
                 "((is2016 && Jet_jetId >= 1) || (!is2016 && Jet_jetId >= 2)) && "
                 "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
+            .Define("HEMJets", "Jet_pt > 15 && "
+                "((is2016 && Jet_jetId >= 1) || (!is2016 && Jet_jetId >= 2)) && "
+                "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
+            .Define("HEMJet_pt", "Jet_pt[HEMJets]")
+            .Define("HEMJet_eta", "Jet_eta[HEMJets]")
+            .Define("HEMJet_phi", "Jet_phi[HEMJets]")
             .Define("ak4FromBJet", "goodJets && Jet_btagDeepFlavB > ak4tightBjetScore")
             .Filter("Sum(ak4FromBJet) == 0", "NO TIGHT B-TAGGED AK4 JETS")
             .Define("goodLooseBJets", "goodJets && Jet_btagDeepFlavB > ak4looseBjetScore")

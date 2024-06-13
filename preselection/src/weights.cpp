@@ -2,8 +2,8 @@
 
 RNode goodRun(lumiMask golden, RNode df){
     auto goldenjson = [golden](unsigned int &run, unsigned int &luminosityBlock){return golden.accept(run, luminosityBlock);};
-    return df.Define("weight", goldenjson, {"run", "luminosityBlock"})
-             .Filter("weight", "PASSES GOLDEN JSON");
+    return df.Define("goldenJSON", goldenjson, {"run", "luminosityBlock"})
+             .Filter("goldenJSON", "PASSES GOLDEN JSON");
 }
 
 RNode pileupCorrection(correction::Correction::Ref cset_pileup_2016preVFP, correction::Correction::Ref cset_pileup_2016postVFP, correction::Correction::Ref cset_pileup_2017, correction::Correction::Ref cset_pileup_2018, RNode df){
@@ -42,25 +42,14 @@ RNode muonScaleFactors_ID(correction::Correction::Ref cset_muon_2016preVFP, corr
     return df.Define("muon_scale_factors_ID", eval_correction, {"sample_year", "GMuon_eta", "GMuon_pt"});
 }
 
-RNode muonScaleFactors_ttH(correction::Correction::Ref cset_muon_2016preVFP, correction::Correction::Ref cset_muon_2016postVFP, correction::Correction::Ref cset_muon_2017, correction::Correction::Ref cset_muon_2018, RNode df, std::string sf_type){
-    auto eval_correction = [cset_muon_2016preVFP, cset_muon_2016postVFP, cset_muon_2017, cset_muon_2018] (std::string year, const RVec<float> eta, const RVec<float> pt) {
+RNode muonScaleFactors_ttH(correction::Correction::Ref cset_muon_tth, RNode df, std::string sf_type){
+    auto eval_correction = [cset_muon_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         double muon_sf_weight = 1.;
         if (eta.size() == 0) {
             return muon_sf_weight;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            if (year == "2016preVFP") {
-                muon_sf_weight *= cset_muon_2016preVFP->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2016postVFP") {
-                muon_sf_weight *= cset_muon_2016postVFP->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2017") {
-                muon_sf_weight *= cset_muon_2017->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2018") {
-                muon_sf_weight *= cset_muon_2018->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
+            muon_sf_weight *= cset_muon_tth->evaluate({year, abs(eta[i]), pt[i]});
         }
         return muon_sf_weight;
     };
@@ -76,15 +65,19 @@ RNode electronScaleFactors_ID(correction::Correction::Ref cset_electron_2016preV
         for (size_t i = 0; i < eta.size(); i++) {
             if (year == "2016preVFP") {
                 electron_sf_weight *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weight *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sf", "Loose", eta[i], pt[i]});
             }
             if (year == "2016postVFP") {
                 electron_sf_weight *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weight *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sf", "Loose", eta[i], pt[i]});
             }
             if (year == "2017") {
                 electron_sf_weight *= cset_electron_2017->evaluate({"2017", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weight *= cset_electron_2017->evaluate({"2017", "sf", "Loose", eta[i], pt[i]});
             }
             if (year == "2018") {
                 electron_sf_weight *= cset_electron_2018->evaluate({"2018", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weight *= cset_electron_2018->evaluate({"2018", "sf", "Loose", eta[i], pt[i]});
             }
         }
         return electron_sf_weight;
@@ -92,35 +85,89 @@ RNode electronScaleFactors_ID(correction::Correction::Ref cset_electron_2016preV
     return df.Define("electron_scale_factors_ID", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
 }
 
-RNode electronScaleFactors_ttH(correction::Correction::Ref cset_electron_2016preVFP, correction::Correction::Ref cset_electron_2016postVFP, correction::Correction::Ref cset_electron_2017, correction::Correction::Ref cset_electron_2018, RNode df, std::string sf_type){
-    auto eval_correction = [cset_electron_2016preVFP, cset_electron_2016postVFP, cset_electron_2017, cset_electron_2018] (std::string year, const RVec<float> eta, const RVec<float> pt) {
+RNode electronScaleFactors_ttH(correction::Correction::Ref cset_electron_tth, RNode df, std::string sf_type){
+    auto eval_correction = [cset_electron_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         double electron_sf_weight = 1.;
         if (eta.size() == 0) {
             return electron_sf_weight;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            if (year == "2016preVFP") {
-                electron_sf_weight *= cset_electron_2016preVFP->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2016postVFP") {
-                electron_sf_weight *= cset_electron_2016postVFP->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2017") {
-                electron_sf_weight *= cset_electron_2017->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
-            if (year == "2018") {
-                electron_sf_weight *= cset_electron_2018->evaluate({"ttHSF", abs(eta[i]), pt[i]});
-            }
+            electron_sf_weight *= cset_electron_tth->evaluate({year, abs(eta[i]), pt[i]});
         }
         return electron_sf_weight;
     };
     return df.Define(sf_type, eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
 }
 
+RNode electronScaleFactors_Trigger(correction::Correction::Ref cset_electron_trigger, RNode df) {
+    auto eval_correction = [cset_electron_trigger] (std::string year, const RVec<float> eta, const RVec<float> pt) {
+        double electron_sf_weight = 1.;
+        if (eta.size() == 0) {
+            return electron_sf_weight;
+        }
+        for (size_t i = 0; i < eta.size(); i++) {
+            electron_sf_weight *= cset_electron_trigger->evaluate({year, eta[i], pt[i]});
+        }
+        return electron_sf_weight;
+    };
+    return df.Define("electron_scale_factors_trigger", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
+}
+
+RNode PNET_W_Corrections(correction::Correction::Ref cset_pnet_w, RNode df) {
+    auto eval_correction = [cset_pnet_w] (std::string year, float pt) {
+        double pnet_w = 1.;
+        pnet_w *= cset_pnet_w->evaluate({pt, year, "nominal"});
+        return pnet_w;
+    };
+    return df.Define("particlenet_w_weight", eval_correction, {"sample_year", "GW_pt"});
+}
+
+RNode PNET_H_Corrections(correction::Correction::Ref cset_pnet_h, RNode df) {
+    auto eval_correction = [cset_pnet_h] (std::string year, float pt) {
+        double pnet_h = 1.;
+        pnet_h *= cset_pnet_h->evaluate({pt, year, "nominal"});
+        return pnet_h;
+    };
+    return df.Define("particlenet_h_weight", eval_correction, {"sample_year", "GHiggs_pt"});
+}
+
+RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df) { 
+    auto eval_correction = [cset_jet_mass_scale] (std::string year, float mass) {
+        double scaleVal = 1. + 0.05 * cset_jet_mass_scale->evaluate({year, "nominal"});
+        // https://docs.google.com/presentation/d/1C7CqO3Wv3-lYd7vw4IQXq69wmULesTsSniFXXM__ReU
+        return mass * scaleVal;
+    };
+    return df.Define("JMS_SF_H", eval_correction, {"sample_year", "GHiggs_mass"})
+             .Define("JMS_SF_W", eval_correction, {"sample_year", "GW_mass"})
+             .Redefine("Hbbmass", "JMS_SF_H")
+             .Redefine("Wjetmass", "JMS_SF_W");
+}
+
+RNode JMR_Corrections(correction::Correction::Ref cset_jet_mass_resolution, RNode df) {
+    auto eval_correction = [cset_jet_mass_resolution] (std::string year, float mass, unsigned int lumi, unsigned long long event) {
+        TRandom3 rnd((lumi << 10) + event);
+        return rnd.Gaus(1, 0.1 * cset_jet_mass_resolution->evaluate({year, "nominal"})) * mass;
+    };
+    return df.Define("JMR_SF_H", eval_correction, {"sample_year", "GHiggs_mass", "luminosityBlock", "event"})
+             .Define("JMR_SF_W", eval_correction, {"sample_year", "GW_mass", "luminosityBlock", "event"})
+             .Redefine("Hbbmass", "JMR_SF_H")
+             .Redefine("Wjetmass", "JMR_SF_W");
+}
+
 RNode METphicorrection(RNode df){
     return df.Define("CorrMET", METXYCorr_Met_MetPhi, {"MET_pt", "MET_phi", "run", "sample_year", "sample_category", "Pileup_nTrueInt"})
              .Define("CorrMET_pt", "CorrMET.first")
              .Define("CorrMET_phi", "CorrMET.second");
+}
+
+RNode AddHEMCorrection(RNode df) {
+    return df.Define("HEMweight", HEMCorrections, {"run", "event", "sample_year", "sample_category", "HEMJet_pt", "HEMJet_eta", "HEMJet_phi"});
+}
+
+RNode finalDataWeight(RNode df){
+    return df.Define("weight", 
+            "goldenJSON * "
+            "HEMweight");
 }
 
 RNode finalMCWeight(RNode df){
@@ -133,10 +180,15 @@ RNode finalMCWeight(RNode df){
             "electron_scale_factors_ID * "
             "electron_scale_factors_ttHID * "
             "electron_scale_factors_ttHISO * "
+            "electron_scale_factors_trigger * "
+            "HEMweight * "
+            "particlenet_w_weight * "
+            "particlenet_h_weight * "
             "xsec_weight * "
             "genWeight");
 }
 
+// WEIGHT FUNCTION DEFINITIONS
 std::pair<double,double> METXYCorr_Met_MetPhi(float uncormet, float uncormet_phi, unsigned int runnb, std::string year_, std::string sample_category_, float npv){
 
   TString year(year_);
@@ -408,6 +460,18 @@ std::pair<double,double> METXYCorr_Met_MetPhi(float uncormet, float uncormet_phi
 
 }
 
-// ParticleNet Xbb scale factors
-// ParticleNet W MD scale factors 
-// ParticleNet mass JMS/JMR
+int HEMCorrections(unsigned int run, unsigned long long event, std::string sample_year, std::string sample_category, RVec<float> pt, RVec<float> eta, RVec<float> phi) {
+    bool isData = false;
+    if (sample_category == "data") isData = true;
+    if (sample_year == "2018" && ((isData && run >= 319077) || (!isData && event % 1961 < 1286))) {
+        for (size_t i = 0; i < pt.size(); i++) {
+            if (eta[i] > -3.2 && eta[i] < -1.3 && phi[i] > -1.57 && phi[i] < -0.87) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+// PUID
+// JEC

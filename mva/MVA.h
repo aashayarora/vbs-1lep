@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TMVA_H
-#define TMVA_H
+#ifndef MVA_H
+#define MVA_H
 
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RDFHelpers.hxx"
@@ -15,4 +15,4 @@
 
 using namespace TMVA::Experimental;
 
-#endif // TMVA_H
+#endif // MVA_H

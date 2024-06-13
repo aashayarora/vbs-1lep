@@ -1,4 +1,4 @@
-#include "TMVA.h"
+#include "MVA.h"
 
 int main(int argc, char** argv){
     std::string input_file = std::string(argv[1]);

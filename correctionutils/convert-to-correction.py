@@ -4,30 +4,31 @@ import correctionlib.schemav2 as cs
 import correctionlib.convert
 
 # %%
-def json_from_root(path, outname):
-    with uproot.open(path) as h:
-        hist = h.to_hist()
+def write_correction(paths, corrname, outname):
+    hists = []
+    for path in paths:
+        with uproot.open(path) as h:
+            hists.append(h.to_hist())
 
-    hist.name = outname
-    hist.label= "ttH Scale Factors"
-    tth = correctionlib.convert.from_histogram(hist)
-    tth.description = "ttH Scale Factors"
-    tth.data.flow = "clamp"
+    tth = [correctionlib.convert.from_histogram(hist) for hist in hists]
+    
+    for corr_ in tth:
+        corr_.data.flow = "clamp"
 
     corr = cs.Correction(
         name=outname,
-        description="ttH Scale Factors",
+        description=corrname,
         version=1,
         inputs=[
             cs.Variable(
-                name="sf",
+                name="year",
                 type="string",
-                description="sf",
+                description="year",
             ),
             cs.Variable(
                 name="xaxis",
                 type="real",
-                description="abseta",
+                description="eta",
             ),
             cs.Variable(
                 name="yaxis",
@@ -35,26 +36,22 @@ def json_from_root(path, outname):
                 description="pt",
             ),
         ],
-        output=cs.Variable(
-            name="weight",
-            type="real",
-            description="weight",
-        ),
+        output=cs.Variable(name="weight", type="real", description="weight"),
         data=cs.Category(
             nodetype="category",
-            input="sf",
+            input="year",
             content=[
-                cs.CategoryItem(
-                    key="ttHSF",
-                    value=tth.data,
-                ),
+                cs.CategoryItem(key="2016preVFP", value=tth[0].data),
+                cs.CategoryItem(key="2016postVFP", value=tth[1].data),
+                cs.CategoryItem(key="2017", value=tth[2].data),
+                cs.CategoryItem(key="2018", value=tth[3].data),
             ],
         )
     )
 
     cset2 = cs.CorrectionSet(
         schema_version=2,
-        description="ttH Scale Factors",
+        description=corrname,
         corrections=[
             corr,
         ],
@@ -66,33 +63,20 @@ def json_from_root(path, outname):
 # %%
 if __name__ == "__main__":
     # muon
-    json_from_root("junk/root_sf/muon/egammaEffi2016APV_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_MuonID_SF")
-    json_from_root("junk/root_sf/muon/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_MuonISO_SF")
+    # corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_EGM2D.root:EGamma_SF2D"]
+    # write_correction(corr_hists, "ttH SFs", "ttH_MuonID_SF")
 
-    json_from_root("junk/root_sf/muon/egammaEffi2016_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_MuonID_SF")
-    json_from_root("junk/root_sf/muon/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_MuonISO_SF")
+    # corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
+    # write_correction(corr_hists, "ttH SFs", "ttH_MuonISO_SF")
 
-    json_from_root("junk/root_sf/muon/egammaEffi2017_EGM2D.root:EGamma_SF2D", "2017_ttH_MuonID_SF")
-    json_from_root("junk/root_sf/muon/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "2017_ttH_MuonISO_SF")
+    # # electron
+    # corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_2lss_EGM2D.root:EGamma_SF2D"]
+    # write_correction(corr_hists, "ttH SFs", "ttH_ElectronID_SF")
 
-    json_from_root("junk/root_sf/muon/egammaEffi2018_EGM2D.root:EGamma_SF2D", "2018_ttH_MuonID_SF")
-    json_from_root("junk/root_sf/muon/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D", "2018_ttH_MuonISO_SF")
+    # corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
+    # write_correction(corr_hists, "ttH SFs", "ttH_ElectronISO_SF")
 
-    # electron
-    json_from_root("junk/root_sf/elec/egammaEffi2016APV_2lss_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_ElectronID_SF")
-    json_from_root("junk/root_sf/elec/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "2016preVFP_ttH_ElectronISO_SF")
+    corr_hists = ["../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2017.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2018.root:EGamma_SF2D"]
+    write_correction(corr_hists, "Electron Trigger SFs", "trigger")
 
-    json_from_root("junk/root_sf/elec/egammaEffi2016_2lss_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_ElectronID_SF")
-    json_from_root("junk/root_sf/elec/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "2016postVFP_ttH_ElectronISO_SF")
-
-    json_from_root("junk/root_sf/elec/egammaEffi2017_2lss_EGM2D.root:EGamma_SF2D", "2017_ttH_ElectronID_SF")
-    json_from_root("junk/root_sf/elec/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "2017_ttH_ElectronISO_SF")
-
-    json_from_root("junk/root_sf/elec/egammaEffi2018_2lss_EGM2D.root:EGamma_SF2D", "2018_ttH_ElectronID_SF")
-    json_from_root("junk/root_sf/elec/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D", "2018_ttH_ElectronISO_SF")
-# %%
-import correctionlib
-
-ceval = correctionlib.CorrectionSet.from_file("2016preVFP_ttH_MuonID_SF.json")
-ceval["2016preVFP_ttH_MuonID_SF"].evaluate("2016preVFP_ttH_MuonID_SF", 0.9, 20.0)
 # %%
