@@ -1,0 +1,228 @@
+{
+    "samples": {
+        "VBSWWH_OSWW_MJJ-100_4f_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODAPVv9/VBSWWH_OSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_preVFP_v11-v2/281000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0002190144
+            }
+        },
+        "VBSWWH_SSWW_MJJ-100_4f_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODAPVv9/VBSWWH_SSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_preVFP_v11-v3/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001184474
+            }
+        },
+        "VBSWZH_MJJ-100_4f_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODAPVv9/VBSWZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_preVFP_v11-v2/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001273485
+            }
+        },
+        "VBSZZH_MJJ-100_4f_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODAPVv9/VBSZZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_preVFP_v11-v2/282000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 8.82407e-05
+            }
+        },
+        "VBSWWH_OSWW_MJJ-100_4f_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODv9/VBSWWH_OSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v2/255000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001886082
+            }
+        },
+        "VBSWWH_SSWW_MJJ-100_4f_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODv9/VBSWWH_SSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v2/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001023823
+            }
+        },
+        "VBSWZH_MJJ-100_4f_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODv9/VBSWZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v2/255000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001100731
+            }
+        },
+        "VBSZZH_MJJ-100_4f_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL16NanoAODv9/VBSZZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_v17-v2/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "sig_mc",
+                "xsec_weight": 7.77209e-05
+            }
+        },
+        "VBSWWH_OSWW_MJJ-100_4f_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL17NanoAODv9/VBSWWH_OSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v2/5000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0002334446
+            }
+        },
+        "VBSWWH_SSWW_MJJ-100_4f_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL17NanoAODv9/VBSWWH_SSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v2/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.000125999
+            }
+        },
+        "VBSWZH_MJJ-100_4f_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL17NanoAODv9/VBSWZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v2/3000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001357391
+            }
+        },
+        "VBSZZH_MJJ-100_4f_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL17NanoAODv9/VBSZZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v2/282000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "sig_mc",
+                "xsec_weight": 9.46592e-05
+            }
+        },
+        "VBSWWH_OSWW_MJJ-100_4f_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL18NanoAODv9/VBSWWH_OSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v2/4000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0002300254
+            }
+        },
+        "VBSWWH_SSWW_MJJ-100_4f_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL18NanoAODv9/VBSWWH_SSWW_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v3/255000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001240615
+            }
+        },
+        "VBSWZH_MJJ-100_4f_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL18NanoAODv9/VBSWZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v2/5000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "sig_mc",
+                "xsec_weight": 0.0001333845
+            }
+        },
+        "VBSZZH_MJJ-100_4f_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/RunIISummer20UL18NanoAODv9/VBSZZH_MJJ-100_4f_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v2/254000/skimmed/output_merged2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "sig_mc",
+                "xsec_weight": 9.3494e-05
+            }
+        }
+    }
+}

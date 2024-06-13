@@ -1,8 +1,15 @@
 #include "MVA.h"
+#include "argparser.hpp"
+
+struct MyArgs : public argparse::Args {
+    std::string &input = kwarg("i,input", "input path");
+    std::string &output = kwarg("o,output", "output path");
+};
 
 int main(int argc, char** argv){
-    std::string input_file = std::string(argv[1]);
-    std::string output_file = std::string(argv[2]);
+    auto args = argparse::parse<MyArgs>(argc, argv);
+    std::string input_file = args.input;
+    std::string output_file = args.output;
 
     RReader reader_AB("weights/BDT/BDT_AB/TMVAClassification_BDT.weights.xml");
     RReader reader_BA("weights/BDT/BDT_BA/TMVAClassification_BDT.weights.xml");
