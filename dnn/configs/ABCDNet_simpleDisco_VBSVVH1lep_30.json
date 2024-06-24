@@ -48,9 +48,9 @@
     },
     "infer": {
         "extra_files": [
-            "/data/userdata/aaarora/output/run2/sig_bdt.root",
-            "/data/userdata/aaarora/output/run2/data_bdt.root",
-            "/data/userdata/aaarora/output/run2/bkg_bdt.root"
+            "/data/userdata/aaarora/output/run2/sig_MVA.root",
+            "/data/userdata/aaarora/output/run2/data_MVA.root",
+            "/data/userdata/aaarora/output/run2/bkg_MVA.root"
         ]
     }
 }

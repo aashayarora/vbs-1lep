@@ -27,6 +27,12 @@ const auto cset_pileup_2016postVFP = CorrectionSet::from_file("corrections/pileu
 const auto cset_pileup_2017 = CorrectionSet::from_file("corrections/pileup/2017_puWeights.json")->at("Collisions17_UltraLegacy_goldenJSON");
 const auto cset_pileup_2018 = CorrectionSet::from_file("corrections/pileup/2018_puWeights.json")->at("Collisions18_UltraLegacy_goldenJSON");
 
+RNode pileupIDCorrection(correction::Correction::Ref cset_pileup_2016preVFP, correction::Correction::Ref cset_pileup_2016postVFP, correction::Correction::Ref cset_pileup_2017, correction::Correction::Ref cset_pileup_2018, RNode df);
+const auto cset_pileupID_2016preVFP = CorrectionSet::from_file("corrections/pileup/2016preVFP_puID.json")->at("PUJetID_eff");
+const auto cset_pileupID_2016postVFP = CorrectionSet::from_file("corrections/pileup/2016postVFP_puID.json")->at("PUJetID_eff");
+const auto cset_pileupID_2017 = CorrectionSet::from_file("corrections/pileup/2017_puID.json")->at("PUJetID_eff");
+const auto cset_pileupID_2018 = CorrectionSet::from_file("corrections/pileup/2018_puID.json")->at("PUJetID_eff");
+
 // muon sfs
 RNode muonScaleFactors_ID(correction::Correction::Ref cset_muon_2016preVFP, correction::Correction::Ref cset_muon_2016postVFP, correction::Correction::Ref cset_muon_2017, correction::Correction::Ref cset_muon_2018, RNode df);
 RNode muonScaleFactors_ttH(correction::Correction::Ref cset_muon_tth, RNode df, std::string sf_type);
@@ -61,12 +67,11 @@ const auto cset_pnet_h = CorrectionSet::from_file("corrections/scalefactors/part
 // jet mass scale and resolution corrections
 RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df);
 RNode JMR_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df); 
-const auto cset_jmr = CorrectionSet::from_file("corrections/scalefactors/jmar/jmar.json")->at("JMR");
-const auto cset_jms = CorrectionSet::from_file("corrections/scalefactors/jmar/jmar.json")->at("JMS");
+const auto cset_jmr = CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json")->at("JMR");
+const auto cset_jms = CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json")->at("JMS");
 
 // other corrections
 RNode METphicorrection(RNode df);
-std::pair<double,double> METXYCorr_Met_MetPhi(float uncormet, float uncormet_phi, unsigned int runnb, std::string year_, std::string sample_category_, float npv);
 
 RNode AddHEMCorrection(RNode df);
 int HEMCorrections(unsigned int run, unsigned long long event, std::string sample_year, std::string sample_category, RVec<float> pt, RVec<float> eta, RVec<float> phi);
@@ -75,19 +80,4 @@ int HEMCorrections(unsigned int run, unsigned long long event, std::string sampl
 RNode finalDataWeight(RNode df);
 RNode finalMCWeight(RNode df);
 
-enum TheRunEra{
-  y2016B,y2016C,y2016D,y2016E,y2016F,y2016G,y2016H,
-  y2017B,y2017C,y2017D,y2017E,y2017F,
-  y2018A,y2018B,y2018C,y2018D,
-  y2016MC,
-  y2017MC,
-  y2018MC,
-  yUL2016B,yUL2016C,yUL2016D,yUL2016E,yUL2016F,yUL2016Flate,yUL2016G,yUL2016H,
-  yUL2017B,yUL2017C,yUL2017D,yUL2017E,yUL2017F,
-  yUL2018A,yUL2018B,yUL2018C,yUL2018D,
-  yUL2016MCAPV,
-  yUL2016MCnonAPV,
-  yUL2017MC,
-  yUL2018MC
-};
 #endif

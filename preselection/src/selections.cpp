@@ -1,7 +1,7 @@
 #include "selections.h"
 
 RNode flagSelections(RNode df) {
-    auto df_flags = df.Filter("Flag_goodVertices && "
+    auto df_flags = df.Define("passesFlags", "Flag_goodVertices && "
                 "(!isData || Flag_globalSuperTightHalo2016Filter) && "
                 "Flag_HBHENoiseFilter && "
                 "Flag_HBHENoiseIsoFilter && "
@@ -9,21 +9,19 @@ RNode flagSelections(RNode df) {
                 "Flag_BadPFMuonFilter &&"
                 "Flag_BadPFMuonDzFilter && "
                 "Flag_eeBadScFilter && "
-                "(!(is2017 || is2018) || Flag_ecalBadCalibFilter)", 
-                "PASSED FLAGS");
+                "(!(is2017 || is2018) || Flag_ecalBadCalibFilter)");
     return df_flags;
 }
 
 RNode triggerSelections(RNode df) {
-    auto df_triggers = df.Filter("((!isData) && "
+    auto df_triggers = df.Define("passesTriggers", "((!isData) && "
                 "((is2018 && (HLT_Ele32_WPTight_Gsf == true || HLT_IsoMu24 == true)) || "
                 "(is2017 && (HLT_Ele32_WPTight_Gsf_L1DoubleEG == true || HLT_IsoMu27 == true)) || "
                 "(is2016 && (HLT_Ele27_eta2p1_WPTight_Gsf == true || HLT_IsoMu24 == true || HLT_IsoTkMu24 == true)))) || "
                 "(isData && "
                 "((is2018 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && HLT_IsoMu24 == true))) || "
                 "(is2017 && ((sample_type == \"SingleElectron\" && HLT_Ele32_WPTight_Gsf_L1DoubleEG == true) || (sample_type == \"SingleMuon\" && HLT_IsoMu27 == true))) || "
-                "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 == true || HLT_IsoTkMu24 == true))))))",
-                "PASSED TRIGGERS");
+                "(is2016 && ((sample_type == \"SingleElectron\" && HLT_Ele27_eta2p1_WPTight_Gsf == true) || (sample_type == \"SingleMuon\" && (HLT_IsoMu24 == true || HLT_IsoTkMu24 == true))))))");
     return df_triggers;
 }
 
@@ -90,10 +88,7 @@ RNode leptonSelections(RNode df) {
     auto df_leps = df_mu.Define("GLepton_pt", "isElectron ? GElectron_pt[0] : GMuon_pt[0]")
             .Define("GLepton_eta", "isElectron ? GElectron_eta[0] : GMuon_eta[0]")
             .Define("GLepton_phi", "isElectron ? GElectron_phi[0] : GMuon_phi[0]")
-            .Define("GLepton_mass", "isElectron ? GElectron_mass[0] : GMuon_mass[0]")
-            .Filter("((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
-            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
-            "(GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40");
+            .Define("GLepton_mass", "isElectron ? GElectron_mass[0] : GMuon_mass[0]");
     return df_leps;
 }
 
@@ -109,7 +104,6 @@ RNode higgsSelections(RNode df) {
                 "FatJet_jetId > 0")
             .Define("HighestHScoreIdx", "HScore.size() != 0 ? ArgMax(HScore[HCandidateJets]) : 999.0")
             .Define("HighestHScore", "HighestHScoreIdx != 999.0 ? HScore[HCandidateJets][HighestHScoreIdx] : -1.0")
-            .Filter("HighestHScore > 0", "HIGGS CANDIDATE EXISTS")
             .Define("GHiggs_pt", "FatJet_pt[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_eta", "FatJet_eta[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_phi", "FatJet_phi[HCandidateJets][HighestHScoreIdx]")
@@ -134,11 +128,11 @@ RNode WZSelections(RNode df) {
             .Define("ZScore", "FatJet_particleNetMD_Xbb / (FatJet_particleNetMD_Xbb + FatJet_particleNetMD_QCD)")
             .Define("HighestZjetScoreIdx", "ZScore.size() != 0 ? ArgMax(ZScore[WZCandidateJets]) : -1")
             .Define("HighestZjetScore", "HighestZjetScoreIdx != -1 ? ZScore[WZCandidateJets][HighestZjetScoreIdx] : -1")
-            .Filter("HighestWjetScore > 0", "W CANDIDATE EXISTS")
             .Define("GW_pt", "FatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("GW_mass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]");
+            .Define("GW_mass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
+            .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + MET_pt");
     return df_wz;
 }
 
@@ -162,14 +156,15 @@ RNode AK4Selections(RNode df) {
             .Define("HEMJet_eta", "Jet_eta[HEMJets]")
             .Define("HEMJet_phi", "Jet_phi[HEMJets]")
             .Define("ak4FromBJet", "goodJets && Jet_btagDeepFlavB > ak4tightBjetScore")
-            .Filter("Sum(ak4FromBJet) == 0", "NO TIGHT B-TAGGED AK4 JETS")
             .Define("goodLooseBJets", "goodJets && Jet_btagDeepFlavB > ak4looseBjetScore")
             .Define("sortedBJets", "Argsort(-Jet_pt[goodLooseBJets])")
             .Define("GExtraBJet_pt", "Take(Jet_pt[goodLooseBJets], sortedBJets)")
             .Define("GExtraBJet_eta", "Take(Jet_eta[goodLooseBJets], sortedBJets)")
             .Define("GExtraBJet_phi", "Take(Jet_phi[goodLooseBJets], sortedBJets)")
             .Define("GExtraBJet_mass", "Take(Jet_mass[goodLooseBJets], sortedBJets)")
-            .Define("Mlb", VfInvariantMass, {"GExtraBJet_pt", "GExtraBJet_eta", "GExtraBJet_phi", "GExtraBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"});
+            .Define("Mlb", VfInvariantMass, {"GExtraBJet_pt", "GExtraBJet_eta", "GExtraBJet_phi", "GExtraBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
+            .Define("MinMlbJetIdx", "Mlb.size() != 0 ? ArgMin(Mlb) : -1")
+            .Define("Mlbminloose", "Mlb.size() != 0 ? Mlb[MinMlbJetIdx] : 1000");
     return df_ak4;
 }
 
@@ -181,7 +176,6 @@ RNode VBSJetsSelections(RNode df) {
                 "AK4WDeltaR >= 0.8 && "
                 "((is2016 && Jet_jetId >= 1) || (!is2016 && Jet_jetId >= 2)) && "
                 "(Jet_pt >= 50 || (Jet_pt < 50 && Jet_puId != 0))")
-            .Filter("Sum(goodVBSJets) >= 2", "AT LEAST TWO VBS JETS")
             .Define("VBSJets_pt", "Jet_pt[goodVBSJets]")
             .Define("VBSJets_eta", "Jet_eta[goodVBSJets]")
             .Define("VBSJets_phi", "Jet_phi[goodVBSJets]")
@@ -198,19 +192,30 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSptjj", "VBSjet1pt + VBSjet2pt")
             .Define("VBSdetajj", "abs(VBSjet1eta - VBSjet2eta)")
             .Define("VBSMjj", fInvariantMass, {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet1mass", "VBSjet2pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2mass"});
+            // .Define("VBSbtagAK4DeltaR1", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet1eta", "VBSjet1phi"})
+            // .Define("VBSbtagAK4DeltaR2", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet2eta", "VBSjet2phi"})
+            // Maybe remove the minMlb b jet from the VBS jet selections
     return df_vbs;
 }
 
 RNode finalSelections(RNode df) {
-    auto df_st = df.Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + MET_pt")
+    auto df_st = df.Filter("passesFlags", "PASSED FLAGS")
+            .Filter("passesTriggers", "PASSED TRIGGERS")
+            .Filter("((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
+            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
+            "(GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40")
+            .Filter("HighestHScore > 0", "HIGGS CANDIDATE EXISTS")
+            .Filter("HighestWjetScore > 0", "W CANDIDATE EXISTS")
+            .Filter("Sum(ak4FromBJet) == 0", "NO TIGHT B-TAGGED AK4 JETS")
+            .Filter("Sum(goodVBSJets) >= 2", "AT LEAST TWO VBS JETS")
+            // .Filter("All(VBSbtagAK4DeltaR1 > 0.4) && All(VBSbtagAK4DeltaR2 > 0.4)")
+            .Filter("ST > 1000", "ST > 1000")
             .Define("Hbbmass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
             .Define("Hbbscore", "HighestHScore")
             .Define("HbbPt", "FatJet_pt[HCandidateJets][HighestHScoreIdx]")
             .Define("Wjetmass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("WjetPt", "FatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("leptonpt", "GLepton_pt")
-            .Define("MET", "MET_pt")
-            .Define("Mlbminloose", "Mlb.size() != 0 ? Min(Mlb) : 1000")
-            .Filter("ST > 1000", "ST > 1000");
+            .Define("MET", "MET_pt");
     return df_st;
 }
