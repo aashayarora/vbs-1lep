@@ -48,6 +48,7 @@
     },
     "infer": {
         "extra_files": [
+            "/data/userdata/aaarora/output/run2/sig_like_bkg_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_MVA.root",
             "/data/userdata/aaarora/output/run2/data_MVA.root",
             "/data/userdata/aaarora/output/run2/bkg_MVA.root"

@@ -4,6 +4,7 @@
 
 #include "weights.h"
 #include "selections.h"
+#include "corrections.h"
 #include "utils.h"
 
 #include "argparser.hpp"
@@ -13,60 +14,90 @@ struct MyArgs : public argparse::Args {
     bool &isData = flag("data", "is data");
     bool &isBkg = flag("bkg", "is bkg");
     bool &isSig = flag("sig", "is sig");
+    bool &METUnclustered = flag("met", "MET unclustered");
+    bool &JEC = flag("jec", "JEC");
+    bool &JMS = flag("jms", "JMS");
+    bool &JMR = flag("jmr", "JMR");
+    std::string &output = kwarg("o,output", "output root file").set_default("");
+    std::string &variation = kwarg("var", "variation").set_default("nominal");
+    std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
+    std::string &JEC_type = kwarg("jec_type", "JEC type").set_default("");
 };
 
 int main(int argc, char** argv) {
     auto args = argparse::parse<MyArgs>(argc, argv);
     std::string input_spec = args.spec;
+    std::string output_file = args.output;
+
+    if (output_file.empty()) {
+        if (args.isData) {
+            output_file = "data.root";
+        }
+        else if (args.isBkg) {
+            output_file = "bkg.root";
+        }
+        else if (args.isSig) {
+            output_file = "sig.root";
+        }
+    }
 
     ROOT::EnableImplicitMT(64);
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
     
+    // define metadata
     auto df = defineMetadata(df_);
-    // selections
-    auto df1 = flagSelections(df);
-    auto df2 = triggerSelections(df1);
-    auto df3 = leptonSelections(df2);
-    auto df4 = higgsSelections(df3);
-    auto df5 = WZSelections(df4);
-    auto df6 = AK4Selections(df5);
-    auto df7 = VBSJetsSelections(df6);
-    auto df8 = AddHEMCorrection(df7);
-    auto df9 = finalSelections(df8);
+    // corrections
+    auto df0 = defineCorrectedCols(df);
+    auto df1 = HEMCorrection(df0);
+    auto df2 = JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df1, args.JERvariation);
 
+    auto applypreCorrections = [] (RNode df, MyArgs args) {
+        if (args.METUnclustered) {
+            return METUnclusteredCorrections(df, args.variation);
+        }
+        else if (args.JEC) {
+            return JetEnergyCorrection(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, df, args.JEC_type, args.variation);
+        }
+        else {
+            return df;
+        }
+    };
+
+    auto df_correction = applypreCorrections(df2, args);
+
+    // selections
+    auto df_selected = finalSelections(df_correction);
+
+    auto applypostCorrections = [](RNode df, MyArgs args) {
+        if (args.JMS) {
+            return JMS_Corrections(cset_jms, df, args.variation);
+        }
+        else if (args.JMR) {
+            return JMR_Corrections(cset_jmr, df, args.variation);
+        }
+        else {
+            return df;
+        }
+    };
+
+    auto df_final = applypostCorrections(df_selected, args);
+
+    //scale factors
     if (args.isData) {
-        auto df_golden = goodRun(LumiMask, df9);
-        auto df_data_final = finalDataWeight(df_golden);
-        saveSnapshot(df_data_final, "data.root");
+        auto df_data_final = finalDataWeight(df_final);
+        saveSnapshot(df_data_final, output_file);
     }
     else {
-        // pileup
-        auto df_pileup = pileupCorrection(cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018, df9);
-        auto df_pileupID = pileupIDCorrection(cset_pileupID_2016preVFP, cset_pileupID_2016postVFP, cset_pileupID_2017, cset_pileupID_2018, df_pileup);
-        // muon sf
-        auto df_muon_ID = muonScaleFactors_ID(cset_muon_ID_2016preVFP, cset_muon_ID_2016postVFP, cset_muon_ID_2017, cset_muon_ID_2018, df_pileupID);
-        auto df_muon_ttHID = muonScaleFactors_ttH(cset_muon_ttHID, df_muon_ID, "muon_scale_factors_ttHID");
-        auto df_muon_ttHISO = muonScaleFactors_ttH(cset_muon_ttHISO, df_muon_ttHID, "muon_scale_factors_ttHISO");
-        // elec sf
-        auto df_elec_ID = electronScaleFactors_ID(cset_electron_ID_2016preVFP, cset_electron_ID_2016postVFP, cset_electron_ID_2017, cset_electron_ID_2018, df_muon_ttHISO);
-        auto df_elec_ttHID = electronScaleFactors_ttH(cset_electron_ttHID, df_elec_ID, "electron_scale_factors_ttHID");
-        auto df_elec_ttHISO = electronScaleFactors_ttH(cset_electron_ttHISO, df_elec_ttHID, "electron_scale_factors_ttHISO");
-        auto df_elec_trigger = electronScaleFactors_Trigger(cset_electron_trigger, df_elec_ttHISO);
-        // particle net
-        auto df_pnet_w = PNET_W_Corrections(cset_pnet_w, df_elec_trigger);
-        auto df_pnet_h = PNET_H_Corrections(cset_pnet_h, df_pnet_w);
-        auto df_jmr = JMR_Corrections(cset_jmr, df_pnet_h);
-        auto df_jms = JMS_Corrections(cset_jms, df_jmr);
-        auto df_mc_final = finalMCWeight(df_jms); // remember to add weights to finalMCWeight everytime.
-
+        auto df_mc_final = finalMCWeight(df_final);
         if (args.isBkg) {
-            saveSnapshot(df_mc_final, "bkg.root");
+            saveSnapshot(df_mc_final, output_file);
         }
         else if (args.isSig) {
-            saveSnapshot(df_mc_final, "sig.root");
+            saveSnapshot(df_mc_final, output_file);
         }
     }
 
     return 0;
 }
+
