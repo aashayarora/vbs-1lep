@@ -4,6 +4,7 @@
 #include "TFile.h"
 
 #include <vector>
+#include <iostream>
 
 using RNode = ROOT::RDF::RNode;
 using ROOT::VecOps::RVec;
@@ -90,8 +91,6 @@ int main(int arc, char** argv){
                 .Define("notagljet_pt", "Jet_pt[notagLJets]")
                 .Define("notagljet_eta", "Jet_eta[notagLJets]");
 
-    TFile* f = new TFile("hist_beff.root", "RECREATE");
-
     double pt_bins[11] = {15, 20, 30, 50, 70, 100, 140, 200, 300, 600, 1000};
     double eta_bins[5] = {-2.5, -0.9, 0, 0.9, 2.5};
 
@@ -107,19 +106,74 @@ int main(int arc, char** argv){
     auto hist_lloose_2016preVFP = df1.Filter("sample_year == \"2016preVFP\"").Histo2D({"hist_lloose_2016preVFP", "hist_lloose_2016preVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
     auto hist_lnotag_2016preVFP = df1.Filter("sample_year == \"2016preVFP\"").Histo2D({"hist_lnotag_2016preVFP", "hist_lnotag_2016preVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
 
-    auto hist_total_2016preVFP = df1.Filter("sample_year == \"2016preVFP\"").Histo2D({"hist_total_2016preVFP", "hist_total_2016preVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "Jet_pt", "Jet_eta").GetValue();
+    auto hist_btight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_btight_2016postVFP", "hist_btight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
+    auto hist_bloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_bloose_2016postVFP", "hist_bloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
+    auto hist_bnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_bnotag_2016postVFP", "hist_bnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
 
-    hist_btight_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_bloose_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_bnotag_2016preVFP->Divide(&hist_total_2016preVFP);
+    auto hist_ctight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_ctight_2016postVFP", "hist_ctight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
+    auto hist_cloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_cloose_2016postVFP", "hist_cloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
+    auto hist_cnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_cnotag_2016postVFP", "hist_cnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
 
-    hist_ctight_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_cloose_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_cnotag_2016preVFP->Divide(&hist_total_2016preVFP);
+    auto hist_ltight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_ltight_2016postVFP", "hist_ltight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
+    auto hist_lloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_lloose_2016postVFP", "hist_lloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
+    auto hist_lnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_lnotag_2016postVFP", "hist_lnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
+    
+    auto hist_btight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_btight_2017", "hist_btight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
+    auto hist_bloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_bloose_2017", "hist_bloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
+    auto hist_bnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_bnotag_2017", "hist_bnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
 
-    hist_ltight_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_lloose_2016preVFP->Divide(&hist_total_2016preVFP);
-    hist_lnotag_2016preVFP->Divide(&hist_total_2016preVFP);
+    auto hist_ctight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_ctight_2017", "hist_ctight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
+    auto hist_cloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_cloose_2017", "hist_cloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
+    auto hist_cnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_cnotag_2017", "hist_cnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
+
+    auto hist_ltight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_ltight_2017", "hist_ltight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
+    auto hist_lloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_lloose_2017", "hist_lloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
+    auto hist_lnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_lnotag_2017", "hist_lnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
+   
+    auto hist_btight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_btight_2018", "hist_btight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
+    auto hist_bloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_bloose_2018", "hist_bloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
+    auto hist_bnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_bnotag_2018", "hist_bnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
+
+    auto hist_ctight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_ctight_2018", "hist_ctight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
+    auto hist_cloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_cloose_2018", "hist_cloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
+    auto hist_cnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_cnotag_2018", "hist_cnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
+
+    auto hist_ltight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_ltight_2018", "hist_ltight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
+    auto hist_lloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_lloose_2018", "hist_lloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
+    auto hist_lnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_lnotag_2018", "hist_lnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
+
+    TFile* f = new TFile("hist_beff.root", "RECREATE");
+
+    std::cout << "Processing 2016preVFP hists..." << std::endl;
+
+    TH2D hist_btotal_2016preVFP;
+    hist_btight_2016preVFP.GetValue().Copy(hist_btotal_2016preVFP);
+    hist_btotal_2016preVFP.Add(&(hist_bloose_2016preVFP.GetValue()));
+    hist_btotal_2016preVFP.Add(&(hist_bnotag_2016preVFP.GetValue()));
+
+    TH2D hist_ctotal_2016preVFP;
+    hist_ctight_2016preVFP.GetValue().Copy(hist_ctotal_2016preVFP);
+    hist_ctotal_2016preVFP.Add(&(hist_cloose_2016preVFP.GetValue()));
+    hist_ctotal_2016preVFP.Add(&(hist_cnotag_2016preVFP.GetValue()));
+
+    TH2D hist_ltotal_2016preVFP;
+    hist_ltight_2016preVFP.GetValue().Copy(hist_ltotal_2016preVFP);
+    hist_ltotal_2016preVFP.Add(&(hist_lloose_2016preVFP.GetValue()));
+    hist_ltotal_2016preVFP.Add(&(hist_lnotag_2016preVFP.GetValue()));
+
+    hist_btight_2016preVFP->Divide(&hist_btotal_2016preVFP);
+    hist_bloose_2016preVFP->Divide(&hist_btotal_2016preVFP);
+    hist_bnotag_2016preVFP->Divide(&hist_btotal_2016preVFP);
+
+    hist_ctight_2016preVFP->Divide(&hist_ctotal_2016preVFP);
+    hist_cloose_2016preVFP->Divide(&hist_ctotal_2016preVFP);
+    hist_cnotag_2016preVFP->Divide(&hist_ctotal_2016preVFP);
+
+    hist_ltight_2016preVFP->Divide(&hist_ltotal_2016preVFP);
+    hist_lloose_2016preVFP->Divide(&hist_ltotal_2016preVFP);
+    hist_lnotag_2016preVFP->Divide(&hist_ltotal_2016preVFP);
+
+    std::cout << "Writing 2016preVFP hists..." << std::endl;
 
     hist_btight_2016preVFP->Write();
     hist_bloose_2016preVFP->Write();
@@ -133,31 +187,39 @@ int main(int arc, char** argv){
     hist_lloose_2016preVFP->Write();
     hist_lnotag_2016preVFP->Write();
 
-    auto hist_btight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_btight_2016postVFP", "hist_btight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
-    auto hist_bloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_bloose_2016postVFP", "hist_bloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
-    auto hist_bnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_bnotag_2016postVFP", "hist_bnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
+    std::cout << "2016preVFP hists written..." << std::endl;
 
-    auto hist_ctight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_ctight_2016postVFP", "hist_ctight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
-    auto hist_cloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_cloose_2016postVFP", "hist_cloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
-    auto hist_cnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_cnotag_2016postVFP", "hist_cnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
+    std::cout << "Processing 2016postVFP hists..." << std::endl;
 
-    auto hist_ltight_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_ltight_2016postVFP", "hist_ltight_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
-    auto hist_lloose_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_lloose_2016postVFP", "hist_lloose_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
-    auto hist_lnotag_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_lnotag_2016postVFP", "hist_lnotag_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
-    
-    auto hist_total_2016postVFP = df1.Filter("sample_year == \"2016postVFP\"").Histo2D({"hist_total_2016postVFP", "hist_total_2016postVFP;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "Jet_pt", "Jet_eta").GetValue();
+   
+    TH2D hist_btotal_2016postVFP;
+    hist_btight_2016postVFP.GetValue().Copy(hist_btotal_2016postVFP);
+    hist_btotal_2016postVFP.Add(&(hist_bloose_2016postVFP.GetValue()));
+    hist_btotal_2016postVFP.Add(&(hist_bnotag_2016postVFP.GetValue()));
 
-    hist_btight_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_bloose_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_bnotag_2016postVFP->Divide(&hist_total_2016postVFP);
+    TH2D hist_ctotal_2016postVFP;
+    hist_ctight_2016postVFP.GetValue().Copy(hist_ctotal_2016postVFP);
+    hist_ctotal_2016postVFP.Add(&(hist_cloose_2016postVFP.GetValue()));
+    hist_ctotal_2016postVFP.Add(&(hist_cnotag_2016postVFP.GetValue()));
 
-    hist_ctight_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_cloose_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_cnotag_2016postVFP->Divide(&hist_total_2016postVFP);
+    TH2D hist_ltotal_2016postVFP;
+    hist_ltight_2016postVFP.GetValue().Copy(hist_ltotal_2016postVFP);
+    hist_ltotal_2016postVFP.Add(&(hist_lloose_2016postVFP.GetValue()));
+    hist_ltotal_2016postVFP.Add(&(hist_lnotag_2016postVFP.GetValue()));
 
-    hist_ltight_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_lloose_2016postVFP->Divide(&hist_total_2016postVFP);
-    hist_lnotag_2016postVFP->Divide(&hist_total_2016postVFP);
+    hist_btight_2016postVFP->Divide(&hist_btotal_2016postVFP);
+    hist_bloose_2016postVFP->Divide(&hist_btotal_2016postVFP);
+    hist_bnotag_2016postVFP->Divide(&hist_btotal_2016postVFP);
+
+    hist_ctight_2016postVFP->Divide(&hist_ctotal_2016postVFP);
+    hist_cloose_2016postVFP->Divide(&hist_ctotal_2016postVFP);
+    hist_cnotag_2016postVFP->Divide(&hist_ctotal_2016postVFP);
+
+    hist_ltight_2016postVFP->Divide(&hist_ltotal_2016postVFP);
+    hist_lloose_2016postVFP->Divide(&hist_ltotal_2016postVFP);
+    hist_lnotag_2016postVFP->Divide(&hist_ltotal_2016postVFP);
+
+    std::cout << "Writing 2016postVFP hists..." << std::endl;
 
     hist_btight_2016postVFP->Write();
     hist_bloose_2016postVFP->Write();
@@ -171,31 +233,39 @@ int main(int arc, char** argv){
     hist_lloose_2016postVFP->Write();
     hist_lnotag_2016postVFP->Write();
 
-    auto hist_btight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_btight_2017", "hist_btight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
-    auto hist_bloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_bloose_2017", "hist_bloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
-    auto hist_bnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_bnotag_2017", "hist_bnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
+    std::cout << "2016postVFP hists written..." << std::endl;
 
-    auto hist_ctight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_ctight_2017", "hist_ctight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
-    auto hist_cloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_cloose_2017", "hist_cloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
-    auto hist_cnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_cnotag_2017", "hist_cnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
+    std::cout << "Processing 2017 hists..." << std::endl;
 
-    auto hist_ltight_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_ltight_2017", "hist_ltight_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
-    auto hist_lloose_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_lloose_2017", "hist_lloose_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
-    auto hist_lnotag_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_lnotag_2017", "hist_lnotag_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
-    
-    auto hist_total_2017 = df1.Filter("sample_year == \"2017\"").Histo2D({"hist_total_2017", "hist_total_2017;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "Jet_pt", "Jet_eta").GetValue();
+   
+    TH2D hist_btotal_2017;
+    hist_btight_2017.GetValue().Copy(hist_btotal_2017);
+    hist_btotal_2017.Add(&(hist_bloose_2017.GetValue()));
+    hist_btotal_2017.Add(&(hist_bnotag_2017.GetValue()));
 
-    hist_btight_2017->Divide(&hist_total_2017);
-    hist_bloose_2017->Divide(&hist_total_2017);
-    hist_bnotag_2017->Divide(&hist_total_2017);
+    TH2D hist_ctotal_2017;
+    hist_ctight_2017.GetValue().Copy(hist_ctotal_2017);
+    hist_ctotal_2017.Add(&(hist_cloose_2017.GetValue()));
+    hist_ctotal_2017.Add(&(hist_cnotag_2017.GetValue()));
 
-    hist_ctight_2017->Divide(&hist_total_2017);
-    hist_cloose_2017->Divide(&hist_total_2017);
-    hist_cnotag_2017->Divide(&hist_total_2017);
+    TH2D hist_ltotal_2017;
+    hist_ltight_2017.GetValue().Copy(hist_ltotal_2017);
+    hist_ltotal_2017.Add(&(hist_lloose_2017.GetValue()));
+    hist_ltotal_2017.Add(&(hist_lnotag_2017.GetValue()));
 
-    hist_ltight_2017->Divide(&hist_total_2017);
-    hist_lloose_2017->Divide(&hist_total_2017);
-    hist_lnotag_2017->Divide(&hist_total_2017);
+    hist_btight_2017->Divide(&hist_btotal_2017);
+    hist_bloose_2017->Divide(&hist_btotal_2017);
+    hist_bnotag_2017->Divide(&hist_btotal_2017);
+
+    hist_ctight_2017->Divide(&hist_ctotal_2017);
+    hist_cloose_2017->Divide(&hist_ctotal_2017);
+    hist_cnotag_2017->Divide(&hist_ctotal_2017);
+
+    hist_ltight_2017->Divide(&hist_ltotal_2017);
+    hist_lloose_2017->Divide(&hist_ltotal_2017);
+    hist_lnotag_2017->Divide(&hist_ltotal_2017);
+
+    std::cout << "Writing 2017 hists..." << std::endl;
 
     hist_btight_2017->Write();
     hist_bloose_2017->Write();
@@ -209,31 +279,39 @@ int main(int arc, char** argv){
     hist_lloose_2017->Write();
     hist_lnotag_2017->Write();
 
-    auto hist_btight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_btight_2018", "hist_btight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightbjet_pt", "tightbjet_eta");    
-    auto hist_bloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_bloose_2018", "hist_bloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosebjet_pt", "loosebjet_eta");
-    auto hist_bnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_bnotag_2018", "hist_bnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagbjet_pt", "notagbjet_eta");
+    std::cout << "2017 hists written..." << std::endl;
 
-    auto hist_ctight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_ctight_2018", "hist_ctight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightcjet_pt", "tightcjet_eta");
-    auto hist_cloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_cloose_2018", "hist_cloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "loosecjet_pt", "loosecjet_eta");
-    auto hist_cnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_cnotag_2018", "hist_cnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagcjet_pt", "notagcjet_eta");
+    std::cout << "Processing 2018 hists..." << std::endl;
 
-    auto hist_ltight_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_ltight_2018", "hist_ltight_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "tightljet_pt", "tightljet_eta");
-    auto hist_lloose_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_lloose_2018", "hist_lloose_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "looseljet_pt", "looseljet_eta");
-    auto hist_lnotag_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_lnotag_2018", "hist_lnotag_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "notagljet_pt", "notagljet_eta");
+    
+    TH2D hist_btotal_2018;
+    hist_btight_2018.GetValue().Copy(hist_btotal_2018);
+    hist_btotal_2018.Add(&(hist_bloose_2018.GetValue()));
+    hist_btotal_2018.Add(&(hist_bnotag_2018.GetValue()));
 
-    auto hist_total_2018 = df1.Filter("sample_year == \"2018\"").Histo2D({"hist_total_2018", "hist_total_2018;jet_pt;jet_eta", 10, pt_bins, 4, eta_bins}, "Jet_pt", "Jet_eta").GetValue();
+    TH2D hist_ctotal_2018;
+    hist_ctight_2018.GetValue().Copy(hist_ctotal_2018);
+    hist_ctotal_2018.Add(&(hist_cloose_2018.GetValue()));
+    hist_ctotal_2018.Add(&(hist_cnotag_2018.GetValue()));
 
-    hist_btight_2018->Divide(&hist_total_2018);
-    hist_bloose_2018->Divide(&hist_total_2018);
-    hist_bnotag_2018->Divide(&hist_total_2018);
+    TH2D hist_ltotal_2018;
+    hist_ltight_2018.GetValue().Copy(hist_ltotal_2018);
+    hist_ltotal_2018.Add(&(hist_lloose_2018.GetValue()));
+    hist_ltotal_2018.Add(&(hist_lnotag_2018.GetValue()));
 
-    hist_ctight_2018->Divide(&hist_total_2018);
-    hist_cloose_2018->Divide(&hist_total_2018);
-    hist_cnotag_2018->Divide(&hist_total_2018);
+    hist_btight_2018->Divide(&hist_btotal_2018);
+    hist_bloose_2018->Divide(&hist_btotal_2018);
+    hist_bnotag_2018->Divide(&hist_btotal_2018);
 
-    hist_ltight_2018->Divide(&hist_total_2018);
-    hist_lloose_2018->Divide(&hist_total_2018);
-    hist_lnotag_2018->Divide(&hist_total_2018);
+    hist_ctight_2018->Divide(&hist_ctotal_2018);
+    hist_cloose_2018->Divide(&hist_ctotal_2018);
+    hist_cnotag_2018->Divide(&hist_ctotal_2018);
+
+    hist_ltight_2018->Divide(&hist_ltotal_2018);
+    hist_lloose_2018->Divide(&hist_ltotal_2018);
+    hist_lnotag_2018->Divide(&hist_ltotal_2018);
+
+    std::cout << "Writing 2018 hists..." << std::endl;
 
     hist_btight_2018->Write();
     hist_bloose_2018->Write();
@@ -247,6 +325,7 @@ int main(int arc, char** argv){
     hist_lloose_2018->Write();
     hist_lnotag_2018->Write();
     
+    std::cout << "2018 hists written..." << std::endl;
 
     f->Close();
     return 0;

@@ -371,43 +371,296 @@ RNode PNET_H_ScaleFactors_2018(correction::Correction::Ref cset_pnet_h, RNode df
     return df.Define("particlenet_h_weight_2018", eval_correction, {"sample_year", "GHiggs_pt"});
 }
 
-RNode bTaggingScaleFactors(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df) {
+RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df) {
     auto eval_correction = [cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff] (std::string year, const RVec<float> eta, const RVec<float> pt, const RVec<int> jetflavor) {
-        // RVec<double> btag_sf_weights = {1., 1., 1.};
-        double btag_sf_weight = 1.;
+        RVec<double> btag_sf_weights = {1., 1., 1.};
         if (eta.size() == 0) {
-            // return btag_sf_weights;
-            return btag_sf_weight;
+            return btag_sf_weights;
         }
-        float prod_tight = 1.;
-        float prod_loose = 1.;
-        float prod_notag = 1.;
+
+        float num = 1.;
+        float num_up = 1.;
+        float num_down = 1.;
+        float den = 1.;
+
         for (size_t i = 0; i < eta.size(); i++) {
+            float btag_sf_tight = -1.;
+            float btag_sf_loose = -1.;
+            float btag_sf_tight_up = -1.;
+            float btag_sf_loose_up = -1.;
+            float btag_sf_tight_down = -1.;
+            float btag_sf_loose_down = -1.;
+            float btag_eff_tight = -1.;
+            float btag_eff_loose = -1.;
             if (year == "2016preVFP") {
-                float btag_sf_tight = -1.;
-                float btag_sf_loose = -1.;
-                float btag_eff_tight = -1.;
-                float btag_eff_loose = -1.;
                 if (jetflavor[i] == 5) {
                     btag_sf_tight = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_sf_loose = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_eff_tight = cset_btag_eff.at("btag_2016preVFP")->evaluate({"B", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016preVFP")->evaluate({"B", "L", pt[i], eta[i]});
                 }
                 else if (jetflavor[i] == 4) {
                     btag_sf_tight = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_sf_loose = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_eff_tight = cset_btag_eff.at("btag_2016preVFP")->evaluate({"C", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016preVFP")->evaluate({"C", "L", pt[i], eta[i]});
                 }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
                 else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2016postVFP") {
+                if (jetflavor[i] == 5) {
+                    btag_sf_tight = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2016postVFP")->evaluate({"B", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2016postVFP")->evaluate({"B", "L", pt[i], eta[i]});
+                }
+                else if (jetflavor[i] == 4) {
+                    btag_sf_tight = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016postVFP.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2016postVFP")->evaluate({"C", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2016postVFP")->evaluate({"C", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2017") {
+                if (jetflavor[i] == 5) {
+                    btag_sf_tight = cset_btag_2017.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2017.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2017.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2017.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2017.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2017.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2017")->evaluate({"B", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2017")->evaluate({"B", "L", pt[i], eta[i]});
+                }
+                else if (jetflavor[i] == 4) {
+                    btag_sf_tight = cset_btag_2017.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2017.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2017.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2017.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2017.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2017.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2017")->evaluate({"C", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2017")->evaluate({"C", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2018") {
+                if (jetflavor[i] == 5) {
+                    btag_sf_tight = cset_btag_2018.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2018.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2018.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2018.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2018.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2018.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2018")->evaluate({"B", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2018")->evaluate({"B", "L", pt[i], eta[i]});
+                }
+                else if (jetflavor[i] == 4) {
+                    btag_sf_tight = cset_btag_2018.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2018.at("deepCSV_comb")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2018.at("deepCSV_comb")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2018.at("deepCSV_comb")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2018.at("deepCSV_comb")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2018.at("deepCSV_comb")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2018")->evaluate({"C", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2018")->evaluate({"C", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+        }
+        btag_sf_weights[0] = num / den;
+        btag_sf_weights[1] = num_up / den;
+        btag_sf_weights[2] = num_down / den;
+        return btag_sf_weights;
+    };
+    return df.Define("btagging_scale_factors_HF", eval_correction, {"sample_year", "GJet_eta", "GJet_pt", "GJet_hadronFlavour"});
+}
+
+RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df) {
+    auto eval_correction = [cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff] (std::string year, const RVec<float> eta, const RVec<float> pt, const RVec<int> jetflavor) {
+        RVec<double> btag_sf_weights = {1., 1., 1.};
+        if (eta.size() == 0) {
+            return btag_sf_weights;
+        }
+
+        float num = 1.;
+        float num_up = 1.;
+        float num_down = 1.;
+        float den = 1.;
+
+        for (size_t i = 0; i < eta.size(); i++) {
+            float btag_sf_tight = -1.;
+            float btag_sf_loose = -1.;
+            float btag_sf_tight_up = -1.;
+            float btag_sf_loose_up = -1.;
+            float btag_sf_tight_down = -1.;
+            float btag_sf_loose_down = -1.;
+            float btag_eff_tight = -1.;
+            float btag_eff_loose = -1.;
+            if (year == "2016preVFP") {
+                if (jetflavor[i] == 0) {
                     btag_sf_tight = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_sf_loose = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
                     btag_eff_tight = cset_btag_eff.at("btag_2016preVFP")->evaluate({"L", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016preVFP")->evaluate({"L", "L", pt[i], eta[i]});
                 }
-    }
-    return df;
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2016postVFP") {
+                if (jetflavor[i] == 0) {
+                    btag_sf_tight = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2016postVFP.at("deepCSV_incl")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2016postVFP")->evaluate({"L", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2016postVFP")->evaluate({"L", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2017") {
+                if (jetflavor[i] == 0) {
+                    btag_sf_tight = cset_btag_2017.at("deepCSV_incl")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2017.at("deepCSV_incl")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2017.at("deepCSV_incl")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2017.at("deepCSV_incl")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2017.at("deepCSV_incl")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2017.at("deepCSV_incl")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2017")->evaluate({"L", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2017")->evaluate({"L", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+            if (year == "2018") {
+                if (jetflavor[i] == 0) {
+                    btag_sf_tight = cset_btag_2018.at("deepCSV_incl")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose = cset_btag_2018.at("deepCSV_incl")->evaluate({"central", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_up = cset_btag_2018.at("deepCSV_incl")->evaluate({"up_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_up = cset_btag_2018.at("deepCSV_incl")->evaluate({"up_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_tight_down = cset_btag_2018.at("deepCSV_incl")->evaluate({"down_uncorrelated", "T", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_sf_loose_down = cset_btag_2018.at("deepCSV_incl")->evaluate({"down_uncorrelated", "L", jetflavor[i], abs(eta[i]), pt[i]});
+                    btag_eff_tight = cset_btag_eff.at("btag_2018")->evaluate({"L", "T", pt[i], eta[i]});
+                    btag_eff_loose = cset_btag_eff.at("btag_2018")->evaluate({"L", "L", pt[i], eta[i]});
+                }
+                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
+                    num = 1.;
+                    num_up = 1.;
+                    num_down = 1.;
+                    den = 1.;
+                }
+                else {
+                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
+                }
+            }
+        }
+        btag_sf_weights[0] = num / den;
+        btag_sf_weights[1] = num_up / den;
+        btag_sf_weights[2] = num_down / den;
+        return btag_sf_weights;
+    };
+    return df.Define("btagging_scale_factors_LF", eval_correction, {"sample_year", "GJet_eta", "GJet_pt", "GJet_hadronFlavour"});
 }
 
 RNode finalMCWeight(RNode df){
@@ -435,9 +688,11 @@ RNode finalMCWeight(RNode df){
     auto df_pnet_h_2017 = PNET_H_ScaleFactors_2017(cset_pnet_h, df_pnet_h_2016postVFP);
     auto df_pnet_h = PNET_H_ScaleFactors_2018(cset_pnet_h, df_pnet_h_2017);
     // btagging sf
-    auto df_btag = bTaggingScaleFactors(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, df_pnet_h);
+    auto df_btag = df_pnet_h.Define("GJet_hadronFlavour", "Jet_hadronFlavour[goodJets]");
+    auto df_btag_hf = bTaggingScaleFactors_HF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag);
+    auto df_btag_lf = bTaggingScaleFactors_LF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag_hf);
     
-    return df_btag.Define("weight", 
+    return df_btag_lf.Define("weight", 
             "pileup_weight[0] * "
             "pileupid_weight[0] * "
             "L1PreFiringWeight[0] * "
@@ -458,13 +713,16 @@ RNode finalMCWeight(RNode df){
             "particlenet_h_weight_2016postVFP[0] * "
             "particlenet_h_weight_2017[0] * "
             "particlenet_h_weight_2018[0] * "
+            "btagging_scale_factors_HF[0] * "
+            "btagging_scale_factors_LF[0] * "
             "HEMweight * "
             "xsec_weight * "
             "genWeight");
 }
 
 RNode finalDataWeight(RNode df){
-    return df.Define("weight", 
+    auto df_golden = goodRun(LumiMask, df);
+    return df_golden.Define("weight", 
             "goldenJSON * "
             "HEMweight");
 }

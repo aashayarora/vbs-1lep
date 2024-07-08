@@ -27,7 +27,7 @@ int main(int argc, char** argv){
         }
     };
 
-    ROOT::EnableImplicitMT(4);
+    // ROOT::EnableImplicitMT(4);
     ROOT::RDataFrame df("Events", input_file);
     ROOT::RDF::Experimental::AddProgressBar(df);
 

@@ -213,7 +213,11 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
     return df_jetcorr.Redefine("CorrMET_pt", correctmet, {"CorrJet_pt", "Jet_phi", "MET_pt", "MET_phi"});
 }
 
-RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation) {
+RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation, bool isData) {
+    if (isData) {
+        return df;
+    }
+    
     auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<int> genJet_idx, RVec<float> genJet_pt, float rho, unsigned long long event, RVec<float> var) {
         RVec<float> jer_factors;
 

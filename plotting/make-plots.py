@@ -66,67 +66,62 @@ df_bkg = r.RDataFrame("Events", mc[0])
 df_sig = r.RDataFrame("Events", mc[1])
 
 # %%
-def plot(histogram):
-    try:
-        hist_data = df_data.Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var).GetValue()
-        hist_bkgs = [
-            df_bkg.Filter("sample_type == \"DY\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
-            df_bkg.Filter("sample_type == \"ttbar\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
-            df_bkg.Filter("sample_type == \"ST\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
-            df_bkg.Filter("sample_type == \"WJets\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
-            df_bkg.Filter("sample_type == \"ttx\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
-            df_bkg.Filter("sample_type == \"Other\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue()
-        ]
-        hist_sig = df_sig.Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue()
+booked_hists = []
+for histogram in hists:
+    hist_data = df_data.Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var).GetValue()
+    hist_bkgs = [
+        df_bkg.Filter("sample_type == \"DY\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+        df_bkg.Filter("sample_type == \"ttbar\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+        df_bkg.Filter("sample_type == \"ST\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+        df_bkg.Filter("sample_type == \"WJets\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+        df_bkg.Filter("sample_type == \"ttx\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue(),
+        df_bkg.Filter("sample_type == \"Other\"").Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue()
+    ]
+    hist_sig = df_sig.Histo1D((histogram.var, histogram.var, *histogram.binning), histogram.var, "weight").GetValue()
 
-        hist_data.Sumw2()
-        [hist.Sumw2() for hist in hist_bkgs]
-        hist_sig.Sumw2()
+booked_hists.append([hist_data, hist_bkgs, hist_sig])
 
-        hist_ratio = hist_data.Clone()
-        hist_bkg_total = hist_bkgs[0].Clone()
-        [hist_bkg_total.Add(hist) for hist in hist_bkgs[1:]]
-        hist_bkg_total.Add(hist_sig)
-        hist_ratio.Divide(hist_bkg_total)
+for histogram, (hist_data, hist_bkgs, hist_sig) in zip(hists, booked_hists):
+    hist_data.Sumw2()
+    [hist.Sumw2() for hist in hist_bkgs]
+    hist_sig.Sumw2()
 
-        hist_sig.Scale(1000)
+    hist_ratio = hist_data.Clone()
+    hist_bkg_total = hist_bkgs[0].Clone()
+    [hist_bkg_total.Add(hist) for hist in hist_bkgs[1:]]
+    hist_bkg_total.Add(hist_sig)
+    hist_ratio.Divide(hist_bkg_total)
 
-        histogram.hist_data = from_pyroot(hist_data).to_hist()
-        histogram.hist_bkg = hist.Stack.from_dict(
-            {
-                r"$t\bar{t}$": from_pyroot(hist_bkgs[1]).to_hist(),
-                "W+Jets": from_pyroot(hist_bkgs[3]).to_hist(),
-                "DY": from_pyroot(hist_bkgs[0]).to_hist(), 
-                "ST": from_pyroot(hist_bkgs[2]).to_hist(),
-                r"$t\bar{t} + X$": from_pyroot(hist_bkgs[4]).to_hist(),
-                "Other": from_pyroot(hist_bkgs[5]).to_hist(),
-            })
-        histogram.hist_ratio = from_pyroot(hist_ratio).to_hist()
-        histogram.hist_sig = from_pyroot(hist_sig).to_hist()
+    hist_sig.Scale(1000)
 
-        fig, ax = plt.subplots(2, 1, gridspec_kw={"height_ratios": (4, 1)})
-        hep.cms.label("Preliminary", data=True, lumi=137, year="Run2", ax=ax[0])
-        hep.histplot(histogram.hist_data, label="Data", ax=ax[0], histtype="errorbar", color="black")
-        histogram.hist_bkg.plot(ax=ax[0], stack=True, histtype="fill")
-        hep.histplot(histogram.hist_sig, label="Signal x 1000", ax=ax[0], histtype="step", color="black", linestyle="--")
-        hep.histplot(histogram.hist_ratio, color="black", ax=ax[1], histtype="errorbar")
-        ax[0].legend()
-        ax[0].set_xlabel("")
-        ax[1].set_xlabel(histogram.xlabel)
-        ax[0].set_ylabel("Events")
-        ax[1].set_ylabel("Data / MC")
-        ax[1].set_ylim(0.8, 1.2)
-        ax[1].axhline(1, color="black", linestyle="--")
+    histogram.hist_data = from_pyroot(hist_data).to_hist()
+    histogram.hist_bkg = hist.Stack.from_dict(
+        {
+            r"$t\bar{t}$": from_pyroot(hist_bkgs[1]).to_hist(),
+            "W+Jets": from_pyroot(hist_bkgs[3]).to_hist(),
+            "DY": from_pyroot(hist_bkgs[0]).to_hist(), 
+            "ST": from_pyroot(hist_bkgs[2]).to_hist(),
+            r"$t\bar{t} + X$": from_pyroot(hist_bkgs[4]).to_hist(),
+            "Other": from_pyroot(hist_bkgs[5]).to_hist(),
+        })
+    histogram.hist_ratio = from_pyroot(hist_ratio).to_hist()
+    histogram.hist_sig = from_pyroot(hist_sig).to_hist()
 
-        plt.savefig(f"plots/{histogram.var}.png")
-        print("Saved", histogram.var)
-        plt.close()
-    except Exception as e:
-        print("Error in", histogram.var)
-        plt.close()
+    # fig, ax = plt.subplots(2, 1, gridspec_kw={"height_ratios": (4, 1)})
+    # hep.cms.label("Preliminary", data=True, lumi=137, year="Run2", ax=ax[0])
+    # hep.histplot(histogram.hist_data, label="Data", ax=ax[0], histtype="errorbar", color="black")
+    # histogram.hist_bkg.plot(ax=ax[0], stack=True, histtype="fill")
+    # hep.histplot(histogram.hist_sig, label="Signal x 1000", ax=ax[0], histtype="step", color="black", linestyle="--")
+    # hep.histplot(histogram.hist_ratio, color="black", ax=ax[1], histtype="errorbar")
+    # ax[0].legend()
+    # ax[0].set_xlabel("")
+    # ax[1].set_xlabel(histogram.xlabel)
+    # ax[0].set_ylabel("Events")
+    # ax[1].set_ylabel("Data / MC")
+    # ax[1].set_ylim(0.8, 1.2)
+    # ax[1].axhline(1, color="black", linestyle="--")
 
-
-# %%
-if __name__ == "__main__":
-    mp.Pool(12).map(plot, hists)
+    plt.savefig(f"plots/{histogram.var}.png")
+    print("Saved", histogram.var)
+    plt.close()
 # %%

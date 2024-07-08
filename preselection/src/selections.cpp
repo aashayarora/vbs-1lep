@@ -143,12 +143,14 @@ RNode AK4Selections(RNode df) {
             .Define("ak4tightBjetScore", tightDFBtagWP, {"sample_year"})
             .Define("ak4looseBjetScore", looseDFBtagWP, {"sample_year"})
             .Define("goodJets", "CorrJet_pt >= 20 && "
-                "abs(Jet_eta) <= 2.5 && "
+                "abs(Jet_eta) < 2.5 && "
                 "AK4LepDeltaR >= 0.4 && "
                 "AK4HDeltaR >= 0.8 && "
                 "AK4WDeltaR >= 0.8 && "
                 "((is2016 && Jet_jetId >= 1) || (!is2016 && Jet_jetId >= 2)) && "
                 "(CorrJet_pt >= 50 || (CorrJet_pt < 50 && Jet_puId != 0))")
+            .Define("GJet_pt", "Jet_pt[goodJets]")
+            .Define("GJet_eta", "Jet_eta[goodJets]")
             .Define("ak4FromBJet", "goodJets && Jet_btagDeepFlavB > ak4tightBjetScore")
             .Define("goodLooseBJets", "goodJets && Jet_btagDeepFlavB > ak4looseBjetScore")
             .Define("sortedBJets", "Argsort(-CorrJet_pt[goodLooseBJets])")

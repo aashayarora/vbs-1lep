@@ -22,6 +22,7 @@ struct MyArgs : public argparse::Args {
     std::string &variation = kwarg("var", "variation").set_default("nominal");
     std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
     std::string &JEC_type = kwarg("jec_type", "JEC type").set_default("");
+    std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
 };
 
 int main(int argc, char** argv) {
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
     // corrections
     auto df0 = defineCorrectedCols(df);
     auto df1 = HEMCorrection(df0);
-    auto df2 = JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df1, args.JERvariation);
+    auto df2 = JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df1, args.JERvariation, args.isData);
 
     auto applypreCorrections = [] (RNode df, MyArgs args) {
         if (args.METUnclustered) {
@@ -89,7 +90,26 @@ int main(int argc, char** argv) {
         saveSnapshot(df_data_final, output_file);
     }
     else {
-        auto df_mc_final = finalMCWeight(df_final);
+        auto df_mc_weight = finalMCWeight(df_final);
+        auto applySFVariations = [](RNode df, MyArgs args) {
+            if (args.SFvariation.empty()) {
+                return df;
+            }
+            else {
+                if (args.variation == "up") {
+                    return df.Redefine("weight", Form("weight * %s[1] / %s[0]", args.SFvariation.c_str(), args.SFvariation.c_str()));
+                }
+                else if (args.variation == "down") {
+                    return df.Redefine("weight", Form("weight * %s[2] / %s[0]", args.SFvariation.c_str(), args.SFvariation.c_str()));
+                }
+                else {
+                    return df;
+                }
+            }
+        };
+
+        auto df_mc_final = applySFVariations(df_mc_weight, args);
+
         if (args.isBkg) {
             saveSnapshot(df_mc_final, output_file);
         }
@@ -100,4 +120,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
