@@ -48,6 +48,16 @@
     },
     "infer": {
         "extra_files": [
+            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHID_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHID_down_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHISO_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHISO_down_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHID_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHID_down_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHISO_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHISO_down_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_trigger_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_trigger_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_MVA.root",
             "/data/userdata/aaarora/output/run2/data_MVA.root",
             "/data/userdata/aaarora/output/run2/bkg_MVA.root",
@@ -61,20 +71,10 @@
             "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ID_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_trigger_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_trigger_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHID_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHID_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHISO_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_muon_scale_factors_ttHISO_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_Reco_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_Reco_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ID_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ID_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHID_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHID_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHISO_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_ttHISO_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_trigger_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_electron_scale_factors_trigger_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_particlenet_w_weight_2016preVFP_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_particlenet_w_weight_2016preVFP_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_particlenet_w_weight_2016postVFP_up_MVA.root",
@@ -139,7 +139,14 @@
             "/data/userdata/aaarora/output/run2/sig_jms_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_jms_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_jmr_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_jmr_down_MVA.root"
+            "/data/userdata/aaarora/output/run2/sig_jmr_down_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_absolute_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_bbec1_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_ec2_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_flavorqcd_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_hf_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_relativebal_up.root",
+            "/data/userdata/aaarora/output/run2/sig_jec_relative_up.root"
         ]
     }
 }

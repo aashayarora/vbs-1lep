@@ -16,6 +16,7 @@ struct MyArgs : public argparse::Args {
     bool &isSig = flag("sig", "is sig");
     bool &METUnclustered = flag("met", "MET unclustered");
     bool &JEC = flag("jec", "JEC");
+    bool &JER = flag("jer", "JER");
     bool &JMS = flag("jms", "JMS");
     bool &JMR = flag("jmr", "JMR");
     std::string &output = kwarg("o,output", "output root file").set_default("");
@@ -42,7 +43,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    ROOT::EnableImplicitMT(64);
+    ROOT::EnableImplicitMT(2);
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
     
@@ -51,10 +52,12 @@ int main(int argc, char** argv) {
     // corrections
     auto df0 = defineCorrectedCols(df);
     auto df1 = HEMCorrection(df0);
-    auto df2 = JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df1, args.JERvariation, args.isData);
 
     auto applypreCorrections = [] (RNode df, MyArgs args) {
-        if (args.METUnclustered) {
+        if (args.JER) {
+            return JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df, args.JERvariation);
+        }
+        else if (args.METUnclustered) {
             return METUnclusteredCorrections(df, args.variation);
         }
         else if (args.JEC) {
@@ -65,7 +68,7 @@ int main(int argc, char** argv) {
         }
     };
 
-    auto df_correction = applypreCorrections(df2, args);
+    auto df_correction = applypreCorrections(df1, args);
 
     // selections
     auto df_selected = finalSelections(df_correction);

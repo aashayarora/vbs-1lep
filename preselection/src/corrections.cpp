@@ -1,5 +1,6 @@
 #include "corrections.h"
-// b WP
+
+#include <iostream>
 
 float looseDFBtagWP(std::string year){
     if(year == "2016preVFP")
@@ -105,7 +106,7 @@ RNode METUnclusteredCorrections(RNode df, std::string variation) {
 }
 
 RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, RNode df, std::string JEC_type, std::string variation) {
-    auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, JEC_type, variation] (std::string year, RVec<float> eta, RVec<float> pt, RVec<float> raw_factor, RVec<float> var) {
+    auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, JEC_type, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<float> raw_factor, RVec<float> var) {
         RVec<float> jec_factors;
         RVec<float> uncorr_var;
 
@@ -118,7 +119,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
         for (size_t i = 0; i < var.size(); i++){
             uncorr_var.push_back(var[i] * (1 - raw_factor[i]));
         }
-        
+
         for (size_t i = 0; i < var.size(); i++) {
             if (year == "2016preVFP") {
                 JEC = std::string("Summer19UL16APV_V7_MC_") + JEC_type + std::string("_AK4PFchs");
@@ -213,11 +214,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
     return df_jetcorr.Redefine("CorrMET_pt", correctmet, {"CorrJet_pt", "Jet_phi", "MET_pt", "MET_phi"});
 }
 
-RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation, bool isData) {
-    if (isData) {
-        return df;
-    }
-    
+RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation) {
     auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<int> genJet_idx, RVec<float> genJet_pt, float rho, unsigned long long event, RVec<float> var) {
         RVec<float> jer_factors;
 

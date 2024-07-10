@@ -147,10 +147,9 @@ RNode muonScaleFactors_ttH(correction::Correction::Ref cset_muon_tth, RNode df, 
             return muon_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            float muon_sf_weight = cset_muon_tth->evaluate({year, abs(eta[i]), pt[i]});
-            muon_sf_weights[0] *= muon_sf_weight;
-            muon_sf_weights[1] *= (muon_sf_weight + sqrt(muon_sf_weight));
-            muon_sf_weights[2] *= (muon_sf_weight - sqrt(muon_sf_weight));
+            muon_sf_weights[0] *= cset_muon_tth->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[1] *= cset_muon_tth->evaluate({"up", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[2] *= cset_muon_tth->evaluate({"down", year, abs(eta[i]), pt[i]});
         }
         return muon_sf_weights;
     };
@@ -231,10 +230,9 @@ RNode electronScaleFactors_ttH(correction::Correction::Ref cset_electron_tth, RN
             return electron_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            float electron_sf_weight = cset_electron_tth->evaluate({year, abs(eta[i]), pt[i]});
-            electron_sf_weights[0] *= electron_sf_weight;
-            electron_sf_weights[1] *= (electron_sf_weight + sqrt(electron_sf_weight));
-            electron_sf_weights[2] *= (electron_sf_weight - sqrt(electron_sf_weight));
+            electron_sf_weights[0] *= cset_electron_tth->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[1] *= cset_electron_tth->evaluate({"up", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[2] *= cset_electron_tth->evaluate({"down", year, abs(eta[i]), pt[i]});
         }
         return electron_sf_weights;
     };
@@ -248,10 +246,9 @@ RNode electronScaleFactors_Trigger(correction::Correction::Ref cset_electron_tri
             return electron_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            float electron_sf_weight = cset_electron_trigger->evaluate({year, eta[i], pt[i]});
-            electron_sf_weights[0] *= electron_sf_weight;
-            electron_sf_weights[1] *= (electron_sf_weight + sqrt(electron_sf_weight));
-            electron_sf_weights[2] *= (electron_sf_weight - sqrt(electron_sf_weight));
+            electron_sf_weights[0] *= cset_electron_trigger->evaluate({"nominal", year, eta[i], pt[i]});
+            electron_sf_weights[1] *= cset_electron_trigger->evaluate({"up", year, eta[i], pt[i]});
+            electron_sf_weights[2] *= cset_electron_trigger->evaluate({"down", year, eta[i], pt[i]});
         }
         return electron_sf_weights;
     };
@@ -529,12 +526,19 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
                 }
             }
         }
-        btag_sf_weights[0] = num / den;
-        btag_sf_weights[1] = num_up / den;
-        btag_sf_weights[2] = num_down / den;
+         if (den == 0.) {
+            btag_sf_weights[0] = 1.;
+            btag_sf_weights[1] = 1.;
+            btag_sf_weights[2] = 1.;
+        }
+        else {
+            btag_sf_weights[0] = num / den;
+            btag_sf_weights[1] = num_up / den;
+            btag_sf_weights[2] = num_down / den;
+        }
         return btag_sf_weights;
     };
-    return df.Define("btagging_scale_factors_HF", eval_correction, {"sample_year", "GJet_eta", "GJet_pt", "GJet_hadronFlavour"});
+    return df.Define("btagging_scale_factors_HF", eval_correction, {"sample_year", "LnTBJet_eta", "LnTBJet_pt", "LnTBJet_hadronFlavour"});
 }
 
 RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df) {
@@ -655,12 +659,19 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
                 }
             }
         }
-        btag_sf_weights[0] = num / den;
-        btag_sf_weights[1] = num_up / den;
-        btag_sf_weights[2] = num_down / den;
+        if (den == 0.) {
+            btag_sf_weights[0] = 1.;
+            btag_sf_weights[1] = 1.;
+            btag_sf_weights[2] = 1.;
+        }
+        else {
+            btag_sf_weights[0] = num / den;
+            btag_sf_weights[1] = num_up / den;
+            btag_sf_weights[2] = num_down / den;
+        }
         return btag_sf_weights;
     };
-    return df.Define("btagging_scale_factors_LF", eval_correction, {"sample_year", "GJet_eta", "GJet_pt", "GJet_hadronFlavour"});
+    return df.Define("btagging_scale_factors_LF", eval_correction, {"sample_year", "LnTBJet_eta", "LnTBJet_pt", "LnTBJet_hadronFlavour"});
 }
 
 RNode finalMCWeight(RNode df){
@@ -688,7 +699,7 @@ RNode finalMCWeight(RNode df){
     auto df_pnet_h_2017 = PNET_H_ScaleFactors_2017(cset_pnet_h, df_pnet_h_2016postVFP);
     auto df_pnet_h = PNET_H_ScaleFactors_2018(cset_pnet_h, df_pnet_h_2017);
     // btagging sf
-    auto df_btag = df_pnet_h.Define("GJet_hadronFlavour", "Jet_hadronFlavour[goodJets]");
+    auto df_btag = df_pnet_h.Define("LnTBJet_hadronFlavour", "Jet_hadronFlavour[LnTBJets]");
     auto df_btag_hf = bTaggingScaleFactors_HF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag);
     auto df_btag_lf = bTaggingScaleFactors_LF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag_hf);
     

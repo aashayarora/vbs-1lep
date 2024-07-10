@@ -1,4 +1,3 @@
-
 imax 4 number of channels
 jmax 1 number of backgrounds
 kmax * number of nuisance parameters
@@ -9,62 +8,64 @@ observation                                             1                  78   
 bin                                                     A                  B                  C                  D                  A           B           C           D           
 process                                                 TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalSig    TotalSig    TotalSig    TotalSig    
 process                                                 1                  1                  1                  1                  0           0           0           0           
-rate                                                    1                  1                  1                  1                  4.06209     1.26253     1.42025     0.81588    
+rate                                                    1                  1                  1                  1                  3.65187     0.85990     1.16809     0.53629    
 --------------------------------------------------------------------------------------------------------------------------------
 CMS_vbsvvh1lep_control_abcd_syst                  lnN   1.2                -                  -                  -                  -           -           -           -           
 lumi_13TeV_correlated                             lnN   -                  -                  -                  -                  1.016       1.016       1.016       1.016       
-CMS_ttH_elec_reco                                 lnN   -                  -                  -                  -                  1.00248     1.00427     1.00036     1.00820
-CMS_ttH_elec_recotoloose                          lnN   -                  -                  -                  -                  1.43301     1.44211     1.44822     1.41230
-CMS_ttH_elec_trig                                 lnN   -                  -                  -                  -                  1.43200     1.43698     1.43604     1.42593
-CMS_ttH_elec_loosetoiso                           lnN   -                  -                  -                  -                  1.42813     1.43237     1.43344     1.41775
-CMS_ttH_elec_isototight                           lnN   -                  -                  -                  -                  1.00729     1.01671     1.01017     1.01152
-CMS_ttH_muon_recotoloose                          lnN   -                  -                  -                  -                  1.56874     1.58606     1.56561     1.59059
-CMS_ttH_muon_trig                                 lnN   -                  -                  -                  -                  1.00053     1.00480     1.00239     1.00079
-CMS_ttH_muon_loosetoiso                           lnN   -                  -                  -                  -                  1.56835     1.58789     1.56467     1.58870
-CMS_ttH_muon_isototight                           lnN   -                  -                  -                  -                  1.00041     1.00571     1.00188     1.00480
-CMS_PrefireWeight_13TeV                           lnN   -                  -                  -                  -                  1.00816     1.01156     1.01195     1.00507
-CMS_vbsvvh_puWeight                               lnN   -                  -                  -                  -                  1.00070     1.01377     1.00340     1.01521
-CMS_vbsvvh_puJetID                                lnN   -                  -                  -                  -                  1.00752     1.00856     1.00482     1.01027
-CMS_scale_j_Absolute_13TeV                        lnN   -                  -                  -                  -                  4.24154     3.31905     2.00000     2.00000
-CMS_scale_j_Absolute_2016postVFP_13TeV            lnN   -                  -                  -                  -                  2.70127     2.36213     1.40107     1.45641
-CMS_scale_j_Absolute_2016preVFP_13TeV             lnN   -                  -                  -                  -                  2.70127     2.36213     1.40107     1.45641
-CMS_scale_j_Absolute_2017_13TeV                   lnN   -                  -                  -                  -                  1.64225     1.34038     1.29702     1.22658
-CMS_scale_j_Absolute_2018_13TeV                   lnN   -                  -                  -                  -                  1.88771     1.50549     1.42618     1.41002
-CMS_scale_j_BBEC1_13TeV                           lnN   -                  -                  -                  -                  4.24216     3.31707     2.00000     2.00000
-CMS_scale_j_BBEC1_2016postVFP_13TeV               lnN   -                  -                  -                  -                  2.70316     2.35605     1.40054     1.45709
-CMS_scale_j_BBEC1_2016preVFP_13TeV                lnN   -                  -                  -                  -                  2.70316     2.35605     1.40054     1.45709
-CMS_scale_j_BBEC1_2017_13TeV                      lnN   -                  -                  -                  -                  1.64197     1.34128     1.29768     1.22950
-CMS_scale_j_BBEC1_2018_13TeV                      lnN   -                  -                  -                  -                  1.88711     1.50741     1.42751     1.40919
-CMS_scale_j_EC2_13TeV                             lnN   -                  -                  -                  -                  4.23941     3.32589     2.00000     2.00000
-CMS_scale_j_EC2_2016postVFP_13TeV                 lnN   -                  -                  -                  -                  2.69941     2.36811     1.40050     1.45638
-CMS_scale_j_EC2_2016preVFP_13TeV                  lnN   -                  -                  -                  -                  2.69941     2.36811     1.40050     1.45638
-CMS_scale_j_EC2_2017_13TeV                        lnN   -                  -                  -                  -                  1.64404     1.33462     1.29920     1.22686
-CMS_scale_j_EC2_2018_13TeV                        lnN   -                  -                  -                  -                  1.88593     1.51122     1.42535     1.40900
-CMS_scale_j_FlavorQCD_13TeV                       lnN   -                  -                  -                  -                  4.23603     3.33679     2.00000     2.00000
-CMS_scale_j_HF_13TeV                              lnN   -                  -                  -                  -                  4.24174     3.31841     2.00000     2.00000
-CMS_scale_j_HF_2016postVFP_13TeV                  lnN   -                  -                  -                  -                  2.70114     2.36252     1.39958     1.45563
-CMS_scale_j_HF_2016preVFP_13TeV                   lnN   -                  -                  -                  -                  2.70114     2.36252     1.39958     1.45563
-CMS_scale_j_HF_2017_13TeV                         lnN   -                  -                  -                  -                  1.64272     1.33887     1.29698     1.22786
-CMS_scale_j_HF_2018_13TeV                         lnN   -                  -                  -                  -                  1.88454     1.51567     1.42722     1.40967
-CMS_scale_j_RelativeBal_13TeV                     lnN   -                  -                  -                  -                  4.24239     3.31633     2.00000     2.00000
-CMS_scale_j_RelativeSample_2016postVFP_13TeV      lnN   -                  -                  -                  -                  2.70544     2.34871     1.40063     1.45774
-CMS_scale_j_RelativeSample_2016preVFP_13TeV       lnN   -                  -                  -                  -                  2.70544     2.34871     1.40063     1.45774
-CMS_scale_j_RelativeSample_2017_13TeV             lnN   -                  -                  -                  -                  1.64161     1.34246     1.29775     1.23138
-CMS_scale_j_RelativeSample_2018_13TeV             lnN   -                  -                  -                  -                  1.88570     1.51194     1.42548     1.41032
-CMS_res_j_13TeV                                   lnN   -                  -                  -                  -                  1.01027     1.05997     1.02991     1.03588
-CMS_metUncl_13Tev                                 lnN   -                  -                  -                  -                  1.00124     1.00691     1.00107     1.00358
-CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  1.00075     1.00798     1.00060     1.00967
-CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  1.05577     1.15980     1.10243     1.19299
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  1.07281     1.09478     1.03091     1.03120
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  1.01102     1.01693     1.00728     1.00776
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  1.01520     1.01561     1.01128     1.00640
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  1.02362     1.02548     1.01379     1.02162
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  1.03992     1.06567     1.04192     1.05715
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  1.01783     1.02163     1.01605     1.01933
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  1.05434     1.05220     1.04850     1.04063
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  1.05601     1.05374     1.04466     1.05200                  
+CMS_ttH_elec_reco                                 lnN   -                  -                  -                  -                  1.00337     1.00043     1.00092     1.01113
+CMS_ttH_elec_recotoloose                          lnN   -                  -                  -                  -                  1.00410     1.00612     1.00270     1.00819
+CMS_ttH_elec_trig                                 lnN   -                  -                  -                  -                  1.00534     1.00685     1.00240     1.00710
+CMS_ttH_elec_loosetoiso                           lnN   -                  -                  -                  -                  1.00106     1.00209     1.00101     1.00617
+CMS_ttH_elec_isototight                           lnN   -                  -                  -                  -                  1.00898     1.01373     1.01096     1.01139
+CMS_ttH_muon_recotoloose                          lnN   -                  -                  -                  -                  1.00174     1.00223     1.00055     1.00464
+CMS_ttH_muon_trig                                 lnN   -                  -                  -                  -                  1.00173     1.00072     1.00025     1.00443
+CMS_ttH_muon_loosetoiso                           lnN   -                  -                  -                  -                  1.00070     1.00171     1.00129     1.00599
+CMS_ttH_muon_isototight                           lnN   -                  -                  -                  -                  1.00087     1.00216     1.00062     1.00409
+CMS_PrefireWeight_13TeV                           lnN   -                  -                  -                  -                  1.00993     1.00807     1.00893     1.01172
+CMS_vbsvvh_puWeight                               lnN   -                  -                  -                  -                  1.00359     1.00545     1.00465     1.00848
+CMS_vbsvvh_puJetID                                lnN   -                  -                  -                  -                  1.00860     1.00329     1.00409     1.01208
+CMS_scale_j_Absolute_13TeV                        lnN   -                  -                  -                  -                  1.00728     1.06942     1.04175     1.10727
+CMS_scale_j_Absolute_2016postVFP_13TeV            lnN   -                  -                  -                  -                  1.01931     1.03940     1.01287     1.06136
+CMS_scale_j_Absolute_2016preVFP_13TeV             lnN   -                  -                  -                  -                  1.01931     1.03940     1.01287     1.06136
+CMS_scale_j_Absolute_2017_13TeV                   lnN   -                  -                  -                  -                  1.03501     1.00892     1.04810     1.01249
+CMS_scale_j_Absolute_2018_13TeV                   lnN   -                  -                  -                  -                  1.04707     1.01191     1.06343     1.01794
+CMS_scale_j_BBEC1_13TeV                           lnN   -                  -                  -                  -                  1.04491     1.03604     1.10134     1.09881
+CMS_scale_j_BBEC1_2016postVFP_13TeV               lnN   -                  -                  -                  -                  1.02276     1.04267     1.01546     1.06271
+CMS_scale_j_BBEC1_2016preVFP_13TeV                lnN   -                  -                  -                  -                  1.02276     1.04267     1.01546     1.06271
+CMS_scale_j_BBEC1_2017_13TeV                      lnN   -                  -                  -                  -                  1.02847     1.00434     1.03929     1.01737
+CMS_scale_j_BBEC1_2018_13TeV                      lnN   -                  -                  -                  -                  1.04238     1.00920     1.06162     1.02379
+CMS_scale_j_EC2_13TeV                             lnN   -                  -                  -                  -                  1.04484     1.04014     1.09986     1.08349
+CMS_scale_j_EC2_2016postVFP_13TeV                 lnN   -                  -                  -                  -                  1.02183     1.04438     1.01489     1.06348
+CMS_scale_j_EC2_2016preVFP_13TeV                  lnN   -                  -                  -                  -                  1.02183     1.04438     1.01489     1.06348
+CMS_scale_j_EC2_2017_13TeV                        lnN   -                  -                  -                  -                  1.03176     1.00542     1.04318     1.01549
+CMS_scale_j_EC2_2018_13TeV                        lnN   -                  -                  -                  -                  1.04412     1.00512     1.06144     1.02323
+CMS_scale_j_FlavorQCD_13TeV                       lnN   -                  -                  -                  -                  1.02083     1.05372     1.07416     1.11428
+CMS_scale_j_HF_13TeV                              lnN   -                  -                  -                  -                  1.01913     1.05121     1.07939     1.09663
+CMS_scale_j_HF_2016postVFP_13TeV                  lnN   -                  -                  -                  -                  1.02104     1.04197     1.01538     1.06308
+CMS_scale_j_HF_2016preVFP_13TeV                   lnN   -                  -                  -                  -                  1.02104     1.04197     1.01538     1.06308
+CMS_scale_j_HF_2017_13TeV                         lnN   -                  -                  -                  -                  1.02931     1.00723     1.04215     1.01573
+CMS_scale_j_HF_2018_13TeV                         lnN   -                  -                  -                  -                  1.04535     1.00628     1.06165     1.02370
+CMS_scale_j_RelativeBal_13TeV                     lnN   -                  -                  -                  -                  1.07684     1.01716     1.13723     1.07766
+CMS_scale_j_RelativeSample_2016postVFP_13TeV      lnN   -                  -                  -                  -                  1.01618     1.03994     1.01100     1.05954
+CMS_scale_j_RelativeSample_2016preVFP_13TeV       lnN   -                  -                  -                  -                  1.01618     1.03994     1.01100     1.05954
+CMS_scale_j_RelativeSample_2017_13TeV             lnN   -                  -                  -                  -                  1.04479     1.00761     1.05574     1.01516
+CMS_scale_j_RelativeSample_2018_13TeV             lnN   -                  -                  -                  -                  1.06905     1.01281     1.09201     1.02169
+CMS_res_j_13TeV                                   lnN   -                  -                  -                  -                  1.00034     1.00340     1.00013     1.00527
+CMS_metUncl_13Tev                                 lnN   -                  -                  -                  -                  1.00083     1.00000     1.00004     1.00496
+CMS_jms_pnetreg_13TeV                             lnN   -                  -                  -                  -                  1.00050     1.00192     1.00311     1.00974
+CMS_jmr_pnetreg_13TeV                             lnN   -                  -                  -                  -                  1.00017     1.00074     1.03450     1.03372
+CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  1.00027     1.00481     1.00107     1.00764
+CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  1.01078     1.02719     1.02872     1.05686
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  1.06403     1.07123     1.02366     1.02877
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  1.01422     1.01099     1.00636     1.01554
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  1.01780     1.01407     1.00921     1.01453
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  1.02464     1.02107     1.01359     1.02322
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  1.03784     1.04050     1.03333     1.04414
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  1.02057     1.02216     1.01592     1.02931
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  1.06077     1.05767     1.05168     1.05683
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  1.05527     1.05355     1.04592     1.05271                  
 --------------------------------------------------------------------------------------------------------------------------------
 A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    78  [52,104]                  
-C_OneLep rateParam                  C  TotalBkg_OneLep    12  [2,22]                  
-D_OneLep rateParam                  D  TotalBkg_OneLep    1054  [957,1151]                
+B_OneLep rateParam                  B  TotalBkg_OneLep    11                  
+C_OneLep rateParam                  C  TotalBkg_OneLep    75                    
+D_OneLep rateParam                  D  TotalBkg_OneLep    1016                

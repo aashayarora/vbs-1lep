@@ -34,7 +34,7 @@ RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df,
 const auto cset_jms = CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json")->at("JMS");
 
 RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, RNode df, std::string JEC_type, std::string variation);
-RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation, bool isData);
+RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation);
 const auto cset_jerc_2016preVFP = *CorrectionSet::from_file("corrections/jets/2016preVFP_jet_jerc.json");
 const auto cset_jerc_2016postVFP = *CorrectionSet::from_file("corrections/jets/2016postVFP_jet_jerc.json");
 const auto cset_jerc_2017 = *CorrectionSet::from_file("corrections/jets/2017_jet_jerc.json");

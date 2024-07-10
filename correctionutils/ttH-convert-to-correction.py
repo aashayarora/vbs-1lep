@@ -5,13 +5,15 @@ import correctionlib.convert
 
 # %%
 def write_correction(paths, corrname, outname):
-    hists = []
+    tth = []
     for path in paths:
         with uproot.open(path) as h:
-            hists.append(h.to_hist())
+            tth.append(correctionlib.convert.from_histogram(h.to_hist()))
+            tth.append(correctionlib.convert.from_histogram(h.to_hist()))
+            tth[-1].data.content = list(h.values().flatten() + h.errors().flatten())
+            tth.append(correctionlib.convert.from_histogram(h.to_hist()))
+            tth[-1].data.content = list(h.values().flatten() - h.errors().flatten())
 
-    tth = [correctionlib.convert.from_histogram(hist) for hist in hists]
-    
     for corr_ in tth:
         corr_.data.flow = "clamp"
 
@@ -20,6 +22,11 @@ def write_correction(paths, corrname, outname):
         description=corrname,
         version=1,
         inputs=[
+            cs.Variable(
+                name="variation",
+                type="string",
+                description="variation"
+            ),
             cs.Variable(
                 name="year",
                 type="string",
@@ -41,11 +48,55 @@ def write_correction(paths, corrname, outname):
             nodetype="category",
             input="year",
             content=[
-                cs.CategoryItem(key="2016preVFP", value=tth[0].data),
-                cs.CategoryItem(key="2016postVFP", value=tth[1].data),
-                cs.CategoryItem(key="2017", value=tth[2].data),
-                cs.CategoryItem(key="2018", value=tth[3].data),
-            ],
+                cs.CategoryItem(
+                    key="2016preVFP",
+                    value=cs.Category( 
+                        nodetype="category",
+                        input="variation",
+                        content=[
+                            cs.CategoryItem(key="nominal", value=tth[0].data),
+                            cs.CategoryItem(key="up", value=tth[1].data),
+                            cs.CategoryItem(key="down", value=tth[2].data),
+                        ],
+                    )
+                ),
+                cs.CategoryItem(
+                    key="2016postVFP",
+                    value=cs.Category( 
+                        nodetype="category",
+                        input="variation",
+                        content=[
+                            cs.CategoryItem(key="nominal", value=tth[3].data),
+                            cs.CategoryItem(key="up", value=tth[4].data),
+                            cs.CategoryItem(key="down", value=tth[5].data),
+                        ],
+                    )
+                ),
+                cs.CategoryItem(
+                    key="2017",
+                    value=cs.Category( 
+                        nodetype="category",
+                        input="variation",
+                        content=[
+                            cs.CategoryItem(key="nominal", value=tth[6].data),
+                            cs.CategoryItem(key="up", value=tth[7].data),
+                            cs.CategoryItem(key="down", value=tth[8].data),
+                        ],
+                    )
+                ),
+                cs.CategoryItem(
+                    key="2018",
+                    value=cs.Category( 
+                        nodetype="category",
+                        input="variation",
+                        content=[
+                            cs.CategoryItem(key="nominal", value=tth[9].data),
+                            cs.CategoryItem(key="up", value=tth[10].data),
+                            cs.CategoryItem(key="down", value=tth[11].data),
+                        ],
+                    )
+                ),
+            ]
         )
     )
 
@@ -62,23 +113,20 @@ def write_correction(paths, corrname, outname):
 
 # %%
 if __name__ == "__main__":
-    # muon
-    # corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_EGM2D.root:EGamma_SF2D"]
-    # write_correction(corr_hists, "ttH SFs", "ttH_MuonID_SF")
+    #muon
+    corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_EGM2D.root:EGamma_SF2D"]
+    write_correction(corr_hists, "ttH SFs", "ttH_MuonID_SF")
 
-    # corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
-    # write_correction(corr_hists, "ttH SFs", "ttH_MuonISO_SF")
+    corr_hists = ["../junk/root_sf/muon/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/muon/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
+    write_correction(corr_hists, "ttH SFs", "ttH_MuonISO_SF")
 
-    # # electron
-    # corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_2lss_EGM2D.root:EGamma_SF2D"]
-    # write_correction(corr_hists, "ttH SFs", "ttH_ElectronID_SF")
+    # electron
+    corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_2lss_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_2lss_EGM2D.root:EGamma_SF2D"]
+    write_correction(corr_hists, "ttH SFs", "ttH_ElectronID_SF")
 
-    # corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
-    # write_correction(corr_hists, "ttH SFs", "ttH_ElectronISO_SF")
+    corr_hists = ["../junk/root_sf/elec/egammaEffi2016APV_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2016_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2017_iso_EGM2D.root:EGamma_SF2D", "../junk/root_sf/elec/egammaEffi2018_iso_EGM2D.root:EGamma_SF2D"]
+    write_correction(corr_hists, "ttH SFs", "ttH_ElectronISO_SF")
 
-    # corr_hists = ["../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2017.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2018.root:EGamma_SF2D"]
-    # write_correction(corr_hists, "Electron Trigger SFs", "trigger")
-
-    corr_hists = ["hist_beff.root:hist_btight", "hist_beff.root:hist_bloose", "hist_beff.root:hist_bmedium", "hist_beff.root:hist_ctight", "hist_beff.root:hist_cloose", "hist_beff.root:hist_cmedium", "hist_beff.root:hist_ltight", "hist_beff.root:hist_lloose", "hist_beff.root:hist_lmedium"]
-    write_correction(corr_hists, "Btag Efficiency", "btag")
+    corr_hists = ["../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2016.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2017.root:EGamma_SF2D", "../junk/root_sf/elec/electron_hlt_sfs_2018.root:EGamma_SF2D"]
+    write_correction(corr_hists, "Electron Trigger SFs", "trigger")
 # %%

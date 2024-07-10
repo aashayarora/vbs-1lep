@@ -5,6 +5,7 @@ import os.path
 @dataclass
 class Systematics():
     sig: list
+    data: list
     ttH_elec_reco: list
     ttH_elec_recotoloose: list
     ttH_elec_trig: list
@@ -45,6 +46,8 @@ class Systematics():
     scale_j_RelativeSample_2018_13TeV: list
     res_j_13TeV: list
     metUncl_13Tev: list
+    jms_pnetreg: list
+    jmr_pnetreg: list
     btagWeightDeepJet_HF_13Tev: list
     btagWeightDeepJet_LF_13Tev: list
     vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP: list
@@ -108,9 +111,23 @@ def get_variation(correction=None, tree="Events"):
     else:
         return ["{:.5f}".format(1 + abs(x)) for x in variations[0]]
 
+def get_data(tree="Events"):
+    data_file = "/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/data_MVA_abcdnet.root"
+    
+    BDT_CUT = 0.56
+    DNN_CUT = 0.92
+    
+    with uproot.open(data_file) as f:
+        df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+
+    b = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score > DNN_CUT)].weight)
+    c = sum(df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
+    d = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
+
+    return [b, c, d]
+
 def write_datacard(sys):
-    datacard = f"""
-imax 4 number of channels
+    datacard = f"""imax 4 number of channels
 jmax 1 number of backgrounds
 kmax * number of nuisance parameters
 --------------------------------------------------------------------------------------------------------------------------------
@@ -164,6 +181,8 @@ CMS_scale_j_RelativeSample_2017_13TeV             lnN   -                  -    
 CMS_scale_j_RelativeSample_2018_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2018_13TeV[0]}     {sys.scale_j_RelativeSample_2018_13TeV[1]}     {sys.scale_j_RelativeSample_2018_13TeV[2]}     {sys.scale_j_RelativeSample_2018_13TeV[3]}
 CMS_res_j_13TeV                                   lnN   -                  -                  -                  -                  {sys.res_j_13TeV[0]}     {sys.res_j_13TeV[1]}     {sys.res_j_13TeV[2]}     {sys.res_j_13TeV[3]}
 CMS_metUncl_13Tev                                 lnN   -                  -                  -                  -                  {sys.metUncl_13Tev[0]}     {sys.metUncl_13Tev[1]}     {sys.metUncl_13Tev[2]}     {sys.metUncl_13Tev[3]}
+CMS_jms_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jms_pnetreg[0]}     {sys.jms_pnetreg[1]}     {sys.jms_pnetreg[2]}     {sys.jms_pnetreg[3]}
+CMS_jmr_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jmr_pnetreg[0]}     {sys.jmr_pnetreg[1]}     {sys.jmr_pnetreg[2]}     {sys.jmr_pnetreg[3]}
 CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_HF_13Tev[0]}     {sys.btagWeightDeepJet_HF_13Tev[1]}     {sys.btagWeightDeepJet_HF_13Tev[2]}     {sys.btagWeightDeepJet_HF_13Tev[3]}
 CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_LF_13Tev[0]}     {sys.btagWeightDeepJet_LF_13Tev[1]}     {sys.btagWeightDeepJet_LF_13Tev[2]}     {sys.btagWeightDeepJet_LF_13Tev[3]}
 CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[3]}
@@ -176,9 +195,9 @@ CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -    
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[3]}                  
 --------------------------------------------------------------------------------------------------------------------------------
 A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    78  [52,104]                  
-C_OneLep rateParam                  C  TotalBkg_OneLep    12  [2,22]                  
-D_OneLep rateParam                  D  TotalBkg_OneLep    1054  [957,1151]                
+B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]}                  
+C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]}                    
+D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]}                
 """
     with open("datacard.txt", "w") as f:
         f.write(datacard)
@@ -186,6 +205,7 @@ D_OneLep rateParam                  D  TotalBkg_OneLep    1054  [957,1151]
 if __name__ == "__main__":
     sys = Systematics(
         sig=get_variation(),
+        data=get_data(),
         ttH_elec_reco=get_variation("electron_scale_factors_Reco"),
         ttH_elec_recotoloose=get_variation("electron_scale_factors_ttHID"),
         ttH_elec_trig=get_variation("electron_scale_factors_trigger"),
@@ -226,6 +246,8 @@ if __name__ == "__main__":
         scale_j_RelativeSample_2018_13TeV=get_variation("jec_relativesample_2018"),
         res_j_13TeV=get_variation("jer"),
         metUncl_13Tev=get_variation("met_unclustered"),
+        jms_pnetreg=get_variation("jms"),
+        jmr_pnetreg=get_variation("jmr"),
         btagWeightDeepJet_HF_13Tev=get_variation("btagging_scale_factors_HF"),
         btagWeightDeepJet_LF_13Tev=get_variation("btagging_scale_factors_LF"),
         vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP=get_variation("particlenet_w_weight_2016preVFP"),
