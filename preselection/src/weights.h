@@ -79,6 +79,12 @@ const auto cset_btag_2017 = *CorrectionSet::from_file("corrections/scalefactors/
 const auto cset_btag_2018 = *CorrectionSet::from_file("corrections/scalefactors/btagging/2018.json");
 const auto cset_btag_eff = *CorrectionSet::from_file("corrections/scalefactors/btagging/btag_eff.json");
 
+RNode PSWeight_FSR(RNode df);
+RNode PSWeight_ISR(RNode df);
+RNode LHEScaleWeight_muF(RNode df);
+RNode LHEScaleWeight_muR(RNode df);
+RNode LHEWeights_pdf(RNode df);
+
 // final weights
 RNode finalDataWeight(RNode df);
 RNode finalMCWeight(RNode df);

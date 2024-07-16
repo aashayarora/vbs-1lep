@@ -93,6 +93,16 @@ cd ./preselection/
 ./bin/runAnalysis -i input/sig.json --sig --var down --sfvar btagging_scale_factors_HF -o sig_btagging_scale_factors_HF_down.root &
 ./bin/runAnalysis -i input/sig.json --sig --var up --sfvar btagging_scale_factors_LF -o sig_btagging_scale_factors_LF_up.root &
 ./bin/runAnalysis -i input/sig.json --sig --var down --sfvar btagging_scale_factors_LF -o sig_btagging_scale_factors_LF_down.root &
+./bin/runAnalysis -i input/sig.json --sig --var up --sfvar PSWeight_ISR -o sig_PSWeight_ISR_up.root &
+./bin/runAnalysis -i input/sig.json --sig --var down --sfvar PSWeight_ISR -o sig_PSWeight_ISR_down.root &
+./bin/runAnalysis -i input/sig.json --sig --var up --sfvar PSWeight_FSR -o sig_PSWeight_FSR_up.root &
+./bin/runAnalysis -i input/sig.json --sig --var down --sfvar PSWeight_FSR -o sig_PSWeight_FSR_down.root &
+./bin/runAnalysis -i input/sig.json --sig --var up --sfvar LHEScaleWeight_muR -o sig_LHEScaleWeight_muR_up.root &
+./bin/runAnalysis -i input/sig.json --sig --var down --sfvar LHEScaleWeight_muR -o sig_LHEScaleWeight_muR_down.root &
+./bin/runAnalysis -i input/sig.json --sig --var up --sfvar LHEScaleWeight_muF -o sig_LHEScaleWeight_muF_up.root &
+./bin/runAnalysis -i input/sig.json --sig --var down --sfvar LHEScaleWeight_muF -o sig_LHEScaleWeight_muF_down.root &
+./bin/runAnalysis -i input/sig.json --sig --var up --sfvar LHEWeights_pdf -o sig_LHEWeights_pdf_up.root &
+./bin/runAnalysis -i input/sig.json --sig --var down --sfvar LHEWeights_pdf -o sig_LHEWeights_pdf_down.root &
 ./bin/runAnalysis -i input/sig.json --sig --jec --jec_type Regrouped_Absolute --var up -o sig_jec_absolute_up.root &
 ./bin/runAnalysis -i input/sig.json --sig --jec --jec_type Regrouped_BBEC1 --var up -o sig_jec_bbec1_up.root &
 ./bin/runAnalysis -i input/sig.json --sig --jec --jec_type Regrouped_EC2 --var up -o sig_jec_ec2_up.root &
@@ -195,6 +205,16 @@ cd mva/
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_btagging_scale_factors_HF_down.root &
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_btagging_scale_factors_LF_up.root &
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_btagging_scale_factors_LF_down.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_PSWeight_ISR_up.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_PSWeight_ISR_down.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_PSWeight_FSR_up.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_PSWeight_FSR_down.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muR_up.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muR_down.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muF_up.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muF_down.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_up.root &
+./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_down.root &
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_jec_absolute_up.root &
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_jec_bbec1_up.root &
 ./bin/runMVA -i /data/userdata/aaarora/output/run2/sig_jec_ec2_up.root &

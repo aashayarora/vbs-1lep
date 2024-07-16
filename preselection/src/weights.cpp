@@ -674,6 +674,48 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
     return df.Define("btagging_scale_factors_LF", eval_correction, {"sample_year", "LnTBJet_eta", "LnTBJet_pt", "LnTBJet_hadronFlavour"});
 }
 
+RNode PSWeight_FSR(RNode df) {
+    auto eval_correction = [] (const RVec<float> PSWeight) {
+        return RVec<float>{1., PSWeight[1], PSWeight[3]};
+    };
+    return df.Define("PSWeight_FSR", eval_correction, {"PSWeight"});
+}
+
+RNode PSWeight_ISR(RNode df) {
+    auto eval_correction = [] (const RVec<float> PSWeight) {
+        return RVec<float>{1., PSWeight[0], PSWeight[2]};
+    };
+    return df.Define("PSWeight_ISR", eval_correction, {"PSWeight"});
+}
+
+RNode LHEScaleWeight_muF(RNode df) {
+    auto eval_correction = [] (const RVec<float> LHEScaleWeight) {
+        return RVec<float>{1., LHEScaleWeight[5], LHEScaleWeight[3]};
+    };
+    return df.Define("LHEScaleWeight_muF", eval_correction, {"LHEScaleWeight"});
+}
+
+RNode LHEScaleWeight_muR(RNode df) {
+    auto eval_correction = [] (const RVec<float> LHEScaleWeight) {
+        return RVec<float>{1., LHEScaleWeight[7], LHEScaleWeight[1]};
+    };
+    return df.Define("LHEScaleWeight_muR", eval_correction, {"LHEScaleWeight"});
+}
+
+RNode LHEWeights_pdf(RNode df) {
+    auto eval_correction = [] (const RVec<float> LHEWeights, float genWeight) {
+        RVec<float> PDFWeights = {1., 1., 1.};
+        float PDFUncValue = 0.0;
+        auto LHEWeights_sorted = Sort(LHEWeights);
+        PDFUncValue += 0.5 * ((LHEWeights_sorted[84] - 1) - (LHEWeights_sorted[16] - 1));
+        PDFWeights[0] = genWeight;
+        PDFWeights[1] = (genWeight * (1 + PDFUncValue));
+        PDFWeights[2] = (genWeight * (1 - PDFUncValue));
+        return PDFWeights;
+    };  
+    return df.Define("LHEWeights_pdf", eval_correction, {"LHEPdfWeight", "genWeight"});
+}
+
 RNode finalMCWeight(RNode df){
     auto df_l1prefire = L1PreFiringWeight(df);
     auto df_pileup = pileupScaleFactors(cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018, df_l1prefire);
@@ -703,7 +745,14 @@ RNode finalMCWeight(RNode df){
     auto df_btag_hf = bTaggingScaleFactors_HF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag);
     auto df_btag_lf = bTaggingScaleFactors_LF(cset_btag_2016preVFP, cset_btag_2016postVFP, cset_btag_2017, cset_btag_2018, cset_btag_eff, df_btag_hf);
     
-    return df_btag_lf.Define("weight", 
+    auto df_psweight_fsr = PSWeight_FSR(df_btag_lf);
+    auto df_psweight_isr = PSWeight_ISR(df_psweight_fsr);
+    auto df_lhescaleweight_muf = LHEScaleWeight_muF(df_psweight_isr);
+    auto df_lhescaleweight_mur = LHEScaleWeight_muR(df_lhescaleweight_muf);
+
+    auto df_pdf_lheweight = LHEWeights_pdf(df_lhescaleweight_mur);
+
+    return df_pdf_lheweight.Define("weight", 
             "pileup_weight[0] * "
             "pileupid_weight[0] * "
             "L1PreFiringWeight[0] * "
@@ -726,9 +775,13 @@ RNode finalMCWeight(RNode df){
             "particlenet_h_weight_2018[0] * "
             "btagging_scale_factors_HF[0] * "
             "btagging_scale_factors_LF[0] * "
+            "PSWeight_ISR[0] * "
+            "PSWeight_FSR[0] * "
+            "LHEScaleWeight_muR[0] * "
+            "LHEScaleWeight_muF[0] * "
+            "LHEWeights_pdf[0] * " // contains genWeights
             "HEMweight * "
-            "xsec_weight * "
-            "genWeight");
+            "xsec_weight");
 }
 
 RNode finalDataWeight(RNode df){

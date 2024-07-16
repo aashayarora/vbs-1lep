@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 import uproot
+import numpy as np
 import os.path
 
 @dataclass
 class Systematics():
     sig: list
     data: list
+    stat_unc: list
     ttH_elec_reco: list
     ttH_elec_recotoloose: list
     ttH_elec_trig: list
@@ -58,6 +60,11 @@ class Systematics():
     vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP: list
     vbsvvh1lep_qTagWeightXWqq_13TeV_17: list
     vbsvvh1lep_qTagWeightXWqq_13TeV_18: list
+    PSWeight_FSR: list
+    PSWeight_ISR: list
+    LHEScaleWeight_muF: list
+    LHEScaleWeight_muR: list
+    LHEWeights_pdf: list
 
 def max_var(variations):
     deviations = [abs(1 - x) for x in variations]
@@ -79,7 +86,7 @@ def get_variation(correction=None, tree="Events"):
     d = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
 
     if correction is None:
-        return ["{:.5f}".format(i) for i in [a, b, c, d]]
+        return ["{:.5f}".format(round(i, 5)) for i in [a, b, c, d]]
 
     variations = []
 
@@ -107,9 +114,31 @@ def get_variation(correction=None, tree="Events"):
         variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
 
     if len(variations) == 2:
-        return ["{:.5f}".format(1 + abs(max_var(x))) for x in zip(*variations)]
+        return ["{:.5f}".format(round(1 + abs(max_var(x)), 5)) for x in zip(*variations)]
     else:
-        return ["{:.5f}".format(1 + abs(x)) for x in variations[0]]
+        return ["{:.5f}".format(round(1 + abs(x), 5)) for x in variations[0]]
+
+def get_stats(tree="Events"):
+    print("Evaluating stats")
+    sig_file = "/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_MVA_abcdnet.root"
+    
+    BDT_CUT = 0.56
+    DNN_CUT = 0.92
+    
+    with uproot.open(sig_file) as f:
+        df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+
+    df_a = df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score > DNN_CUT)]
+    df_b = df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score > DNN_CUT)]
+    df_c = df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)]
+    df_d = df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)]
+
+    a = 1 + np.sqrt(sum(df_a[["weight"]].map(lambda x: x**2).weight)) / sum(df_a.weight)
+    b = 1 + np.sqrt(sum(df_b[["weight"]].map(lambda x: x**2).weight)) / sum(df_b.weight)
+    c = 1 + np.sqrt(sum(df_c[["weight"]].map(lambda x: x**2).weight)) / sum(df_c.weight)
+    d = 1 + np.sqrt(sum(df_d[["weight"]].map(lambda x: x**2).weight)) / sum(df_d.weight)
+
+    return ["{:.4f}".format(round(i, 4)) for i in [a, b, c, d]]
 
 def get_data(tree="Events"):
     data_file = "/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/data_MVA_abcdnet.root"
@@ -126,86 +155,11 @@ def get_data(tree="Events"):
 
     return [b, c, d]
 
-def write_datacard(sys):
-    datacard = f"""imax 4 number of channels
-jmax 1 number of backgrounds
-kmax * number of nuisance parameters
---------------------------------------------------------------------------------------------------------------------------------
-bin                                                     A                  B                  C                  D                  
-observation                                             1                  78                 12                 1054               
---------------------------------------------------------------------------------------------------------------------------------
-bin                                                     A                  B                  C                  D                  A           B           C           D           
-process                                                 TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalSig    TotalSig    TotalSig    TotalSig    
-process                                                 1                  1                  1                  1                  0           0           0           0           
-rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}     {sys.sig[2]}     {sys.sig[3]}    
---------------------------------------------------------------------------------------------------------------------------------
-CMS_vbsvvh1lep_control_abcd_syst                  lnN   1.2                -                  -                  -                  -           -           -           -           
-lumi_13TeV_correlated                             lnN   -                  -                  -                  -                  1.016       1.016       1.016       1.016       
-CMS_ttH_elec_reco                                 lnN   -                  -                  -                  -                  {sys.ttH_elec_reco[0]}     {sys.ttH_elec_reco[1]}     {sys.ttH_elec_reco[2]}     {sys.ttH_elec_reco[3]}
-CMS_ttH_elec_recotoloose                          lnN   -                  -                  -                  -                  {sys.ttH_elec_recotoloose[0]}     {sys.ttH_elec_recotoloose[1]}     {sys.ttH_elec_recotoloose[2]}     {sys.ttH_elec_recotoloose[3]}
-CMS_ttH_elec_trig                                 lnN   -                  -                  -                  -                  {sys.ttH_elec_trig[0]}     {sys.ttH_elec_trig[1]}     {sys.ttH_elec_trig[2]}     {sys.ttH_elec_trig[3]}
-CMS_ttH_elec_loosetoiso                           lnN   -                  -                  -                  -                  {sys.ttH_elec_loosetoiso[0]}     {sys.ttH_elec_loosetoiso[1]}     {sys.ttH_elec_loosetoiso[2]}     {sys.ttH_elec_loosetoiso[3]}
-CMS_ttH_elec_isototight                           lnN   -                  -                  -                  -                  {sys.ttH_elec_isototight[0]}     {sys.ttH_elec_isototight[1]}     {sys.ttH_elec_isototight[2]}     {sys.ttH_elec_isototight[3]}
-CMS_ttH_muon_recotoloose                          lnN   -                  -                  -                  -                  {sys.ttH_muon_recotoloose[0]}     {sys.ttH_muon_recotoloose[1]}     {sys.ttH_muon_recotoloose[2]}     {sys.ttH_muon_recotoloose[3]}
-CMS_ttH_muon_trig                                 lnN   -                  -                  -                  -                  {sys.ttH_muon_trig[0]}     {sys.ttH_muon_trig[1]}     {sys.ttH_muon_trig[2]}     {sys.ttH_muon_trig[3]}
-CMS_ttH_muon_loosetoiso                           lnN   -                  -                  -                  -                  {sys.ttH_muon_loosetoiso[0]}     {sys.ttH_muon_loosetoiso[1]}     {sys.ttH_muon_loosetoiso[2]}     {sys.ttH_muon_loosetoiso[3]}
-CMS_ttH_muon_isototight                           lnN   -                  -                  -                  -                  {sys.ttH_muon_isototight[0]}     {sys.ttH_muon_isototight[1]}     {sys.ttH_muon_isototight[2]}     {sys.ttH_muon_isototight[3]}
-CMS_PrefireWeight_13TeV                           lnN   -                  -                  -                  -                  {sys.PrefireWeight_13TeV[0]}     {sys.PrefireWeight_13TeV[1]}     {sys.PrefireWeight_13TeV[2]}     {sys.PrefireWeight_13TeV[3]}
-CMS_vbsvvh_puWeight                               lnN   -                  -                  -                  -                  {sys.vbsvvh_puWeight[0]}     {sys.vbsvvh_puWeight[1]}     {sys.vbsvvh_puWeight[2]}     {sys.vbsvvh_puWeight[3]}
-CMS_vbsvvh_puJetID                                lnN   -                  -                  -                  -                  {sys.vbsvvh_puJetID[0]}     {sys.vbsvvh_puJetID[1]}     {sys.vbsvvh_puJetID[2]}     {sys.vbsvvh_puJetID[3]}
-CMS_scale_j_Absolute_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_13TeV[0]}     {sys.scale_j_Absolute_13TeV[1]}     {sys.scale_j_Absolute_13TeV[2]}     {sys.scale_j_Absolute_13TeV[3]}
-CMS_scale_j_Absolute_2016postVFP_13TeV            lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2016postVFP_13TeV[0]}     {sys.scale_j_Absolute_2016postVFP_13TeV[1]}     {sys.scale_j_Absolute_2016postVFP_13TeV[2]}     {sys.scale_j_Absolute_2016postVFP_13TeV[3]}
-CMS_scale_j_Absolute_2016preVFP_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2016preVFP_13TeV[0]}     {sys.scale_j_Absolute_2016preVFP_13TeV[1]}     {sys.scale_j_Absolute_2016preVFP_13TeV[2]}     {sys.scale_j_Absolute_2016preVFP_13TeV[3]}
-CMS_scale_j_Absolute_2017_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2017_13TeV[0]}     {sys.scale_j_Absolute_2017_13TeV[1]}     {sys.scale_j_Absolute_2017_13TeV[2]}     {sys.scale_j_Absolute_2017_13TeV[3]}
-CMS_scale_j_Absolute_2018_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2018_13TeV[0]}     {sys.scale_j_Absolute_2018_13TeV[1]}     {sys.scale_j_Absolute_2018_13TeV[2]}     {sys.scale_j_Absolute_2018_13TeV[3]}
-CMS_scale_j_BBEC1_13TeV                           lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_13TeV[0]}     {sys.scale_j_BBEC1_13TeV[1]}     {sys.scale_j_BBEC1_13TeV[2]}     {sys.scale_j_BBEC1_13TeV[3]}
-CMS_scale_j_BBEC1_2016postVFP_13TeV               lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2016postVFP_13TeV[0]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[1]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[2]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[3]}
-CMS_scale_j_BBEC1_2016preVFP_13TeV                lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2016preVFP_13TeV[0]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[1]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[2]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[3]}
-CMS_scale_j_BBEC1_2017_13TeV                      lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2017_13TeV[0]}     {sys.scale_j_BBEC1_2017_13TeV[1]}     {sys.scale_j_BBEC1_2017_13TeV[2]}     {sys.scale_j_BBEC1_2017_13TeV[3]}
-CMS_scale_j_BBEC1_2018_13TeV                      lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2018_13TeV[0]}     {sys.scale_j_BBEC1_2018_13TeV[1]}     {sys.scale_j_BBEC1_2018_13TeV[2]}     {sys.scale_j_BBEC1_2018_13TeV[3]}
-CMS_scale_j_EC2_13TeV                             lnN   -                  -                  -                  -                  {sys.scale_j_EC2_13TeV[0]}     {sys.scale_j_EC2_13TeV[1]}     {sys.scale_j_EC2_13TeV[2]}     {sys.scale_j_EC2_13TeV[3]}
-CMS_scale_j_EC2_2016postVFP_13TeV                 lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2016postVFP_13TeV[0]}     {sys.scale_j_EC2_2016postVFP_13TeV[1]}     {sys.scale_j_EC2_2016postVFP_13TeV[2]}     {sys.scale_j_EC2_2016postVFP_13TeV[3]}
-CMS_scale_j_EC2_2016preVFP_13TeV                  lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2016preVFP_13TeV[0]}     {sys.scale_j_EC2_2016preVFP_13TeV[1]}     {sys.scale_j_EC2_2016preVFP_13TeV[2]}     {sys.scale_j_EC2_2016preVFP_13TeV[3]}
-CMS_scale_j_EC2_2017_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2017_13TeV[0]}     {sys.scale_j_EC2_2017_13TeV[1]}     {sys.scale_j_EC2_2017_13TeV[2]}     {sys.scale_j_EC2_2017_13TeV[3]}
-CMS_scale_j_EC2_2018_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2018_13TeV[0]}     {sys.scale_j_EC2_2018_13TeV[1]}     {sys.scale_j_EC2_2018_13TeV[2]}     {sys.scale_j_EC2_2018_13TeV[3]}
-CMS_scale_j_FlavorQCD_13TeV                       lnN   -                  -                  -                  -                  {sys.scale_j_FlavorQCD_13TeV[0]}     {sys.scale_j_FlavorQCD_13TeV[1]}     {sys.scale_j_FlavorQCD_13TeV[2]}     {sys.scale_j_FlavorQCD_13TeV[3]}
-CMS_scale_j_HF_13TeV                              lnN   -                  -                  -                  -                  {sys.scale_j_HF_13TeV[0]}     {sys.scale_j_HF_13TeV[1]}     {sys.scale_j_HF_13TeV[2]}     {sys.scale_j_HF_13TeV[3]}
-CMS_scale_j_HF_2016postVFP_13TeV                  lnN   -                  -                  -                  -                  {sys.scale_j_HF_2016postVFP_13TeV[0]}     {sys.scale_j_HF_2016postVFP_13TeV[1]}     {sys.scale_j_HF_2016postVFP_13TeV[2]}     {sys.scale_j_HF_2016postVFP_13TeV[3]}
-CMS_scale_j_HF_2016preVFP_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_HF_2016preVFP_13TeV[0]}     {sys.scale_j_HF_2016preVFP_13TeV[1]}     {sys.scale_j_HF_2016preVFP_13TeV[2]}     {sys.scale_j_HF_2016preVFP_13TeV[3]}
-CMS_scale_j_HF_2017_13TeV                         lnN   -                  -                  -                  -                  {sys.scale_j_HF_2017_13TeV[0]}     {sys.scale_j_HF_2017_13TeV[1]}     {sys.scale_j_HF_2017_13TeV[2]}     {sys.scale_j_HF_2017_13TeV[3]}
-CMS_scale_j_HF_2018_13TeV                         lnN   -                  -                  -                  -                  {sys.scale_j_HF_2018_13TeV[0]}     {sys.scale_j_HF_2018_13TeV[1]}     {sys.scale_j_HF_2018_13TeV[2]}     {sys.scale_j_HF_2018_13TeV[3]}
-CMS_scale_j_RelativeBal_13TeV                     lnN   -                  -                  -                  -                  {sys.scale_j_RelativeBal_13TeV[0]}     {sys.scale_j_RelativeBal_13TeV[1]}     {sys.scale_j_RelativeBal_13TeV[2]}     {sys.scale_j_RelativeBal_13TeV[3]}
-CMS_scale_j_RelativeSample_2016postVFP_13TeV      lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2016postVFP_13TeV[0]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[1]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[2]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[3]}
-CMS_scale_j_RelativeSample_2016preVFP_13TeV       lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2016preVFP_13TeV[0]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[1]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[2]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[3]}
-CMS_scale_j_RelativeSample_2017_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2017_13TeV[0]}     {sys.scale_j_RelativeSample_2017_13TeV[1]}     {sys.scale_j_RelativeSample_2017_13TeV[2]}     {sys.scale_j_RelativeSample_2017_13TeV[3]}
-CMS_scale_j_RelativeSample_2018_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2018_13TeV[0]}     {sys.scale_j_RelativeSample_2018_13TeV[1]}     {sys.scale_j_RelativeSample_2018_13TeV[2]}     {sys.scale_j_RelativeSample_2018_13TeV[3]}
-CMS_res_j_13TeV                                   lnN   -                  -                  -                  -                  {sys.res_j_13TeV[0]}     {sys.res_j_13TeV[1]}     {sys.res_j_13TeV[2]}     {sys.res_j_13TeV[3]}
-CMS_metUncl_13Tev                                 lnN   -                  -                  -                  -                  {sys.metUncl_13Tev[0]}     {sys.metUncl_13Tev[1]}     {sys.metUncl_13Tev[2]}     {sys.metUncl_13Tev[3]}
-CMS_jms_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jms_pnetreg[0]}     {sys.jms_pnetreg[1]}     {sys.jms_pnetreg[2]}     {sys.jms_pnetreg[3]}
-CMS_jmr_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jmr_pnetreg[0]}     {sys.jmr_pnetreg[1]}     {sys.jmr_pnetreg[2]}     {sys.jmr_pnetreg[3]}
-CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_HF_13Tev[0]}     {sys.btagWeightDeepJet_HF_13Tev[1]}     {sys.btagWeightDeepJet_HF_13Tev[2]}     {sys.btagWeightDeepJet_HF_13Tev[3]}
-CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_LF_13Tev[0]}     {sys.btagWeightDeepJet_LF_13Tev[1]}     {sys.btagWeightDeepJet_LF_13Tev[2]}     {sys.btagWeightDeepJet_LF_13Tev[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[3]}
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[3]}
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[3]}
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[3]}
-CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[3]}                  
---------------------------------------------------------------------------------------------------------------------------------
-A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]}                  
-C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]}                    
-D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]}                
-"""
-    with open("datacard.txt", "w") as f:
-        f.write(datacard)
-
 if __name__ == "__main__":
     sys = Systematics(
         sig=get_variation(),
         data=get_data(),
+        stat_unc=get_stats(),
         ttH_elec_reco=get_variation("electron_scale_factors_Reco"),
         ttH_elec_recotoloose=get_variation("electron_scale_factors_ttHID"),
         ttH_elec_trig=get_variation("electron_scale_factors_trigger"),
@@ -257,8 +211,94 @@ if __name__ == "__main__":
         vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP=get_variation("particlenet_h_weight_2016preVFP"),
         vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP=get_variation("particlenet_h_weight_2016postVFP"),
         vbsvvh1lep_qTagWeightXWqq_13TeV_17=get_variation("particlenet_h_weight_2017"),
-        vbsvvh1lep_qTagWeightXWqq_13TeV_18=get_variation("particlenet_h_weight_2018")
+        vbsvvh1lep_qTagWeightXWqq_13TeV_18=get_variation("particlenet_h_weight_2018"),
+        PSWeight_FSR=get_variation("PSWeight_FSR"),
+        PSWeight_ISR=get_variation("PSWeight_ISR"),
+        LHEScaleWeight_muF=get_variation("LHEScaleWeight_muF"),
+        LHEScaleWeight_muR=get_variation("LHEScaleWeight_muR"),
+        LHEWeights_pdf=get_variation("LHEWeights_pdf")
     )
 
-    write_datacard(sys)
-
+    datacard = f"""imax 4 number of channels
+jmax 1 number of backgrounds
+kmax * number of nuisance parameters
+--------------------------------------------------------------------------------------------------------------------------------
+bin                                                     A                  B                  C                  D                  
+observation                                             1                  {sys.data[0]}                 {sys.data[1]}                 {sys.data[2]}               
+--------------------------------------------------------------------------------------------------------------------------------
+bin                                                     A                  B                  C                  D                  A           B           C           D           
+process                                                 TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalSig    TotalSig    TotalSig    TotalSig    
+process                                                 1                  1                  1                  1                  0           0           0           0           
+rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}     {sys.sig[2]}     {sys.sig[3]}    
+--------------------------------------------------------------------------------------------------------------------------------
+CMS_vbsvvh1lep_control_abcd_syst                  lnN   1.2                -                  -                  -                  -           -           -           -           
+lumi_13TeV_correlated                             lnN   -                  -                  -                  -                  1.016       1.016       1.016       1.016       
+CMS_vbsvvh1lep_signal_RegionA                     lnN   -                  -                  -                  -                  {sys.stat_unc[0]}      -           -           -
+CMS_vbsvvh1lep_signal_RegionB                     lnN   -                  -                  -                  -                  -           {sys.stat_unc[1]}      -           -           
+CMS_vbsvvh1lep_signal_RegionC                     lnN   -                  -                  -                  -                  -           -           {sys.stat_unc[2]}      -           
+CMS_vbsvvh1lep_signal_RegionD                     lnN   -                  -                  -                  -                  -           -           -           {sys.stat_unc[3]}     
+CMS_LHE_weights_pdf_vbsvvh                        lnN   -                  -                  -                  -                  {sys.LHEWeights_pdf[0]}     {sys.LHEWeights_pdf[1]}     {sys.LHEWeights_pdf[2]}     {sys.LHEWeights_pdf[3]}
+CMS_ttH_elec_reco                                 lnN   -                  -                  -                  -                  {sys.ttH_elec_reco[0]}     {sys.ttH_elec_reco[1]}     {sys.ttH_elec_reco[2]}     {sys.ttH_elec_reco[3]}
+CMS_ttH_elec_recotoloose                          lnN   -                  -                  -                  -                  {sys.ttH_elec_recotoloose[0]}     {sys.ttH_elec_recotoloose[1]}     {sys.ttH_elec_recotoloose[2]}     {sys.ttH_elec_recotoloose[3]}
+CMS_ttH_elec_trig                                 lnN   -                  -                  -                  -                  {sys.ttH_elec_trig[0]}     {sys.ttH_elec_trig[1]}     {sys.ttH_elec_trig[2]}     {sys.ttH_elec_trig[3]}
+CMS_ttH_elec_loosetoiso                           lnN   -                  -                  -                  -                  {sys.ttH_elec_loosetoiso[0]}     {sys.ttH_elec_loosetoiso[1]}     {sys.ttH_elec_loosetoiso[2]}     {sys.ttH_elec_loosetoiso[3]}
+CMS_ttH_elec_isototight                           lnN   -                  -                  -                  -                  {sys.ttH_elec_isototight[0]}     {sys.ttH_elec_isototight[1]}     {sys.ttH_elec_isototight[2]}     {sys.ttH_elec_isototight[3]}
+CMS_ttH_muon_recotoloose                          lnN   -                  -                  -                  -                  {sys.ttH_muon_recotoloose[0]}     {sys.ttH_muon_recotoloose[1]}     {sys.ttH_muon_recotoloose[2]}     {sys.ttH_muon_recotoloose[3]}
+CMS_ttH_muon_trig                                 lnN   -                  -                  -                  -                  {sys.ttH_muon_trig[0]}     {sys.ttH_muon_trig[1]}     {sys.ttH_muon_trig[2]}     {sys.ttH_muon_trig[3]}
+CMS_ttH_muon_loosetoiso                           lnN   -                  -                  -                  -                  {sys.ttH_muon_loosetoiso[0]}     {sys.ttH_muon_loosetoiso[1]}     {sys.ttH_muon_loosetoiso[2]}     {sys.ttH_muon_loosetoiso[3]}
+CMS_ttH_muon_isototight                           lnN   -                  -                  -                  -                  {sys.ttH_muon_isototight[0]}     {sys.ttH_muon_isototight[1]}     {sys.ttH_muon_isototight[2]}     {sys.ttH_muon_isototight[3]}
+CMS_PSWeight_FSR_vbsvvh                           lnN   -                  -                  -                  -                  {sys.PSWeight_FSR[0]}     {sys.PSWeight_FSR[1]}     {sys.PSWeight_FSR[2]}     {sys.PSWeight_FSR[3]}
+CMS_PSWeight_ISR_vbsvvh                           lnN   -                  -                  -                  -                  {sys.PSWeight_ISR[0]}     {sys.PSWeight_ISR[1]}     {sys.PSWeight_ISR[2]}     {sys.PSWeight_ISR[3]}
+CMS_PrefireWeight_13TeV                           lnN   -                  -                  -                  -                  {sys.PrefireWeight_13TeV[0]}     {sys.PrefireWeight_13TeV[1]}     {sys.PrefireWeight_13TeV[2]}     {sys.PrefireWeight_13TeV[3]}
+CMS_vbsvvh_puWeight                               lnN   -                  -                  -                  -                  {sys.vbsvvh_puWeight[0]}     {sys.vbsvvh_puWeight[1]}     {sys.vbsvvh_puWeight[2]}     {sys.vbsvvh_puWeight[3]}
+CMS_LHE_weights_scale_muF_vbsvvh                  lnN   -                  -                  -                  -                  {sys.LHEScaleWeight_muF[0]}     {sys.LHEScaleWeight_muF[1]}     {sys.LHEScaleWeight_muF[2]}     {sys.LHEScaleWeight_muF[3]}
+CMS_LHE_weights_scale_muR_vbsvvh                  lnN   -                  -                  -                  -                  {sys.LHEScaleWeight_muR[0]}     {sys.LHEScaleWeight_muR[1]}     {sys.LHEScaleWeight_muR[2]}     {sys.LHEScaleWeight_muR[3]}
+CMS_vbsvvh_puJetID                                lnN   -                  -                  -                  -                  {sys.vbsvvh_puJetID[0]}     {sys.vbsvvh_puJetID[1]}     {sys.vbsvvh_puJetID[2]}     {sys.vbsvvh_puJetID[3]}
+CMS_scale_j_Absolute_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_13TeV[0]}     {sys.scale_j_Absolute_13TeV[1]}     {sys.scale_j_Absolute_13TeV[2]}     {sys.scale_j_Absolute_13TeV[3]}
+CMS_scale_j_Absolute_2016postVFP_13TeV            lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2016postVFP_13TeV[0]}     {sys.scale_j_Absolute_2016postVFP_13TeV[1]}     {sys.scale_j_Absolute_2016postVFP_13TeV[2]}     {sys.scale_j_Absolute_2016postVFP_13TeV[3]}
+CMS_scale_j_Absolute_2016preVFP_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2016preVFP_13TeV[0]}     {sys.scale_j_Absolute_2016preVFP_13TeV[1]}     {sys.scale_j_Absolute_2016preVFP_13TeV[2]}     {sys.scale_j_Absolute_2016preVFP_13TeV[3]}
+CMS_scale_j_Absolute_2017_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2017_13TeV[0]}     {sys.scale_j_Absolute_2017_13TeV[1]}     {sys.scale_j_Absolute_2017_13TeV[2]}     {sys.scale_j_Absolute_2017_13TeV[3]}
+CMS_scale_j_Absolute_2018_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_Absolute_2018_13TeV[0]}     {sys.scale_j_Absolute_2018_13TeV[1]}     {sys.scale_j_Absolute_2018_13TeV[2]}     {sys.scale_j_Absolute_2018_13TeV[3]}
+CMS_scale_j_BBEC1_13TeV                           lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_13TeV[0]}     {sys.scale_j_BBEC1_13TeV[1]}     {sys.scale_j_BBEC1_13TeV[2]}     {sys.scale_j_BBEC1_13TeV[3]}
+CMS_scale_j_BBEC1_2016postVFP_13TeV               lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2016postVFP_13TeV[0]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[1]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[2]}     {sys.scale_j_BBEC1_2016postVFP_13TeV[3]}
+CMS_scale_j_BBEC1_2016preVFP_13TeV                lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2016preVFP_13TeV[0]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[1]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[2]}     {sys.scale_j_BBEC1_2016preVFP_13TeV[3]}
+CMS_scale_j_BBEC1_2017_13TeV                      lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2017_13TeV[0]}     {sys.scale_j_BBEC1_2017_13TeV[1]}     {sys.scale_j_BBEC1_2017_13TeV[2]}     {sys.scale_j_BBEC1_2017_13TeV[3]}
+CMS_scale_j_BBEC1_2018_13TeV                      lnN   -                  -                  -                  -                  {sys.scale_j_BBEC1_2018_13TeV[0]}     {sys.scale_j_BBEC1_2018_13TeV[1]}     {sys.scale_j_BBEC1_2018_13TeV[2]}     {sys.scale_j_BBEC1_2018_13TeV[3]}
+CMS_scale_j_EC2_13TeV                             lnN   -                  -                  -                  -                  {sys.scale_j_EC2_13TeV[0]}     {sys.scale_j_EC2_13TeV[1]}     {sys.scale_j_EC2_13TeV[2]}     {sys.scale_j_EC2_13TeV[3]}
+CMS_scale_j_EC2_2016postVFP_13TeV                 lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2016postVFP_13TeV[0]}     {sys.scale_j_EC2_2016postVFP_13TeV[1]}     {sys.scale_j_EC2_2016postVFP_13TeV[2]}     {sys.scale_j_EC2_2016postVFP_13TeV[3]}
+CMS_scale_j_EC2_2016preVFP_13TeV                  lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2016preVFP_13TeV[0]}     {sys.scale_j_EC2_2016preVFP_13TeV[1]}     {sys.scale_j_EC2_2016preVFP_13TeV[2]}     {sys.scale_j_EC2_2016preVFP_13TeV[3]}
+CMS_scale_j_EC2_2017_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2017_13TeV[0]}     {sys.scale_j_EC2_2017_13TeV[1]}     {sys.scale_j_EC2_2017_13TeV[2]}     {sys.scale_j_EC2_2017_13TeV[3]}
+CMS_scale_j_EC2_2018_13TeV                        lnN   -                  -                  -                  -                  {sys.scale_j_EC2_2018_13TeV[0]}     {sys.scale_j_EC2_2018_13TeV[1]}     {sys.scale_j_EC2_2018_13TeV[2]}     {sys.scale_j_EC2_2018_13TeV[3]}
+CMS_scale_j_FlavorQCD_13TeV                       lnN   -                  -                  -                  -                  {sys.scale_j_FlavorQCD_13TeV[0]}     {sys.scale_j_FlavorQCD_13TeV[1]}     {sys.scale_j_FlavorQCD_13TeV[2]}     {sys.scale_j_FlavorQCD_13TeV[3]}
+CMS_scale_j_HF_13TeV                              lnN   -                  -                  -                  -                  {sys.scale_j_HF_13TeV[0]}     {sys.scale_j_HF_13TeV[1]}     {sys.scale_j_HF_13TeV[2]}     {sys.scale_j_HF_13TeV[3]}
+CMS_scale_j_HF_2016postVFP_13TeV                  lnN   -                  -                  -                  -                  {sys.scale_j_HF_2016postVFP_13TeV[0]}     {sys.scale_j_HF_2016postVFP_13TeV[1]}     {sys.scale_j_HF_2016postVFP_13TeV[2]}     {sys.scale_j_HF_2016postVFP_13TeV[3]}
+CMS_scale_j_HF_2016preVFP_13TeV                   lnN   -                  -                  -                  -                  {sys.scale_j_HF_2016preVFP_13TeV[0]}     {sys.scale_j_HF_2016preVFP_13TeV[1]}     {sys.scale_j_HF_2016preVFP_13TeV[2]}     {sys.scale_j_HF_2016preVFP_13TeV[3]}
+CMS_scale_j_HF_2017_13TeV                         lnN   -                  -                  -                  -                  {sys.scale_j_HF_2017_13TeV[0]}     {sys.scale_j_HF_2017_13TeV[1]}     {sys.scale_j_HF_2017_13TeV[2]}     {sys.scale_j_HF_2017_13TeV[3]}
+CMS_scale_j_HF_2018_13TeV                         lnN   -                  -                  -                  -                  {sys.scale_j_HF_2018_13TeV[0]}     {sys.scale_j_HF_2018_13TeV[1]}     {sys.scale_j_HF_2018_13TeV[2]}     {sys.scale_j_HF_2018_13TeV[3]}
+CMS_scale_j_RelativeBal_13TeV                     lnN   -                  -                  -                  -                  {sys.scale_j_RelativeBal_13TeV[0]}     {sys.scale_j_RelativeBal_13TeV[1]}     {sys.scale_j_RelativeBal_13TeV[2]}     {sys.scale_j_RelativeBal_13TeV[3]}
+CMS_scale_j_RelativeSample_2016postVFP_13TeV      lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2016postVFP_13TeV[0]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[1]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[2]}     {sys.scale_j_RelativeSample_2016postVFP_13TeV[3]}
+CMS_scale_j_RelativeSample_2016preVFP_13TeV       lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2016preVFP_13TeV[0]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[1]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[2]}     {sys.scale_j_RelativeSample_2016preVFP_13TeV[3]}
+CMS_scale_j_RelativeSample_2017_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2017_13TeV[0]}     {sys.scale_j_RelativeSample_2017_13TeV[1]}     {sys.scale_j_RelativeSample_2017_13TeV[2]}     {sys.scale_j_RelativeSample_2017_13TeV[3]}
+CMS_scale_j_RelativeSample_2018_13TeV             lnN   -                  -                  -                  -                  {sys.scale_j_RelativeSample_2018_13TeV[0]}     {sys.scale_j_RelativeSample_2018_13TeV[1]}     {sys.scale_j_RelativeSample_2018_13TeV[2]}     {sys.scale_j_RelativeSample_2018_13TeV[3]}
+CMS_res_j_13TeV                                   lnN   -                  -                  -                  -                  {sys.res_j_13TeV[0]}     {sys.res_j_13TeV[1]}     {sys.res_j_13TeV[2]}     {sys.res_j_13TeV[3]}
+CMS_metUncl_13Tev                                 lnN   -                  -                  -                  -                  {sys.metUncl_13Tev[0]}     {sys.metUncl_13Tev[1]}     {sys.metUncl_13Tev[2]}     {sys.metUncl_13Tev[3]}
+CMS_jms_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jms_pnetreg[0]}     {sys.jms_pnetreg[1]}     {sys.jms_pnetreg[2]}     {sys.jms_pnetreg[3]}
+CMS_jmr_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jmr_pnetreg[0]}     {sys.jmr_pnetreg[1]}     {sys.jmr_pnetreg[2]}     {sys.jmr_pnetreg[3]}
+CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_HF_13Tev[0]}     {sys.btagWeightDeepJet_HF_13Tev[1]}     {sys.btagWeightDeepJet_HF_13Tev[2]}     {sys.btagWeightDeepJet_HF_13Tev[3]}
+CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_LF_13Tev[0]}     {sys.btagWeightDeepJet_LF_13Tev[1]}     {sys.btagWeightDeepJet_LF_13Tev[2]}     {sys.btagWeightDeepJet_LF_13Tev[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[3]}
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[3]}
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[3]}
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[3]}
+CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[3]}                  
+--------------------------------------------------------------------------------------------------------------------------------
+A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
+B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]}                  
+C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]}                    
+D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]}                
+"""
+    with open("datacard.txt", "w") as f:
+        f.write(datacard)
