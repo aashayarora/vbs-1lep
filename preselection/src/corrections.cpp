@@ -123,7 +123,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
         for (size_t i = 0; i < var.size(); i++) {
             if (year == "2016preVFP") {
                 JEC = std::string("Summer19UL16APV_V7_MC_") + JEC_type + std::string("_AK4PFchs");
-                if (JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                if (JEC_type.find("2016postVFP") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
                     jec_factors.push_back(var[i]);
                 }
                 else {
@@ -140,7 +140,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
             }
             else if (year == "2016postVFP") {
                 JEC = std::string("Summer19UL16_V7_MC_") + JEC_type + std::string("_AK4PFchs");
-                if (JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                if (JEC_type.find("2016preVFP") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
                     jec_factors.push_back(var[i]);
                 }
                 else {

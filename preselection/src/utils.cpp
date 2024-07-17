@@ -159,6 +159,7 @@ RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_
 void saveSnapshot(RNode df, const std::string& finalFile) {
     auto ColNames = df.GetDefinedColumnNames();
     std::vector<std::string> final_variables;
+    final_variables.push_back("event");
     for (auto &&ColName : ColNames)
         {
             TString colName = ColName;
@@ -167,4 +168,3 @@ void saveSnapshot(RNode df, const std::string& finalFile) {
         }
     df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables);
 }
-

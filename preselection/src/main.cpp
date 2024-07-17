@@ -16,6 +16,7 @@ struct MyArgs : public argparse::Args {
     bool &JMS = flag("jms", "JMS");
     bool &JMR = flag("jmr", "JMR");
     bool &METUnclustered = flag("met", "MET unclustered");
+    int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
     std::string &output = kwarg("o,output", "output root file").set_default("");
     std::string &variation = kwarg("var", "variation").set_default("nominal");
     std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
@@ -83,7 +84,7 @@ int main(int argc, char** argv) {
     std::string input_spec = args.spec;
     std::string output_file = args.output;
 
-    ROOT::EnableImplicitMT(32);
+    ROOT::EnableImplicitMT(args.nthreads);
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
     ROOT::RDF::Experimental::AddProgressBar(df_);
 

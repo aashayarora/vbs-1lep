@@ -90,33 +90,27 @@ def get_variation(correction=None, tree="Events"):
 
     variations = []
 
-    if os.path.isfile(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_up_MVA_abcdnet.root"):
-        with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_up_MVA_abcdnet.root") as g:
-            df2 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+    with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_up_MVA_abcdnet.root") as g:
+        df2 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-        a2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
-        b2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
-        c2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
-        d2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
+    a2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
+    b2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
+    c2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
+    d2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
 
-        variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
+    variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
 
+    with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_down_MVA_abcdnet.root") as g:
+        df3 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    if os.path.isfile(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_down_MVA_abcdnet.root"):
-        with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_down_MVA_abcdnet.root") as g:
-            df3 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+    a3 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
+    b3 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
+    c3 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
+    d3 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
 
-        a2 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
-        b2 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
-        c2 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
-        d2 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
+    variations.append([(a - a3) / a, (b - b3) / b, (c - c3) / c, (d - d3) / d])
 
-        variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
-
-    if len(variations) == 2:
-        return ["{:.5f}".format(round(1 + abs(max_var(x)), 5)) for x in zip(*variations)]
-    else:
-        return ["{:.5f}".format(round(1 + abs(x), 5)) for x in variations[0]]
+    return ["{:.5f}".format(round(1 + abs(max_var(x)), 5)) for x in zip(*variations)]
 
 def get_stats(tree="Events"):
     print("Evaluating stats")
@@ -173,29 +167,29 @@ if __name__ == "__main__":
         vbsvvh_puWeight=get_variation("pileup_weight"),
         vbsvvh_puJetID=get_variation("pileupid_weight"),
         scale_j_Absolute_13TeV=get_variation("jec_absolute"),
-        scale_j_Absolute_2016postVFP_13TeV=get_variation("jec_absolute_2016"),
-        scale_j_Absolute_2016preVFP_13TeV=get_variation("jec_absolute_2016"),
+        scale_j_Absolute_2016postVFP_13TeV=get_variation("jec_absolute_2016postVFP"),
+        scale_j_Absolute_2016preVFP_13TeV=get_variation("jec_absolute_2016preVFP"),
         scale_j_Absolute_2017_13TeV=get_variation("jec_absolute_2017"),
         scale_j_Absolute_2018_13TeV=get_variation("jec_absolute_2018"),
         scale_j_BBEC1_13TeV=get_variation("jec_bbec1"),
-        scale_j_BBEC1_2016postVFP_13TeV=get_variation("jec_bbec1_2016"),
-        scale_j_BBEC1_2016preVFP_13TeV=get_variation("jec_bbec1_2016"),
+        scale_j_BBEC1_2016postVFP_13TeV=get_variation("jec_bbec1_2016postVFP"),
+        scale_j_BBEC1_2016preVFP_13TeV=get_variation("jec_bbec1_2016preVFP"),
         scale_j_BBEC1_2017_13TeV=get_variation("jec_bbec1_2017"),
         scale_j_BBEC1_2018_13TeV=get_variation("jec_bbec1_2018"),
         scale_j_EC2_13TeV=get_variation("jec_ec2"),
-        scale_j_EC2_2016postVFP_13TeV=get_variation("jec_ec2_2016"),
-        scale_j_EC2_2016preVFP_13TeV=get_variation("jec_ec2_2016"),
+        scale_j_EC2_2016postVFP_13TeV=get_variation("jec_ec2_2016postVFP"),
+        scale_j_EC2_2016preVFP_13TeV=get_variation("jec_ec2_2016preVFP"),
         scale_j_EC2_2017_13TeV=get_variation("jec_ec2_2017"),
         scale_j_EC2_2018_13TeV=get_variation("jec_ec2_2018"),
         scale_j_FlavorQCD_13TeV=get_variation("jec_flavorqcd"),
         scale_j_HF_13TeV=get_variation("jec_hf"),
-        scale_j_HF_2016postVFP_13TeV=get_variation("jec_hf_2016"),
-        scale_j_HF_2016preVFP_13TeV=get_variation("jec_hf_2016"),
+        scale_j_HF_2016postVFP_13TeV=get_variation("jec_hf_2016postVFP"),
+        scale_j_HF_2016preVFP_13TeV=get_variation("jec_hf_2016preVFP"),
         scale_j_HF_2017_13TeV=get_variation("jec_hf_2017"),
         scale_j_HF_2018_13TeV=get_variation("jec_hf_2018"),
         scale_j_RelativeBal_13TeV=get_variation("jec_relativebal"),
-        scale_j_RelativeSample_2016postVFP_13TeV=get_variation("jec_relativesample_2016"),
-        scale_j_RelativeSample_2016preVFP_13TeV=get_variation("jec_relativesample_2016"),
+        scale_j_RelativeSample_2016postVFP_13TeV=get_variation("jec_relativesample_2016postVFP"),
+        scale_j_RelativeSample_2016preVFP_13TeV=get_variation("jec_relativesample_2016preVFP"),
         scale_j_RelativeSample_2017_13TeV=get_variation("jec_relativesample_2017"),
         scale_j_RelativeSample_2018_13TeV=get_variation("jec_relativesample_2018"),
         res_j_13TeV=get_variation("jer"),
