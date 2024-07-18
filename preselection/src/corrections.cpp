@@ -44,7 +44,6 @@ RNode defineCorrectedCols(RNode df) {
             .Define("CorrJet_mass", "Jet_mass")
             .Define("CorrFatJet_pt", "FatJet_pt")
             .Define("CorrFatJet_mass", "FatJet_mass")
-            .Define("CorrFatJet_msoftdrop", "FatJet_msoftdrop")
             .Define("CorrMET_pt", "MET_pt");
 }
 
@@ -108,16 +107,11 @@ RNode METUnclusteredCorrections(RNode df, std::string variation) {
 RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, RNode df, std::string JEC_type, std::string variation) {
     auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, JEC_type, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<float> raw_factor, RVec<float> var) {
         RVec<float> jec_factors;
-        RVec<float> uncorr_var;
 
         std::string JEC;
 
         if (var.size() == 0) {
             return var;
-        }
-
-        for (size_t i = 0; i < var.size(); i++){
-            uncorr_var.push_back(var[i] * (1 - raw_factor[i]));
         }
 
         for (size_t i = 0; i < var.size(); i++) {
@@ -128,10 +122,10 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                 }
                 else {
                     if (variation == "up") {
-                        jec_factors.push_back(uncorr_var[i] * (1 + cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 + cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else if (variation == "down") {
-                        jec_factors.push_back(uncorr_var[i] * (1 - cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 - cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
                         jec_factors.push_back(var[i]);
@@ -145,10 +139,10 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                 }
                 else {
                     if (variation == "up") {
-                        jec_factors.push_back(uncorr_var[i] * (1 + cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 + cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else if (variation == "down") {
-                        jec_factors.push_back(uncorr_var[i] * (1 - cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 - cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
                         jec_factors.push_back(var[i]);
@@ -162,10 +156,10 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                 }
                 else {
                     if (variation == "up") {
-                        jec_factors.push_back(uncorr_var[i] * (1 + cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 + cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else if (variation == "down") {
-                        jec_factors.push_back(uncorr_var[i] * (1 - cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 - cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
                         jec_factors.push_back(var[i]);
@@ -179,10 +173,10 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                 }
                 else {
                     if (variation == "up") {
-                        jec_factors.push_back(uncorr_var[i] * (1 + cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 + cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else if (variation == "down") {
-                        jec_factors.push_back(uncorr_var[i] * (1 - cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
+                        jec_factors.push_back(var[i] * (1 - cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
                         jec_factors.push_back(var[i]);
@@ -198,8 +192,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
     auto df_jetcorr =  df.Redefine("CorrJet_pt", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_rawFactor", "Jet_pt"})
                         .Redefine("CorrJet_mass", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_rawFactor", "Jet_mass"})
                         .Redefine("CorrFatJet_pt", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_pt"})
-                        .Redefine("CorrFatJet_mass", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_mass"})
-                        .Redefine("CorrFatJet_msoftdrop", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_msoftdrop"});
+                        .Redefine("CorrFatJet_mass", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_mass"});
 
     auto correctmet = [](RVec<float> corrjet_pt, RVec<float> jet_phi, float MET_pt, float MET_phi) {
         float px = 0;
