@@ -9,6 +9,8 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
+import multiprocessing as mp
+
 import models
 import ingress
 import train
@@ -22,6 +24,29 @@ class VBSOutput:
         raise NotImplementedError()
     def close(self):
         raise NotImplementedError()
+
+def runInference(root_file, model, device, config, args):
+    # Get data
+    loader = DataLoader(ingress.ingress_file(config, root_file, -1, save=False))
+    # Make file names
+    orig_dir = "/".join(root_file.split("/")[:-1]) or "."
+    os.makedirs(f"{orig_dir}/{config.name}", exist_ok=True)
+    name = root_file.split("/")[-1].replace(".root", "")
+    if args.no_tag:
+        new_root_file = f"{out_dir}/{name}.root"
+    else:
+        new_root_file = f"{out_dir}/{name}_abcdnet.root"
+    # Run inference (and write output)
+    output = OutputROOT(
+        root_file, new_root_file, 
+        selection=selection, 
+        ttree_name=config.ingress.ttree_name,
+        algo_name=args.name
+    )
+    if config.discotype == "single":
+        infer(model, device, loader, output)
+    elif config.discotype == "double":
+        infer(model1, model2, device, loader, output)
 
 if __name__ == "__main__":
     # CLI
@@ -108,28 +133,11 @@ if __name__ == "__main__":
             elif config.discotype == "double":
                 times += infer(model1, model2, device, loader, output)
         # Run inference on extra files (e.g. data)
-        for root_file in config.get("infer", {}).get("extra_files", []):
-            # Get data
-            loader = DataLoader(ingress.ingress_file(config, root_file, -1, save=False))
-            # Make file names
-            orig_dir = "/".join(root_file.split("/")[:-1]) or "."
-            os.makedirs(f"{orig_dir}/{config.name}", exist_ok=True)
-            name = root_file.split("/")[-1].replace(".root", "")
-            if args.no_tag:
-                new_root_file = f"{out_dir}/{name}.root"
-            else:
-                new_root_file = f"{out_dir}/{name}_abcdnet.root"
-            # Run inference (and write output)
-            output = OutputROOT(
-                root_file, new_root_file, 
-                selection=selection, 
-                ttree_name=config.ingress.ttree_name,
-                algo_name=args.name
-            )
-            if config.discotype == "single":
-                times += infer(model, device, loader, output)
-            elif config.discotype == "double":
-                times += infer(model1, model2, device, loader, output)
+        # for root_file in config.get("infer", {}).get("extra_files", []):
+        #     runInference(root_file, model, device, config, args)
+        with mp.Pool(10) as pool:
+            pool.starmap(runInference, [(root_file, model, device, config, args) for root_file in config.get("infer", {}).get("extra_files", [])])
+
     else:
         # Load testing and training data
         if config.discotype == "single":
@@ -165,5 +173,4 @@ if __name__ == "__main__":
             times += infer(model1, model2, device, test_loader, test_csv)
             times += infer(model1, model2, device, train_loader, train_csv)
 
-    print(f"Avg. inference time: {sum(times)/len(times)}s")
     print("\nDone.\n")

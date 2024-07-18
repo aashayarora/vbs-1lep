@@ -131,6 +131,7 @@ do
     ./bin/runMVA -i $file &
 done
 
+wait
 cd -
 
 cd dnn/
