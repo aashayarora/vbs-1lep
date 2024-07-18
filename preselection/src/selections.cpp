@@ -120,7 +120,7 @@ RNode WZSelections(RNode df) {
                 "WLepDeltaR >= 0.8 && "
                 "WHDeltaR >= 0.8 && "
                 "abs(FatJet_eta) <= 2.5 && "
-                "CorrFatJet_msoftdrop > 40 && "
+                "FatJet_msoftdrop > 40 && "
                 "FatJet_jetId > 0")
             .Define("WScore", "(FatJet_particleNetMD_Xqq + FatJet_particleNetMD_Xcc) / (FatJet_particleNetMD_Xqq + FatJet_particleNetMD_Xcc + FatJet_particleNetMD_QCD)")
             .Define("HighestWjetScoreIdx", "WScore.size() != 0 ? ArgMax(WScore[WZCandidateJets]) : -1")
