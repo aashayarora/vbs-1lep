@@ -6,25 +6,26 @@
 #include "selections.h"
 #include "corrections.h"
 #include "utils.h"
+#include "MVA.h"
 
 #include "argparser.hpp"
 
 struct MyArgs : public argparse::Args {
     std::string &spec = kwarg("i,input", "spec.json path");
+    std::string &output = kwarg("o,output", "output root file").set_default("");
+    std::string &variation = kwarg("var", "variation").set_default("nominal");
+    std::string &JEC_type = kwarg("jec_type", "JEC type").set_default("");
+    std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
+    int &nthreads = kwarg("n, nthread", "Number of threads").set_default(4);
     bool &JEC = flag("jec", "JEC");
     bool &JER = flag("jer", "JER");
     bool &JMS = flag("jms", "JMS");
     bool &JMR = flag("jmr", "JMR");
-    bool &METUnclustered = flag("met", "MET unclustered");
-    int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
-    std::string &output = kwarg("o,output", "output root file").set_default("");
-    std::string &variation = kwarg("var", "variation").set_default("nominal");
-    std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
-    std::string &JEC_type = kwarg("jec_type", "JEC type").set_default("");
-    std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
+    bool &MET = flag("met", "MET unclustered");
+    bool &save = flag("save", "Save intermediate baby (before MVA)");
 };
 
-void runBkgAnalysis(RNode df, std::string output_file) {
+void runBkgAnalysis(RNode df, std::string output_file, bool save) {
     // corrections
     auto df1 = defineCorrectedCols(df);
     auto df2 = HEMCorrection(df1);
@@ -32,10 +33,12 @@ void runBkgAnalysis(RNode df, std::string output_file) {
     auto df3 = finalSelections(df2);
     // scale factors
     auto df4 = finalMCWeight(df3);
-    saveSnapshot(df4, output_file);
+    if (save) saveSnapshot(df4, output_file);
+    auto df5 = MVA(df4);
+    saveMVASnapshot(df5, output_file);
 }
 
-void runDataAnalysis(RNode df, std::string output_file) {
+void runDataAnalysis(RNode df, std::string output_file, bool save) {
     // corrections
     auto df1 = defineCorrectedCols(df);
     auto df2 = HEMCorrection(df1);
@@ -43,17 +46,19 @@ void runDataAnalysis(RNode df, std::string output_file) {
     auto df3 = finalSelections(df2);
     // scale factors
     auto df4 = finalDataWeight(df3);
-    saveSnapshot(df4, output_file);
+    if (save) saveSnapshot(df4, output_file);
+    auto df5 = MVA(df4);
+    saveMVASnapshot(df5, output_file);
 }
 
-void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
+void runSigAnalysis(RNode df, MyArgs args, std::string output_file, bool save) {
     // corrections
     auto df1 = defineCorrectedCols(df);
     auto df2 = HEMCorrection(df1);
     // selections
     auto applypreCorrections = [] (RNode df, MyArgs args) {
-        if (args.JER) {return JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df, args.JERvariation);}
-        else if (args.METUnclustered) {return METUnclusteredCorrections(df, args.variation);}
+        if (args.JER) {return JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df, args.variation);}
+        else if (args.MET) {return METUnclusteredCorrections(df, args.variation);}
         else if (args.JEC) {return JetEnergyCorrection(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, df, args.JEC_type, args.variation);}
         else {return df;}
     };
@@ -76,7 +81,9 @@ void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
         }
     };
     auto df7 = applySFVariations(df6, args);
-    saveSnapshot(df7, output_file);
+    if (save) saveSnapshot(df7, output_file);
+    auto df8 = MVA(df7);
+    saveMVASnapshot(df8, output_file);    
 }
 
 int main(int argc, char** argv) {
@@ -96,19 +103,19 @@ int main(int argc, char** argv) {
         if (output_file.empty()) {
             output_file = "data.root";
         }
-        runDataAnalysis(df, output_file);
+        runDataAnalysis(df, output_file, args.save);
     }
     else if (input_spec.find("bkg") != std::string::npos) {
         if (output_file.empty()) {
             output_file = "bkg.root";
         }
-        runBkgAnalysis(df, output_file);
+        runBkgAnalysis(df, output_file, args.save);
     }
     else if (input_spec.find("sig") != std::string::npos) {
         if (output_file.empty()) {
             output_file = "sig.root";
         }
-        runSigAnalysis(df, args, output_file);
+        runSigAnalysis(df, args, output_file, args.save);
     }
     else {
         std::cerr << "Invalid input file, the spec file name must contain sig, bkg or data" << std::endl;

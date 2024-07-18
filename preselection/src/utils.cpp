@@ -168,3 +168,8 @@ void saveSnapshot(RNode df, const std::string& finalFile) {
         }
     df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables);
 }
+
+void saveMVASnapshot(RNode df, const std::string& finalFile) {
+    std::vector<std::string> final_vars = {"Hbbscore", "HighestWjetScore", "HbbPt", "Hbbmass", "MET", "Mlbminloose", "VBSBDTscore", "VBSMjj", "VBSdetajj", "VBSjet1eta", "VBSjet1phi", "VBSjet1pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2pt", "WjetPt", "Wjetmass", "leptonpt", "weight"};
+    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile.substr(0, finalFile.find(".root")) + "_MVA.root", final_vars);
+}

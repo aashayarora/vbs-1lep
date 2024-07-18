@@ -1,18 +1,14 @@
-#pragma once
-
 #ifndef MVA_H
 #define MVA_H
+
+#pragma once
 
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RDFHelpers.hxx"
 #include "TMVA/RReader.hxx"
 
-#include "TRandom3.h"
-#include "TCanvas.h"
+using RNode = ROOT::RDF::RNode;
 
-#include <string>
-#include <vector>
-
-using namespace TMVA::Experimental;
+RNode MVA(RNode df);
 
 #endif // MVA_H

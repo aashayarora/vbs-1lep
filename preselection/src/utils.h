@@ -104,5 +104,6 @@ RVec<int> VBS_MaxE( RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_phi
 RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_phi, RVec<float> Jet_mass);
 
 void saveSnapshot(RNode df, const std::string& finalFile);
+void saveMVASnapshot(RNode df, const std::string& finalFile);
 
 #endif
