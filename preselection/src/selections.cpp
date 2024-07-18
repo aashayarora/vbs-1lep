@@ -177,6 +177,8 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSJets_eta", "Jet_eta[goodVBSJets]")
             .Define("VBSJets_phi", "Jet_phi[goodVBSJets]")
             .Define("VBSJets_mass", "CorrJet_mass[goodVBSJets]")
+            .Define("puIDJets_pt", "CorrJet_pt[goodVBSJets || goodJets]")
+            .Define("puIDJets_eta", "Jet_eta[goodVBSJets || goodJets]")
             .Define("VBSjetidxs", VBS_MaxE, {"VBSJets_pt", "VBSJets_eta", "VBSJets_phi", "VBSJets_mass"})
             .Define("VBSjet1pt", "VBSJets_pt[VBSjetidxs[0]]")
             .Define("VBSjet1eta", "VBSJets_eta[VBSjetidxs[0]]")

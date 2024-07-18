@@ -68,6 +68,10 @@ if __name__ == "__main__":
         "--name", type=str, default="abcdnet",
         help="name to be used for branches, i.e. NAME_score (default: 'abcdnet')"
     )
+    parser.add_argument(
+        "--parallel", action="store_true",
+        help="run inference in parallel"
+    )
     args = parser.parse_args()
 
     config = VBSConfig.from_json(args.config_json)
@@ -133,11 +137,12 @@ if __name__ == "__main__":
             elif config.discotype == "double":
                 times += infer(model1, model2, device, loader, output)
         # Run inference on extra files (e.g. data)
-        # for root_file in config.get("infer", {}).get("extra_files", []):
-        #     runInference(root_file, model, device, config, args)
-        with mp.Pool(10) as pool:
-            pool.starmap(runInference, [(root_file, model, device, config, args) for root_file in config.get("infer", {}).get("extra_files", [])])
-
+        if (args.parallel):
+            with mp.Pool(10) as pool:
+                pool.starmap(runInference, [(root_file, model, device, config, args) for root_file in config.get("infer", {}).get("extra_files", [])])
+        else:
+            for root_file in config.get("infer", {}).get("extra_files", []):
+                runInference(root_file, model, device, config, args)
     else:
         # Load testing and training data
         if config.discotype == "single":

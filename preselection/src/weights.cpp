@@ -71,7 +71,7 @@ RNode pileupIDScaleFactors(correction::Correction::Ref cset_pileup_2016preVFP, c
         }
         return pileup_weights;
     };
-    return df.Define("pileupid_weight", eval_correction, {"sample_year", "VBSJets_eta", "VBSJets_pt"});
+    return df.Define("pileupid_weight", eval_correction, {"sample_year", "puIDJets_eta", "puIDJets_pt"});
 }
 
 RNode muonScaleFactors_ID(correction::CorrectionSet cset_muon_2016preVFP, correction::CorrectionSet cset_muon_2016postVFP, correction::CorrectionSet cset_muon_2017, correction::CorrectionSet cset_muon_2018, RNode df){

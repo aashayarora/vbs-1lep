@@ -136,6 +136,6 @@ cd -
 
 cd dnn/
 
-python3 python/infer.py configs/ABCDNet_simpleDisco_VBSVVH1lep_30.json --export --epoch 500
+python3 python/infer.py configs/ABCDNet_simpleDisco_VBSVVH1lep_30.json --export --epoch 500 --parallel
 
 cd -

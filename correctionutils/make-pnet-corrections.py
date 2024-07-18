@@ -45,7 +45,7 @@ corr_W = cs.Correction(
                                 input="pt",
                                 edges=[200, 300, 400, 800],
                                 content=[0.96, 0.97, 1.0],
-                                flow=1.6,
+                                flow=1.06,
                             ),
                         ),
                         cs.CategoryItem(
