@@ -71,9 +71,9 @@ RNode HEMCorrection(RNode df) {
     return df1.Define("HEMweight", HEMCorrections, {"run", "event", "sample_year", "sample_category", "HEMJet_pt", "HEMJet_eta", "HEMJet_phi"});
 }
 
-RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df, std::string variation) { 
+RNode JMS_Corrections(correction::CorrectionSet cset_jet_mass_scale, RNode df, std::string variation) { 
     auto eval_correction = [cset_jet_mass_scale, variation] (std::string year, float mass) {
-        double scaleVal = 1. + 0.05 * cset_jet_mass_scale->evaluate({year, variation});
+        double scaleVal = 1. + 0.05 * cset_jet_mass_scale.at("JMS")->evaluate({year, variation});
         // https://docs.google.com/presentation/d/1C7CqO3Wv3-lYd7vw4IQXq69wmULesTsSniFXXM__ReU
         return mass * scaleVal;
     };
@@ -81,10 +81,10 @@ RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df,
              .Redefine("Wjetmass", eval_correction, {"sample_year", "GW_mass"});
 }
 
-RNode JMR_Corrections(correction::Correction::Ref cset_jet_mass_resolution, RNode df, std::string variation) {
+RNode JMR_Corrections(correction::CorrectionSet cset_jet_mass_resolution, RNode df, std::string variation) {
     auto eval_correction = [cset_jet_mass_resolution, variation] (std::string year, float mass, unsigned int lumi, unsigned long long event) {
         TRandom3 rnd((lumi << 10) + event);
-        return rnd.Gaus(1, 0.1 * cset_jet_mass_resolution->evaluate({year, variation})) * mass;
+        return rnd.Gaus(1, 0.1 * cset_jet_mass_resolution.at("JMR")->evaluate({year, variation})) * mass;
     };
     return df.Redefine("Hbbmass", eval_correction, {"sample_year", "GHiggs_mass", "luminosityBlock", "event"})
              .Redefine("Wjetmass", eval_correction, {"sample_year", "GW_mass", "luminosityBlock", "event"});

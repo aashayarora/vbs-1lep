@@ -69,6 +69,10 @@ CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -    
 CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  1.02095     1.02053     1.02039     1.01956
 CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  1.06027     1.05973     1.05463     1.05038
 CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  1.05525     1.05362     1.04763     1.04895
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03400     1.03400     1.03400     1.03400     
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_16postVFP         lnN   -                  -                  -                  -                  1.01400     1.01400     1.01400     1.01400       
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_17                lnN   -                  -                  -                  -                  1.03100     1.03100     1.03100     1.03100     
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07100     1.07100     1.07100     1.07100 
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  1.01734     1.01848     1.01345     1.01505
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  1.01363     1.01349     1.00935     1.00903
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  1.01708     1.01710     1.01109     1.01042

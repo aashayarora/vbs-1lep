@@ -27,11 +27,11 @@ RNode HEMCorrection(RNode df);
 RNode METUnclusteredCorrections(RNode df, std::string variation);
 
 // jet mass scale and resolution corrections
-RNode JMR_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df, std::string variation); 
-const auto cset_jmr = CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json")->at("JMR");
+RNode JMR_Corrections(correction::CorrectionSet cset_jet_mass_scale, RNode df, std::string variation); 
+const auto cset_jmr = *CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json");
 
-RNode JMS_Corrections(correction::Correction::Ref cset_jet_mass_scale, RNode df, std::string variation);
-const auto cset_jms = CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json")->at("JMS");
+RNode JMS_Corrections(correction::CorrectionSet cset_jet_mass_scale, RNode df, std::string variation);
+const auto cset_jms = *CorrectionSet::from_file("corrections/scalefactors/particlenet/jmar.json");
 
 RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, RNode df, std::string JEC_type, std::string variation);
 RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation);

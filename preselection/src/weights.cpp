@@ -13,35 +13,35 @@ RNode L1PreFiringWeight(RNode df){
     return df.Define("L1PreFiringWeight", eval_correction, {"L1PreFiringWeight_Nom", "L1PreFiringWeight_Up", "L1PreFiringWeight_Dn"});
 }
 
-RNode pileupScaleFactors(correction::Correction::Ref cset_pileup_2016preVFP, correction::Correction::Ref cset_pileup_2016postVFP, correction::Correction::Ref cset_pileup_2017, correction::Correction::Ref cset_pileup_2018, RNode df){
+RNode pileupScaleFactors(correction::CorrectionSet cset_pileup_2016preVFP, correction::CorrectionSet cset_pileup_2016postVFP, correction::CorrectionSet cset_pileup_2017, correction::CorrectionSet cset_pileup_2018, RNode df){
     auto eval_correction = [cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018] (std::string year, float ntrueint) {
         RVec<double> pileup_weights;
         if (year == "2016preVFP") {
-            pileup_weights.push_back(cset_pileup_2016preVFP->evaluate({ntrueint, "nominal"}));
-            pileup_weights.push_back(cset_pileup_2016preVFP->evaluate({ntrueint, "up"}));
-            pileup_weights.push_back(cset_pileup_2016preVFP->evaluate({ntrueint, "down"}));
+            pileup_weights.push_back(cset_pileup_2016preVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "nominal"}));
+            pileup_weights.push_back(cset_pileup_2016preVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "up"}));
+            pileup_weights.push_back(cset_pileup_2016preVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "down"}));
         }
         if (year == "2016postVFP") {
-            pileup_weights.push_back(cset_pileup_2016postVFP->evaluate({ntrueint, "nominal"}));
-            pileup_weights.push_back(cset_pileup_2016postVFP->evaluate({ntrueint, "up"}));
-            pileup_weights.push_back(cset_pileup_2016postVFP->evaluate({ntrueint, "down"}));
+            pileup_weights.push_back(cset_pileup_2016postVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "nominal"}));
+            pileup_weights.push_back(cset_pileup_2016postVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "up"}));
+            pileup_weights.push_back(cset_pileup_2016postVFP.at("Collisions16_UltraLegacy_goldenJSON")->evaluate({ntrueint, "down"}));
         }
         if (year == "2017") {
-            pileup_weights.push_back(cset_pileup_2017->evaluate({ntrueint, "nominal"}));
-            pileup_weights.push_back(cset_pileup_2017->evaluate({ntrueint, "up"}));
-            pileup_weights.push_back(cset_pileup_2017->evaluate({ntrueint, "down"}));
+            pileup_weights.push_back(cset_pileup_2017.at("Collisions17_UltraLegacy_goldenJSON")->evaluate({ntrueint, "nominal"}));
+            pileup_weights.push_back(cset_pileup_2017.at("Collisions17_UltraLegacy_goldenJSON")->evaluate({ntrueint, "up"}));
+            pileup_weights.push_back(cset_pileup_2017.at("Collisions17_UltraLegacy_goldenJSON")->evaluate({ntrueint, "down"}));
         }
         if (year == "2018") {
-            pileup_weights.push_back(cset_pileup_2018->evaluate({ntrueint, "nominal"}));
-            pileup_weights.push_back(cset_pileup_2018->evaluate({ntrueint, "up"}));
-            pileup_weights.push_back(cset_pileup_2018->evaluate({ntrueint, "down"}));
+            pileup_weights.push_back(cset_pileup_2018.at("Collisions18_UltraLegacy_goldenJSON")->evaluate({ntrueint, "nominal"}));
+            pileup_weights.push_back(cset_pileup_2018.at("Collisions18_UltraLegacy_goldenJSON")->evaluate({ntrueint, "up"}));
+            pileup_weights.push_back(cset_pileup_2018.at("Collisions18_UltraLegacy_goldenJSON")->evaluate({ntrueint, "down"}));
         }
         return pileup_weights;
     };
     return df.Define("pileup_weight", eval_correction, {"sample_year", "Pileup_nTrueInt"});
 }
 
-RNode pileupIDScaleFactors(correction::Correction::Ref cset_pileup_2016preVFP, correction::Correction::Ref cset_pileup_2016postVFP, correction::Correction::Ref cset_pileup_2017, correction::Correction::Ref cset_pileup_2018, RNode df){
+RNode pileupIDScaleFactors(correction::CorrectionSet cset_pileup_2016preVFP, correction::CorrectionSet cset_pileup_2016postVFP, correction::CorrectionSet cset_pileup_2017, correction::CorrectionSet cset_pileup_2018, RNode df){
     auto eval_correction = [cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018] (std::string year, RVec<float> eta, RVec<float> pt) {
         RVec<double> pileup_weights = {1., 1., 1.};
         if (eta.size() == 0) {
@@ -49,24 +49,24 @@ RNode pileupIDScaleFactors(correction::Correction::Ref cset_pileup_2016preVFP, c
         }
         for (size_t i = 0; i < eta.size(); i++) {
             if (year == "2016preVFP" && pt[i] < 50) {
-                pileup_weights[0] *= cset_pileup_2016preVFP->evaluate({eta[i], pt[i], "nom", "L"});
-                pileup_weights[1] *= cset_pileup_2016preVFP->evaluate({eta[i], pt[i], "up", "L"});
-                pileup_weights[2] *= cset_pileup_2016preVFP->evaluate({eta[i], pt[i], "down", "L"});
+                pileup_weights[0] *= cset_pileup_2016preVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "nom", "L"});
+                pileup_weights[1] *= cset_pileup_2016preVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "up", "L"});
+                pileup_weights[2] *= cset_pileup_2016preVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "down", "L"});
             }
             if (year == "2016postVFP" && pt[i] < 50) {
-                pileup_weights[0] *= cset_pileup_2016postVFP->evaluate({eta[i], pt[i], "nom", "L"});
-                pileup_weights[1] *= cset_pileup_2016postVFP->evaluate({eta[i], pt[i], "up", "L"});
-                pileup_weights[2] *= cset_pileup_2016postVFP->evaluate({eta[i], pt[i], "down", "L"});
+                pileup_weights[0] *= cset_pileup_2016postVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "nom", "L"});
+                pileup_weights[1] *= cset_pileup_2016postVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "up", "L"});
+                pileup_weights[2] *= cset_pileup_2016postVFP.at("PUJetID_eff")->evaluate({eta[i], pt[i], "down", "L"});
             }
             if (year == "2017" && pt[i] < 50) {
-                pileup_weights[0] *= cset_pileup_2017->evaluate({eta[i], pt[i], "nom", "L"});
-                pileup_weights[1] *= cset_pileup_2017->evaluate({eta[i], pt[i], "up", "L"});
-                pileup_weights[2] *= cset_pileup_2017->evaluate({eta[i], pt[i], "down", "L"});
+                pileup_weights[0] *= cset_pileup_2017.at("PUJetID_eff")->evaluate({eta[i], pt[i], "nom", "L"});
+                pileup_weights[1] *= cset_pileup_2017.at("PUJetID_eff")->evaluate({eta[i], pt[i], "up", "L"});
+                pileup_weights[2] *= cset_pileup_2017.at("PUJetID_eff")->evaluate({eta[i], pt[i], "down", "L"});
             }
             if (year == "2018" && pt[i] < 50) {
-                pileup_weights[0] *= cset_pileup_2018->evaluate({eta[i], pt[i], "nom", "L"});
-                pileup_weights[1] *= cset_pileup_2018->evaluate({eta[i], pt[i], "up", "L"});
-                pileup_weights[2] *= cset_pileup_2018->evaluate({eta[i], pt[i], "down", "L"});
+                pileup_weights[0] *= cset_pileup_2018.at("PUJetID_eff")->evaluate({eta[i], pt[i], "nom", "L"});
+                pileup_weights[1] *= cset_pileup_2018.at("PUJetID_eff")->evaluate({eta[i], pt[i], "up", "L"});
+                pileup_weights[2] *= cset_pileup_2018.at("PUJetID_eff")->evaluate({eta[i], pt[i], "down", "L"});
             }
         }
         return pileup_weights;
@@ -140,23 +140,41 @@ RNode muonScaleFactors_trigger(correction::CorrectionSet cset_muon_2016preVFP, c
     return df.Define("muon_scale_factors_trigger", eval_correction, {"sample_year", "GMuon_eta", "GMuon_pt"});
 }
 
-RNode muonScaleFactors_ttH(correction::Correction::Ref cset_muon_tth, RNode df, std::string sf_type){
+RNode muonScaleFactors_ttHID(correction::CorrectionSet cset_muon_tth, RNode df){
     auto eval_correction = [cset_muon_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         RVec<double> muon_sf_weights = {1., 1., 1.};
         if (eta.size() == 0) {
             return muon_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            muon_sf_weights[0] *= cset_muon_tth->evaluate({"nominal", year, abs(eta[i]), pt[i]});
-            muon_sf_weights[1] *= cset_muon_tth->evaluate({"up", year, abs(eta[i]), pt[i]});
-            muon_sf_weights[2] *= cset_muon_tth->evaluate({"down", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[0] *= cset_muon_tth.at("ttH_MuonID_SF")->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[1] *= cset_muon_tth.at("ttH_MuonID_SF")->evaluate({"up", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[2] *= cset_muon_tth.at("ttH_MuonID_SF")->evaluate({"down", year, abs(eta[i]), pt[i]});
         }
         return muon_sf_weights;
     };
-    return df.Define(sf_type, eval_correction, {"sample_year", "GMuon_eta", "GMuon_pt"});
+    return df.Define("muon_scale_factors_ttHID", eval_correction, {"sample_year", "GMuon_eta", "GMuon_pt"});
 }
 
-RNode electronScaleFactors_Reco(correction::Correction::Ref cset_electron_2016preVFP, correction::Correction::Ref cset_electron_2016postVFP, correction::Correction::Ref cset_electron_2017, correction::Correction::Ref cset_electron_2018, RNode df){
+
+RNode muonScaleFactors_ttHISO(correction::CorrectionSet cset_muon_tth, RNode df){
+    auto eval_correction = [cset_muon_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
+        RVec<double> muon_sf_weights = {1., 1., 1.};
+        if (eta.size() == 0) {
+            return muon_sf_weights;
+        }
+        for (size_t i = 0; i < eta.size(); i++) {
+            muon_sf_weights[0] *= cset_muon_tth.at("ttH_MuonISO_SF")->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[1] *= cset_muon_tth.at("ttH_MuonISO_SF")->evaluate({"up", year, abs(eta[i]), pt[i]});
+            muon_sf_weights[2] *= cset_muon_tth.at("ttH_MuonISO_SF")->evaluate({"down", year, abs(eta[i]), pt[i]});
+        }
+        return muon_sf_weights;
+    };
+    return df.Define("muon_scale_factors_ttHISO", eval_correction, {"sample_year", "GMuon_eta", "GMuon_pt"});
+}
+
+
+RNode electronScaleFactors_Reco(correction::CorrectionSet cset_electron_2016preVFP, correction::CorrectionSet cset_electron_2016postVFP, correction::CorrectionSet cset_electron_2017, correction::CorrectionSet cset_electron_2018, RNode df){
     auto eval_correction = [cset_electron_2016preVFP, cset_electron_2016postVFP, cset_electron_2017, cset_electron_2018] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         RVec<double> electron_sf_weights = {1., 1., 1.};
         if (eta.size() == 0) {
@@ -164,24 +182,24 @@ RNode electronScaleFactors_Reco(correction::Correction::Ref cset_electron_2016pr
         }
         for (size_t i = 0; i < eta.size(); i++) {
             if (year == "2016preVFP") {
-                electron_sf_weights[0] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sf", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[1] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sfup", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[2] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sfdown", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[0] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[1] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sfup", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[2] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sfdown", "RecoAbove20", eta[i], pt[i]});
             }
            if (year == "2016postVFP") {
-                electron_sf_weights[0] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sf", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[1] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sfup", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[2] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sfdown", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[0] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[1] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sfup", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[2] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sfdown", "RecoAbove20", eta[i], pt[i]});
             }
             if (year == "2017") {
-                electron_sf_weights[0] *= cset_electron_2017->evaluate({"2017", "sf", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[1] *= cset_electron_2017->evaluate({"2017", "sfup", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[2] *= cset_electron_2017->evaluate({"2017", "sfdown", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[0] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[1] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sfup", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[2] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sfdown", "RecoAbove20", eta[i], pt[i]});
             }
             if (year == "2018") {
-                electron_sf_weights[0] *= cset_electron_2018->evaluate({"2018", "sf", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[1] *= cset_electron_2018->evaluate({"2018", "sfup", "RecoAbove20", eta[i], pt[i]});
-                electron_sf_weights[2] *= cset_electron_2018->evaluate({"2018", "sfdown", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[0] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sf", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[1] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sfup", "RecoAbove20", eta[i], pt[i]});
+                electron_sf_weights[2] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sfdown", "RecoAbove20", eta[i], pt[i]});
             
            }
         }
@@ -190,7 +208,7 @@ RNode electronScaleFactors_Reco(correction::Correction::Ref cset_electron_2016pr
     return df.Define("electron_scale_factors_Reco", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
 }
 
-RNode electronScaleFactors_ID(correction::Correction::Ref cset_electron_2016preVFP, correction::Correction::Ref cset_electron_2016postVFP, correction::Correction::Ref cset_electron_2017, correction::Correction::Ref cset_electron_2018, RNode df){
+RNode electronScaleFactors_ID(correction::CorrectionSet cset_electron_2016preVFP, correction::CorrectionSet cset_electron_2016postVFP, correction::CorrectionSet cset_electron_2017, correction::CorrectionSet cset_electron_2018, RNode df){
     auto eval_correction = [cset_electron_2016preVFP, cset_electron_2016postVFP, cset_electron_2017, cset_electron_2018] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         RVec<double> electron_sf_weight = {1., 1., 1.};
         if (eta.size() == 0) {
@@ -198,24 +216,24 @@ RNode electronScaleFactors_ID(correction::Correction::Ref cset_electron_2016preV
         }
         for (size_t i = 0; i < eta.size(); i++) {
             if (year == "2016preVFP") {
-                electron_sf_weight[0] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sf", "Loose", eta[i], pt[i]});
-                electron_sf_weight[1] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sfup", "Loose", eta[i], pt[i]});
-                electron_sf_weight[2] *= cset_electron_2016preVFP->evaluate({"2016preVFP", "sfdown", "Loose", eta[i], pt[i]});
+                electron_sf_weight[0] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sf", "Loose", eta[i], pt[i]});
+                electron_sf_weight[1] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sfup", "Loose", eta[i], pt[i]});
+                electron_sf_weight[2] *= cset_electron_2016preVFP.at("UL-Electron-ID-SF")->evaluate({"2016preVFP", "sfdown", "Loose", eta[i], pt[i]});
             }
             if (year == "2016postVFP") {
-                electron_sf_weight[0] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sf", "Loose", eta[i], pt[i]});
-                electron_sf_weight[1] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sfup", "Loose", eta[i], pt[i]});
-                electron_sf_weight[2] *= cset_electron_2016postVFP->evaluate({"2016postVFP", "sfdown", "Loose", eta[i], pt[i]});
+                electron_sf_weight[0] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sf", "Loose", eta[i], pt[i]});
+                electron_sf_weight[1] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sfup", "Loose", eta[i], pt[i]});
+                electron_sf_weight[2] *= cset_electron_2016postVFP.at("UL-Electron-ID-SF")->evaluate({"2016postVFP", "sfdown", "Loose", eta[i], pt[i]});
             }
             if (year == "2017") {
-                electron_sf_weight[0] *= cset_electron_2017->evaluate({"2017", "sf", "Loose", eta[i], pt[i]});
-                electron_sf_weight[1] *= cset_electron_2017->evaluate({"2017", "sfup", "Loose", eta[i], pt[i]});
-                electron_sf_weight[2] *= cset_electron_2017->evaluate({"2017", "sfdown", "Loose", eta[i], pt[i]});
+                electron_sf_weight[0] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sf", "Loose", eta[i], pt[i]});
+                electron_sf_weight[1] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sfup", "Loose", eta[i], pt[i]});
+                electron_sf_weight[2] *= cset_electron_2017.at("UL-Electron-ID-SF")->evaluate({"2017", "sfdown", "Loose", eta[i], pt[i]});
             }
             if (year == "2018") {
-                electron_sf_weight[0] *= cset_electron_2018->evaluate({"2018", "sf", "Loose", eta[i], pt[i]});
-                electron_sf_weight[1] *= cset_electron_2018->evaluate({"2018", "sfup", "Loose", eta[i], pt[i]});
-                electron_sf_weight[2] *= cset_electron_2018->evaluate({"2018", "sfdown", "Loose", eta[i], pt[i]});
+                electron_sf_weight[0] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sf", "Loose", eta[i], pt[i]});
+                electron_sf_weight[1] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sfup", "Loose", eta[i], pt[i]});
+                electron_sf_weight[2] *= cset_electron_2018.at("UL-Electron-ID-SF")->evaluate({"2018", "sfdown", "Loose", eta[i], pt[i]});
             }
         }
         return electron_sf_weight;
@@ -223,32 +241,48 @@ RNode electronScaleFactors_ID(correction::Correction::Ref cset_electron_2016preV
     return df.Define("electron_scale_factors_ID", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
 }
 
-RNode electronScaleFactors_ttH(correction::Correction::Ref cset_electron_tth, RNode df, std::string sf_type){
+RNode electronScaleFactors_ttHID(correction::CorrectionSet cset_electron_tth, RNode df){
     auto eval_correction = [cset_electron_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         RVec<double> electron_sf_weights = {1., 1., 1.};
         if (eta.size() == 0) {
             return electron_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            electron_sf_weights[0] *= cset_electron_tth->evaluate({"nominal", year, abs(eta[i]), pt[i]});
-            electron_sf_weights[1] *= cset_electron_tth->evaluate({"up", year, abs(eta[i]), pt[i]});
-            electron_sf_weights[2] *= cset_electron_tth->evaluate({"down", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[0] *= cset_electron_tth.at("ttH_ElectronID_SF")->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[1] *= cset_electron_tth.at("ttH_ElectronID_SF")->evaluate({"up", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[2] *= cset_electron_tth.at("ttH_ElectronID_SF")->evaluate({"down", year, abs(eta[i]), pt[i]});
         }
         return electron_sf_weights;
     };
-    return df.Define(sf_type, eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
+    return df.Define("electron_scale_factors_ttHID", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
 }
 
-RNode electronScaleFactors_Trigger(correction::Correction::Ref cset_electron_trigger, RNode df) {
+RNode electronScaleFactors_ttHISO(correction::CorrectionSet cset_electron_tth, RNode df){
+    auto eval_correction = [cset_electron_tth] (std::string year, const RVec<float> eta, const RVec<float> pt) {
+        RVec<double> electron_sf_weights = {1., 1., 1.};
+        if (eta.size() == 0) {
+            return electron_sf_weights;
+        }
+        for (size_t i = 0; i < eta.size(); i++) {
+            electron_sf_weights[0] *= cset_electron_tth.at("ttH_ElectronISO_SF")->evaluate({"nominal", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[1] *= cset_electron_tth.at("ttH_ElectronISO_SF")->evaluate({"up", year, abs(eta[i]), pt[i]});
+            electron_sf_weights[2] *= cset_electron_tth.at("ttH_ElectronISO_SF")->evaluate({"down", year, abs(eta[i]), pt[i]});
+        }
+        return electron_sf_weights;
+    };
+    return df.Define("electron_scale_factors_ttHISO", eval_correction, {"sample_year", "GElectron_eta", "GElectron_pt"});
+}
+
+RNode electronScaleFactors_Trigger(correction::CorrectionSet cset_electron_trigger, RNode df) {
     auto eval_correction = [cset_electron_trigger] (std::string year, const RVec<float> eta, const RVec<float> pt) {
         RVec<double> electron_sf_weights = {1., 1., 1.};
         if (eta.size() == 0) {
             return electron_sf_weights;
         }
         for (size_t i = 0; i < eta.size(); i++) {
-            electron_sf_weights[0] *= cset_electron_trigger->evaluate({"nominal", year, eta[i], pt[i]});
-            electron_sf_weights[1] *= cset_electron_trigger->evaluate({"up", year, eta[i], pt[i]});
-            electron_sf_weights[2] *= cset_electron_trigger->evaluate({"down", year, eta[i], pt[i]});
+            electron_sf_weights[0] *= cset_electron_trigger.at("trigger")->evaluate({"nominal", year, eta[i], pt[i]});
+            electron_sf_weights[1] *= cset_electron_trigger.at("trigger")->evaluate({"up", year, eta[i], pt[i]});
+            electron_sf_weights[2] *= cset_electron_trigger.at("trigger")->evaluate({"down", year, eta[i], pt[i]});
         }
         return electron_sf_weights;
     };
@@ -256,113 +290,113 @@ RNode electronScaleFactors_Trigger(correction::Correction::Ref cset_electron_tri
 }
 
 
-RNode PNET_W_ScaleFactors_2016preVFP(correction::Correction::Ref cset_pnet_w, RNode df) {
+RNode PNET_W_ScaleFactors_2016preVFP(correction::CorrectionSet cset_pnet_w, RNode df) {
     auto eval_correction = [cset_pnet_w] (std::string year, float pt) {
         RVec<double> pnet_w = {1., 1., 1.};
         if (year != "2016preVFP") {
             return pnet_w;
         }
-        pnet_w[0] *= cset_pnet_w->evaluate({pt, year, "nominal"});
-        pnet_w[1] *= cset_pnet_w->evaluate({pt, year, "up"});
-        pnet_w[2] *= cset_pnet_w->evaluate({pt, year, "down"});
+        pnet_w[0] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "nominal"});
+        pnet_w[1] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "up"});
+        pnet_w[2] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "down"});
         return pnet_w;
     };
     return df.Define("particlenet_w_weight_2016preVFP", eval_correction, {"sample_year", "GW_pt"});
 }
 
-RNode PNET_W_ScaleFactors_2016postVFP(correction::Correction::Ref cset_pnet_w, RNode df) {
+RNode PNET_W_ScaleFactors_2016postVFP(correction::CorrectionSet cset_pnet_w, RNode df) {
     auto eval_correction = [cset_pnet_w] (std::string year, float pt) {
         RVec<double> pnet_w = {1., 1., 1.};
         if (year != "2016postVFP") {
             return pnet_w;
         }
-        pnet_w[0] *= cset_pnet_w->evaluate({pt, year, "nominal"});
-        pnet_w[1] *= cset_pnet_w->evaluate({pt, year, "up"});
-        pnet_w[2] *= cset_pnet_w->evaluate({pt, year, "down"});
+        pnet_w[0] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "nominal"});
+        pnet_w[1] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "up"});
+        pnet_w[2] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "down"});
         return pnet_w;
     };
     return df.Define("particlenet_w_weight_2016postVFP", eval_correction, {"sample_year", "GW_pt"});
 }
 
-RNode PNET_W_ScaleFactors_2017(correction::Correction::Ref cset_pnet_w, RNode df) {
+RNode PNET_W_ScaleFactors_2017(correction::CorrectionSet cset_pnet_w, RNode df) {
     auto eval_correction = [cset_pnet_w] (std::string year, float pt) {
         RVec<double> pnet_w = {1., 1., 1.};
         if (year != "2017") {
             return pnet_w;
         }
-        pnet_w[0] *= cset_pnet_w->evaluate({pt, year, "nominal"});
-        pnet_w[1] *= cset_pnet_w->evaluate({pt, year, "up"});
-        pnet_w[2] *= cset_pnet_w->evaluate({pt, year, "down"});
+        pnet_w[0] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "nominal"});
+        pnet_w[1] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "up"});
+        pnet_w[2] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "down"});
         return pnet_w;
     };
     return df.Define("particlenet_w_weight_2017", eval_correction, {"sample_year", "GW_pt"});
 }
 
-RNode PNET_W_ScaleFactors_2018(correction::Correction::Ref cset_pnet_w, RNode df) {
+RNode PNET_W_ScaleFactors_2018(correction::CorrectionSet cset_pnet_w, RNode df) {
     auto eval_correction = [cset_pnet_w] (std::string year, float pt) {
         RVec<double> pnet_w = {1., 1., 1.};
         if (year != "2018") {
             return pnet_w;
         }
-        pnet_w[0] *= cset_pnet_w->evaluate({pt, year, "nominal"});
-        pnet_w[1] *= cset_pnet_w->evaluate({pt, year, "up"});
-        pnet_w[2] *= cset_pnet_w->evaluate({pt, year, "down"});
+        pnet_w[0] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "nominal"});
+        pnet_w[1] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "up"});
+        pnet_w[2] *= cset_pnet_w.at("PNET_W")->evaluate({pt, year, "down"});
         return pnet_w;
     };
     return df.Define("particlenet_w_weight_2018", eval_correction, {"sample_year", "GW_pt"});
 }
 
-RNode PNET_H_ScaleFactors_2016preVFP(correction::Correction::Ref cset_pnet_h, RNode df) {
+RNode PNET_H_ScaleFactors_2016preVFP(correction::CorrectionSet cset_pnet_h, RNode df) {
     auto eval_correction = [cset_pnet_h] (std::string year, float pt) {
         RVec<double> pnet_h = {1., 1., 1.};
         if (year != "2016preVFP") {
             return pnet_h;
         }
-        pnet_h[0] *= cset_pnet_h->evaluate({pt, year, "nominal"});
-        pnet_h[1] *= cset_pnet_h->evaluate({pt, year, "up"});
-        pnet_h[2] *= cset_pnet_h->evaluate({pt, year, "down"});
+        pnet_h[0] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "nominal"});
+        pnet_h[1] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "up"});
+        pnet_h[2] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "down"});
         return pnet_h;
     };
     return df.Define("particlenet_h_weight_2016preVFP", eval_correction, {"sample_year", "GHiggs_pt"});
 }
 
-RNode PNET_H_ScaleFactors_2016postVFP(correction::Correction::Ref cset_pnet_h, RNode df) {
+RNode PNET_H_ScaleFactors_2016postVFP(correction::CorrectionSet cset_pnet_h, RNode df) {
     auto eval_correction = [cset_pnet_h] (std::string year, float pt) {
         RVec<double> pnet_h = {1., 1., 1.};
         if (year != "2016postVFP") {
             return pnet_h;
         }
-        pnet_h[0] *= cset_pnet_h->evaluate({pt, year, "nominal"});
-        pnet_h[1] *= cset_pnet_h->evaluate({pt, year, "up"});
-        pnet_h[2] *= cset_pnet_h->evaluate({pt, year, "down"});
+        pnet_h[0] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "nominal"});
+        pnet_h[1] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "up"});
+        pnet_h[2] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "down"});
         return pnet_h;
     };
     return df.Define("particlenet_h_weight_2016postVFP", eval_correction, {"sample_year", "GHiggs_pt"});
 }
 
-RNode PNET_H_ScaleFactors_2017(correction::Correction::Ref cset_pnet_h, RNode df) {
+RNode PNET_H_ScaleFactors_2017(correction::CorrectionSet cset_pnet_h, RNode df) {
     auto eval_correction = [cset_pnet_h] (std::string year, float pt) {
         RVec<double> pnet_h = {1., 1., 1.};
         if (year != "2017") {
             return pnet_h;
         }
-        pnet_h[0] *= cset_pnet_h->evaluate({pt, year, "nominal"});
-        pnet_h[1] *= cset_pnet_h->evaluate({pt, year, "up"});
-        pnet_h[2] *= cset_pnet_h->evaluate({pt, year, "down"});
+        pnet_h[0] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "nominal"});
+        pnet_h[1] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "up"});
+        pnet_h[2] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "down"});
         return pnet_h;
     };
     return df.Define("particlenet_h_weight_2017", eval_correction, {"sample_year", "GHiggs_pt"});
 }
 
-RNode PNET_H_ScaleFactors_2018(correction::Correction::Ref cset_pnet_h, RNode df) {
+RNode PNET_H_ScaleFactors_2018(correction::CorrectionSet cset_pnet_h, RNode df) {
     auto eval_correction = [cset_pnet_h] (std::string year, float pt) {
         RVec<double> pnet_h = {1., 1., 1.};
         if (year != "2018") {
             return pnet_h;
         }
-        pnet_h[0] *= cset_pnet_h->evaluate({pt, year, "nominal"});
-        pnet_h[1] *= cset_pnet_h->evaluate({pt, year, "up"});
-        pnet_h[2] *= cset_pnet_h->evaluate({pt, year, "down"});
+        pnet_h[0] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "nominal"});
+        pnet_h[1] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "up"});
+        pnet_h[2] *= cset_pnet_h.at("PNET_H")->evaluate({pt, year, "down"});
         return pnet_h;
     };
     return df.Define("particlenet_h_weight_2018", eval_correction, {"sample_year", "GHiggs_pt"});
@@ -723,13 +757,13 @@ RNode finalMCWeight(RNode df){
     // muon sf
     auto df_muon_ID = muonScaleFactors_ID(cset_muon_ID_2016preVFP, cset_muon_ID_2016postVFP, cset_muon_ID_2017, cset_muon_ID_2018, df_pileupID);
     auto df_muon_trigger = muonScaleFactors_trigger(cset_muon_ID_2016preVFP, cset_muon_ID_2016postVFP, cset_muon_ID_2017, cset_muon_ID_2018, df_muon_ID);
-    auto df_muon_ttHID = muonScaleFactors_ttH(cset_muon_ttHID, df_muon_trigger, "muon_scale_factors_ttHID");
-    auto df_muon_ttHISO = muonScaleFactors_ttH(cset_muon_ttHISO, df_muon_ttHID, "muon_scale_factors_ttHISO");
+    auto df_muon_ttHID = muonScaleFactors_ttHID(cset_muon_ttH, df_muon_trigger);
+    auto df_muon_ttHISO = muonScaleFactors_ttHISO(cset_muon_ttH, df_muon_ttHID);
     // elec sf
     auto df_elec_Reco = electronScaleFactors_Reco(cset_electron_ID_2016preVFP, cset_electron_ID_2016postVFP, cset_electron_ID_2017, cset_electron_ID_2018, df_muon_ttHISO);
     auto df_elec_ID = electronScaleFactors_ID(cset_electron_ID_2016preVFP, cset_electron_ID_2016postVFP, cset_electron_ID_2017, cset_electron_ID_2018, df_elec_Reco);
-    auto df_elec_ttHID = electronScaleFactors_ttH(cset_electron_ttHID, df_elec_ID, "electron_scale_factors_ttHID");
-    auto df_elec_ttHISO = electronScaleFactors_ttH(cset_electron_ttHISO, df_elec_ttHID, "electron_scale_factors_ttHISO");
+    auto df_elec_ttHID = electronScaleFactors_ttHID(cset_electron_ttH, df_elec_ID);
+    auto df_elec_ttHISO = electronScaleFactors_ttHISO(cset_electron_ttH, df_elec_ttHID);
     auto df_elec_trigger = electronScaleFactors_Trigger(cset_electron_trigger, df_elec_ttHISO);
     // particle net
     auto df_pnet_w_2016preVFP = PNET_W_ScaleFactors_2016preVFP(cset_pnet_w, df_elec_trigger);
