@@ -737,17 +737,20 @@ RNode LHEScaleWeight_muR(RNode df) {
 }
 
 RNode LHEWeights_pdf(RNode df) {
-    auto eval_correction = [] (const RVec<float> LHEWeights, float genWeight) {
+    auto eval_correction = [] (const RVec<float> LHEWeights, float genWeight, double lhe_pdf_norm) {
         RVec<float> PDFWeights = {1., 1., 1.};
         float PDFUncValue = 0.0;
-        auto LHEWeights_sorted = Sort(LHEWeights);
-        PDFUncValue += 0.5 * ((LHEWeights_sorted[84] - 1) - (LHEWeights_sorted[16] - 1));
+        for (const auto& weight : LHEWeights) {
+            PDFUncValue += (weight - 1) * (weight - 1);
+        }
+        PDFUncValue = sqrt(PDFUncValue);
+
         PDFWeights[0] = genWeight;
-        PDFWeights[1] = (genWeight * (1 + PDFUncValue));
-        PDFWeights[2] = (genWeight * (1 - PDFUncValue));
+        PDFWeights[1] = (genWeight * (1 + PDFUncValue) / lhe_pdf_norm);
+        PDFWeights[2] = (genWeight * (1 - PDFUncValue) / (2 - lhe_pdf_norm));
         return PDFWeights;
     };  
-    return df.Define("LHEWeights_pdf", eval_correction, {"LHEPdfWeight", "genWeight"});
+    return df.Define("LHEWeights_pdf", eval_correction, {"LHEPdfWeight", "genWeight", "lhe_pdf_norm"});
 }
 
 RNode finalMCWeight(RNode df){

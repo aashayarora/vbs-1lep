@@ -16,7 +16,7 @@ CMS_vbsvvh1lep_signal_RegionA                     lnN   -                  -    
 CMS_vbsvvh1lep_signal_RegionB                     lnN   -                  -                  -                  -                  -           1.0146      -           -           
 CMS_vbsvvh1lep_signal_RegionC                     lnN   -                  -                  -                  -                  -           -           1.0131      -           
 CMS_vbsvvh1lep_signal_RegionD                     lnN   -                  -                  -                  -                  -           -           -           1.0210     
-CMS_LHE_weights_pdf_vbsvvh                        lnN   -                  -                  -                  -                  1.03156     1.02557     1.01754     1.01455
+CMS_LHE_weights_pdf_vbsvvh                        lnN   -                  -                  -                  -                  1.13346     1.06872     1.02423     1.07815
 CMS_ttH_elec_reco                                 lnN   -                  -                  -                  -                  1.00282     1.00281     1.00294     1.00274
 CMS_ttH_elec_recotoloose                          lnN   -                  -                  -                  -                  1.00448     1.00449     1.00455     1.00415
 CMS_ttH_elec_trig                                 lnN   -                  -                  -                  -                  1.00566     1.00549     1.00407     1.00347

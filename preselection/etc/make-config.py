@@ -498,6 +498,44 @@ def get_xsec_weight(InputYear):
         print("Error: xsec not found for " + InputYear)
     return weight_xsec
 
+def lhe_pdf_norms(InputYear):
+    pdf_norm = 0
+    if(InputYear == "VBSZZH,2017"):
+        pdf_norm = 1.2980920185943707
+    elif(InputYear == "VBSWWH_SSWW,2017"):
+        pdf_norm = 1.2205882825144703
+    elif(InputYear == "VBSWZH,2017"):
+        pdf_norm = 1.2566551045188934
+    elif(InputYear == "VBSWWH_OSWW,2017"):
+        pdf_norm = 1.2507539374406431
+    elif(InputYear == "VBSZZH,2018"):
+        pdf_norm = 1.2985744198332958
+    elif(InputYear == "VBSWWH_SSWW,2018"):
+        pdf_norm = 1.2189417248705572
+    elif(InputYear == "VBSWZH,2018"):
+        pdf_norm = 1.2543030646199427
+    elif(InputYear == "VBSWWH_OSWW,2018"):
+        pdf_norm = 1.2486530419157191
+    elif(InputYear == "VBSZZH,2016postVFP"):
+        pdf_norm = 1.297558141585914
+    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
+        pdf_norm = 1.2196977423067406
+    elif(InputYear == "VBSWZH,2016postVFP"):
+        pdf_norm = 1.2576042114971981
+    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
+        pdf_norm = 1.2473127695051147
+    elif(InputYear == "VBSZZH,2016preVFP"):
+        pdf_norm = 1.2993650469217064
+    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
+        pdf_norm = 1.218872708226821
+    elif(InputYear == "VBSWZH,2016preVFP"):
+        pdf_norm = 1.2528598974228045
+    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
+        pdf_norm = 1.2507993077851738
+    else:
+        print("Error")
+    return pdf_norm
+
 def extract_mc_sample_type(sample_name):
     if "DY" in sample_name:
         return "DY"
@@ -546,7 +584,8 @@ def make_config(args):
                                 "sample_category": "bkg",
                                 "sample_year" : sample_year,
                                 "sample_type": extract_mc_sample_type(sample_name),
-                                "xsec_weight": xsec
+                                "xsec_weight": xsec,
+                                "lhe_pdf_norm": 1.0
                             }
                         }
                     }
@@ -569,7 +608,8 @@ def make_config(args):
                                 "sample_category": "data",
                                 "sample_year" : sample_year,
                                 "sample_type": data_sample_type,
-                                "xsec_weight": 1.0
+                                "xsec_weight": 1.0,
+                                "lhe_pdf_norm": 1.0
                             }
                         }
                     }
@@ -586,6 +626,10 @@ def make_config(args):
                 if xsec == 0:
                     print(sample)
                     continue
+                lhe_weight = lhe_pdf_norms(sample_name.split("/")[1].split("_MJJ")[0] + "," + sample_year)
+                if lhe_weight == 0:
+                    print(sample)
+                    continue
                 config["samples"].update(
                     {
                         sample_name.split("v9/")[1] + "_" + sample_year: {
@@ -595,7 +639,8 @@ def make_config(args):
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,
                                 "sample_type": "sig_mc",
-                                "xsec_weight": xsec
+                                "xsec_weight": xsec,
+                                "lhe_pdf_norm": lhe_weight
                             }
                         }
                     }

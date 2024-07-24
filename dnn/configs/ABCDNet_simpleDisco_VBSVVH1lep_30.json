@@ -48,6 +48,8 @@
     },
     "infer": {
         "extra_files": [
+            "/data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_up_MVA.root",
+            "/data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_MVA.root",
             "/data/userdata/aaarora/output/run2/data_MVA.root",
             "/data/userdata/aaarora/output/run2/bkg_MVA.root",
@@ -164,9 +166,7 @@
             "/data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muR_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muR_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muF_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muF_down_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_up_MVA.root",
-            "/data/userdata/aaarora/output/run2/sig_LHEWeights_pdf_down_MVA.root"
+            "/data/userdata/aaarora/output/run2/sig_LHEScaleWeight_muF_down_MVA.root"
         ]
     }
 }
