@@ -6,6 +6,49 @@ RNode goodRun(lumiMask golden, RNode df){
              .Filter("goldenJSON", "PASSES GOLDEN JSON");
 }
 
+RNode EWKCorrections(correction::CorrectionSet cset_ewk, RNode df){
+    auto eval_correction = [cset_ewk] (RVec<float> LHEPart_pt, RVec<float> LHEPart_eta, RVec<float> LHEPart_phi, RVec<float> LHEPart_mass, RVec<int> LHEPart_pdgId, std::string sample_type) {
+        if(sample_type != "EWK") return 1.;
+        else{
+            TLorentzVector TEWKq1, TEWKq2, TEWKlep, TEWKnu;
+            TEWKq1.SetPtEtaPhiM(LHEPart_pt[4],LHEPart_eta[4],LHEPart_phi[4],LHEPart_mass[4]);
+            TEWKq2.SetPtEtaPhiM(LHEPart_pt[5],LHEPart_eta[5],LHEPart_phi[5],LHEPart_mass[5]);
+            TEWKlep.SetPtEtaPhiM(LHEPart_pt[2],LHEPart_eta[2],LHEPart_phi[2],LHEPart_mass[2]);
+            TEWKnu.SetPtEtaPhiM(LHEPart_pt[3],LHEPart_eta[3],LHEPart_phi[3],LHEPart_mass[3]);
+            int chargequark[7] = {0,-1,2,-1,2,-1,2};
+            int EWKpdgq1 = LHEPart_pdgId[4];
+            int EWKpdgq2 = LHEPart_pdgId[5];
+            int EWKsignq1 = (EWKpdgq1 > 0) - (EWKpdgq1 < 0);
+            int EWKsignq2 = (EWKpdgq2 > 0) - (EWKpdgq2 < 0);
+            double EWKMass_q12 = (TEWKq1 + TEWKq2).M();
+            double EWKMass_lnu = (TEWKlep + TEWKnu).M();
+            double fabscharge=(fabs((double)(EWKsignq1 * chargequark[abs(EWKpdgq1)] + (EWKsignq2 * chargequark[abs(EWKpdgq2)]))))/3;
+            double EWKbjet_pt = -999;
+            if(fabscharge ==1){
+                if( EWKMass_q12 >= 70 && EWKMass_q12 < 90  && 
+                    EWKMass_lnu >= 70 && EWKMass_lnu < 90){
+                    return 0.;
+                }
+            }
+            if(EWKMass_q12 >= 95){
+                if( abs(EWKpdgq1) == 5 && abs(EWKpdgq2) == 5){
+                    if(TEWKq1.Pt() > TEWKq2.Pt())  EWKbjet_pt = TEWKq1.Pt();
+                    else                           EWKbjet_pt = TEWKq2.Pt();
+                }else if(abs(EWKpdgq1) == 5){
+                    EWKbjet_pt = TEWKq1.Pt();
+                }else if(abs(EWKpdgq2) == 5){
+                    EWKbjet_pt = TEWKq2.Pt();
+                }
+            }
+            if(EWKbjet_pt > -998){
+                return cset_ewk.at("EWK")->evaluate({EWKbjet_pt});
+            }
+            else return 1.;
+        }
+    };
+    return df.Define("EWKCorrection", eval_correction, {"LHEPart_pt", "LHEPart_eta", "LHEPart_phi", "LHEPart_mass", "LHEPart_pdgId", "sample_type"});
+}
+
 RNode L1PreFiringWeight(RNode df){
     auto eval_correction = [] (float L1prefire, float L1prefireup, float L1prefiredown) {
         return RVec<float>{L1prefire, L1prefireup, L1prefiredown};
@@ -737,7 +780,7 @@ RNode LHEScaleWeight_muR(RNode df) {
 }
 
 RNode LHEWeights_pdf(RNode df) {
-    auto eval_correction = [] (const RVec<float> LHEWeights, float genWeight, double lhe_pdf_norm) {
+    auto eval_correction = [] (const RVec<float> LHEWeights, float genWeight) {
         RVec<float> PDFWeights = {1., 1., 1.};
         float PDFUncValue = 0.0;
         for (const auto& weight : LHEWeights) {
@@ -746,16 +789,17 @@ RNode LHEWeights_pdf(RNode df) {
         PDFUncValue = sqrt(PDFUncValue);
 
         PDFWeights[0] = genWeight;
-        PDFWeights[1] = (genWeight * (1 + PDFUncValue) / lhe_pdf_norm);
-        PDFWeights[2] = (genWeight * (1 - PDFUncValue) / (2 - lhe_pdf_norm));
+        PDFWeights[1] = genWeight * (1 + PDFUncValue);
+        PDFWeights[2] = genWeight * (1 - PDFUncValue);
         return PDFWeights;
     };  
-    return df.Define("LHEWeights_pdf", eval_correction, {"LHEPdfWeight", "genWeight", "lhe_pdf_norm"});
+    return df.Define("LHEWeights_pdf", eval_correction, {"LHEPdfWeight", "genWeight"});
 }
 
 RNode finalMCWeight(RNode df){
     auto df_l1prefire = L1PreFiringWeight(df);
-    auto df_pileup = pileupScaleFactors(cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018, df_l1prefire);
+    auto df_ewk = EWKCorrections(cset_ewk, df_l1prefire);
+    auto df_pileup = pileupScaleFactors(cset_pileup_2016preVFP, cset_pileup_2016postVFP, cset_pileup_2017, cset_pileup_2018, df_ewk);
     auto df_pileupID = pileupIDScaleFactors(cset_pileupID_2016preVFP, cset_pileupID_2016postVFP, cset_pileupID_2017, cset_pileupID_2018, df_pileup);
     // muon sf
     auto df_muon_ID = muonScaleFactors_ID(cset_muon_ID_2016preVFP, cset_muon_ID_2016postVFP, cset_muon_ID_2017, cset_muon_ID_2018, df_pileupID);
@@ -818,6 +862,7 @@ RNode finalMCWeight(RNode df){
         "LHEScaleWeight_muF[0] * "
         "LHEWeights_pdf[0] * " // contains genWeights
         "HEMweight * "
+        "EWKCorrection *"
         "xsec_weight");
 }
 

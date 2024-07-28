@@ -14,5 +14,6 @@
 #include <vector>
 
 using namespace TMVA::Experimental;
+using RNode = ROOT::RDF::RNode;
 
 #endif // MVA_H

@@ -63,6 +63,6 @@ def infer(model, device, loader, output):
             output.write(event_i, truth, score, weight, disco_target)
 
     output.close()
-    print(f"Wrote {output.file_name}")
+    # print(f"Wrote {output.file_name}")
 
     return times

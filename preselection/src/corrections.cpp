@@ -105,7 +105,7 @@ RNode METUnclusteredCorrections(RNode df, std::string variation) {
 }
 
 RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, RNode df, std::string JEC_type, std::string variation) {
-    auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, JEC_type, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<float> raw_factor, RVec<float> var) {
+    auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, JEC_type, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<float> var) {
         RVec<float> jec_factors;
 
         std::string JEC;
@@ -116,11 +116,11 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
 
         for (size_t i = 0; i < var.size(); i++) {
             if (year == "2016preVFP") {
-                JEC = std::string("Summer19UL16APV_V7_MC_") + JEC_type + std::string("_AK4PFchs");
-                if (JEC_type.find("2016postVFP") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
-                    jec_factors.push_back(var[i]);
+                if (JEC_type.find("2016post") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                    return var;
                 }
                 else {
+                    JEC = std::string("Summer19UL16APV_V7_MC_") + JEC_type + std::string("_AK4PFchs");
                     if (variation == "up") {
                         jec_factors.push_back(var[i] * (1 + cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
@@ -128,16 +128,16 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                         jec_factors.push_back(var[i] * (1 - cset_jerc_2016preVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
-                        jec_factors.push_back(var[i]);
+                        return var;
                     }
                 }
             }
             else if (year == "2016postVFP") {
-                JEC = std::string("Summer19UL16_V7_MC_") + JEC_type + std::string("_AK4PFchs");
-                if (JEC_type.find("2016preVFP") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
-                    jec_factors.push_back(var[i]);
+                if (JEC_type.find("2016pre") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                    return var;
                 }
                 else {
+                    JEC = std::string("Summer19UL16_V7_MC_") + JEC_type + std::string("_AK4PFchs");
                     if (variation == "up") {
                         jec_factors.push_back(var[i] * (1 + cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
@@ -145,16 +145,16 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                         jec_factors.push_back(var[i] * (1 - cset_jerc_2016postVFP.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
-                        jec_factors.push_back(var[i]);
+                        return var;
                     }
                 }
             }
             else if (year == "2017") {
-                JEC = std::string("Summer19UL17_V5_MC_") + JEC_type + std::string("_AK4PFchs");
                 if (JEC_type.find("2016") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
-                    jec_factors.push_back(var[i]);
+                    return var;
                 }
                 else {
+                    JEC = std::string("Summer19UL17_V5_MC_") + JEC_type + std::string("_AK4PFchs");
                     if (variation == "up") {
                         jec_factors.push_back(var[i] * (1 + cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
@@ -162,16 +162,16 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                         jec_factors.push_back(var[i] * (1 - cset_jerc_2017.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
-                        jec_factors.push_back(var[i]);
+                        return var;
                     }
                 }
             }
             else if (year == "2018") {
-                JEC = std::string("Summer19UL18_V5_MC_") + JEC_type + std::string("_AK4PFchs");
                 if (JEC_type.find("2016") != std::string::npos || JEC_type.find("2017") != std::string::npos) {
-                    jec_factors.push_back(var[i]);
+                    return var;
                 }
                 else {
+                    JEC = std::string("Summer19UL18_V5_MC_") + JEC_type + std::string("_AK4PFchs");
                     if (variation == "up") {
                         jec_factors.push_back(var[i] * (1 + cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
@@ -179,38 +179,57 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
                         jec_factors.push_back(var[i] * (1 - cset_jerc_2018.at(JEC)->evaluate({eta[i], pt[i]})));
                     }
                     else {
-                        jec_factors.push_back(var[i]);
+                        return var;
                     }
                 }
             }
             else {
-                jec_factors.push_back(var[i]);
+                return var;
             }
         }
         return jec_factors;
     };
-    auto df_jetcorr =  df.Redefine("CorrJet_pt", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_rawFactor", "Jet_pt"})
-                        .Redefine("CorrJet_mass", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_rawFactor", "Jet_mass"})
-                        .Redefine("CorrFatJet_pt", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_pt"})
-                        .Redefine("CorrFatJet_mass", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_rawFactor", "FatJet_mass"});
+    auto df_jetcorr =  df.Redefine("CorrJet_pt", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_pt"})
+                        .Redefine("CorrJet_mass", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_mass"})
+                        .Redefine("CorrFatJet_pt", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_pt"})
+                        .Redefine("CorrFatJet_mass", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_mass"});
 
-    auto correctmet = [](RVec<float> corrjet_pt, RVec<float> jet_phi, float MET_pt, float MET_phi) {
+    auto correctmet = [JEC_type](std::string year, RVec<float> corrjet_pt, RVec<float> jet_phi, RVec<float> jet_pt, float MET_pt, float MET_phi) {
+        if (year == "2016preVFP") {
+            if (JEC_type.find("2016post") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                return MET_pt;
+            }
+        }
+        else if (year == "2016postVFP") {
+            if (JEC_type.find("2016pre") != std::string::npos || JEC_type.find("2017") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                return MET_pt;
+            }
+        }
+        else if (year == "2017") {
+            if (JEC_type.find("2016") != std::string::npos || JEC_type.find("2018") != std::string::npos) {
+                return MET_pt;
+            }
+        }
+        else if (year == "2018") {
+            if (JEC_type.find("2016") != std::string::npos || JEC_type.find("2017") != std::string::npos) {
+                return MET_pt;
+            }
+        }
         float px = 0;
         float py = 0;
         for (size_t i = 0; i < corrjet_pt.size(); i++) {
-            px += corrjet_pt[i] * TMath::Cos(jet_phi[i]);
-            py += corrjet_pt[i] * TMath::Sin(jet_phi[i]);
+            px += ((MET_pt * TMath::Cos(MET_phi)) - (jet_pt[i] * TMath::Cos(jet_phi[i])) + (corrjet_pt[i] * TMath::Cos(jet_phi[i])));
+            py += ((MET_pt * TMath::Cos(MET_phi)) - (jet_pt[i] * TMath::Cos(jet_phi[i])) + (corrjet_pt[i] * TMath::Cos(jet_phi[i])));
         }
-        return TMath::Sqrt(px * px + py * py);        
+        return (float)TMath::Sqrt(px * px + py * py);        
     };
 
-    return df_jetcorr.Redefine("CorrMET_pt", correctmet, {"CorrJet_pt", "Jet_phi", "MET_pt", "MET_phi"});
+    return df_jetcorr.Redefine("CorrMET_pt", correctmet, {"sample_year", "CorrJet_pt", "Jet_phi", "Jet_pt", "MET_pt", "MET_phi"});
 }
 
 RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correction::CorrectionSet cset_jerc_2016postVFP, correction::CorrectionSet cset_jerc_2017, correction::CorrectionSet cset_jerc_2018, correction::CorrectionSet cset_jer_smear, RNode df, std::string variation) {
     auto eval_correction = [cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, variation] (std::string year, RVec<float> pt, RVec<float> eta, RVec<int> genJet_idx, RVec<float> genJet_pt, float rho, unsigned long long event, RVec<float> var) {
         RVec<float> jer_factors;
-
         std::string vary;
         // for jer json
         if (variation == "nominal") {
@@ -219,37 +238,36 @@ RNode JetEnergyResolution(correction::CorrectionSet cset_jerc_2016preVFP, correc
         else {
             vary = variation;
         }
-
         float jer_sf;
         float jer;
-
+        float genjetpt;
         if (var.size() == 0) {
             return var;
         }
-        
         for (size_t i = 0; i < var.size(); i++) {
+            genjetpt = genJet_idx[i] >= 0 ? genJet_pt[genJet_idx[i]] : -1;
             if (year == "2016preVFP") {
                 jer = cset_jerc_2016preVFP.at("Summer20UL16APV_JRV3_MC_PtResolution_AK4PFchs")->evaluate({eta[i], pt[i], rho});
                 jer_sf = cset_jerc_2016preVFP.at("Summer20UL16APV_JRV3_MC_ScaleFactor_AK4PFchs")->evaluate({eta[i], vary});
-                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genJet_pt[genJet_idx[i]], rho, (int)event, jer, jer_sf}));
+                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genjetpt, rho, (int)event, jer, jer_sf}));
             }
             else if (year == "2016postVFP") {
                 jer = cset_jerc_2016postVFP.at("Summer20UL16_JRV3_MC_PtResolution_AK4PFchs")->evaluate({eta[i], pt[i], rho});
                 jer_sf = cset_jerc_2016postVFP.at("Summer20UL16_JRV3_MC_ScaleFactor_AK4PFchs")->evaluate({eta[i], vary});
-                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genJet_pt[genJet_idx[i]], rho, (int)event, jer, jer_sf}));
+                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genjetpt, rho, (int)event, jer, jer_sf}));
             }
             else if (year == "2017") {
                 jer = cset_jerc_2017.at("Summer19UL17_JRV2_MC_PtResolution_AK4PFchs")->evaluate({eta[i], pt[i], rho});
                 jer_sf = cset_jerc_2017.at("Summer19UL17_JRV2_MC_ScaleFactor_AK4PFchs")->evaluate({eta[i], vary});
-                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genJet_pt[genJet_idx[i]], rho, (int)event, jer, jer_sf}));
+                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genjetpt, rho, (int)event, jer, jer_sf}));
             }
             else if (year == "2018") {
                 jer = cset_jerc_2018.at("Summer19UL18_JRV2_MC_PtResolution_AK4PFchs")->evaluate({eta[i], pt[i], rho});
                 jer_sf = cset_jerc_2018.at("Summer19UL18_JRV2_MC_ScaleFactor_AK4PFchs")->evaluate({eta[i], vary});
-                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genJet_pt[genJet_idx[i]], rho, (int)event, jer, jer_sf}));
+                jer_factors.push_back(var[i] * cset_jer_smear.at("JERSmear")->evaluate({pt[i], eta[i], genjetpt, rho, (int)event, jer, jer_sf}));
             }
             else {
-                jer_factors.push_back(var[i]);
+                return var;
             }
         }
         return jer_factors;

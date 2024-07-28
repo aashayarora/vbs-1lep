@@ -17,6 +17,7 @@ struct MyArgs : public argparse::Args {
     bool &JMR = flag("jmr", "JMR");
     bool &METUnclustered = flag("met", "MET unclustered");
     int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
+    int &c2v = kwarg("c2v", "c2v value").set_default(-1);
     std::string &output = kwarg("o,output", "output root file").set_default("");
     std::string &variation = kwarg("var", "variation").set_default("nominal");
     std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
@@ -76,7 +77,14 @@ void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
         }
     };
     auto df7 = applySFVariations(df6, args);
-    saveSnapshot(df7, output_file);
+    auto C2VReweighting = [](RNode df, MyArgs args) {
+        if (args.c2v == -1) {return df;}
+        else {
+            return df.Redefine("weight", Form("weight * LHEReweightingWeight[%d]", args.c2v));
+        }
+    };
+    auto df8 = C2VReweighting(df7, args);
+    saveSnapshot(df8, output_file);
 }
 
 int main(int argc, char** argv) {
@@ -86,27 +94,27 @@ int main(int argc, char** argv) {
 
     ROOT::EnableImplicitMT(args.nthreads);
     ROOT::RDataFrame df_ = ROOT::RDF::Experimental::FromSpec(input_spec);
-    ROOT::RDF::Experimental::AddProgressBar(df_);
+    // ROOT::RDF::Experimental::AddProgressBar(df_);
 
     // define metadata
     auto df = defineMetadata(df_);
-
+    // auto report = df.Report();
     // run analysis
     if (input_spec.find("data") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "data.root";
+            output_file = "data/data.root";
         }
         runDataAnalysis(df, output_file);
     }
     else if (input_spec.find("bkg") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "bkg.root";
+            output_file = "bkg/bkg.root";
         }
         runBkgAnalysis(df, output_file);
     }
     else if (input_spec.find("sig") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "sig.root";
+            output_file = "sig/sig.root";
         }
         runSigAnalysis(df, args, output_file);
     }
@@ -114,6 +122,6 @@ int main(int argc, char** argv) {
         std::cerr << "Invalid input file, the spec file name must contain sig, bkg or data" << std::endl;
         return 1;
     }
-
+    // report->Print();
     return 0;
 }

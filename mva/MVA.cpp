@@ -3,12 +3,14 @@
 
 struct MyArgs : public argparse::Args {
     std::string &input = kwarg("i,input", "input path");
+    std::string &output = kwarg("o,output", "output path");
+    std::string &year = kwarg("y,year", "year").set_default("");
 };
 
 int main(int argc, char** argv){
     auto args = argparse::parse<MyArgs>(argc, argv);
     std::string input_file = args.input;
-    std::string output_file = input_file.substr(0, input_file.find(".root")) + "_MVA.root";
+    std::string output_file = args.output;
 
     RReader reader_AB("weights/BDT/BDT_AB/TMVAClassification_BDT.weights.xml");
     RReader reader_BA("weights/BDT/BDT_BA/TMVAClassification_BDT.weights.xml");
@@ -27,14 +29,22 @@ int main(int argc, char** argv){
 
     // ROOT::EnableImplicitMT(4);
     ROOT::RDataFrame df("Events", input_file);
-    ROOT::RDF::Experimental::AddProgressBar(df);
-
+    // ROOT::RDF::Experimental::AddProgressBar(df);
     // Make final cuts before running MVA
     auto df1 = df.Filter("HighestHScore > 0.5 && HighestWjetScore > 0.7");
+
     auto df2 = df1.Define("VBSBDTscore", predict, {"event", "VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"});
 
+    auto filter_year = [](RNode df, MyArgs args){
+        if (args.year.empty()) {return df.Filter("event > 0");}
+        else {
+            return df.Filter(Form("sample_year == \"%s\"", args.year.c_str()));
+        } 
+    };
+    auto df3 = filter_year(df2, args);
+
     std::vector<std::string> final_vars = {"event", "Hbbscore", "HighestWjetScore", "HbbPt", "Hbbmass", "MET", "Mlbminloose", "VBSBDTscore", "VBSMjj", "VBSdetajj", "VBSjet1eta", "VBSjet1phi", "VBSjet1pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2pt", "WjetPt", "Wjetmass", "leptonpt", "weight"};
-    df2.Snapshot("Events", output_file, final_vars);
+    df3.Snapshot("Events", output_file, final_vars);
 
     return 0;
 }

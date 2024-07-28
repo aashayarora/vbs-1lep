@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 import uproot
 import numpy as np
-import os.path
+import argparse
+import scipy
 
 @dataclass
 class Systematics():
@@ -71,7 +72,6 @@ def max_var(variations):
     return variations[deviations.index(max(deviations))]
 
 def get_variation(correction=None, tree="Events"):
-    print(f"Evaluating {correction}")
     sig_file = "/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_MVA_abcdnet.root"
     
     BDT_CUT = 0.56
@@ -98,6 +98,8 @@ def get_variation(correction=None, tree="Events"):
     c2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
     d2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
 
+    a2, b2, c2, d2 = [0 if x == np.inf or x == -np.inf else x for x in (a2, b2, c2, d2)]
+
     variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
 
     with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_down_MVA_abcdnet.root") as g:
@@ -108,12 +110,13 @@ def get_variation(correction=None, tree="Events"):
     c3 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
     d3 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
 
+    a3, b3, c3, d3 = [0 if (x == np.inf) or (x == -np.inf) else x for x in (a3, b3, c3, d3)]
+
     variations.append([(a - a3) / a, (b - b3) / b, (c - c3) / c, (d - d3) / d])
 
     return ["{:.5f}".format(round(1 + abs(max_var(x)), 5)) for x in zip(*variations)]
 
 def get_stats(tree="Events"):
-    print("Evaluating stats")
     sig_file = "/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_MVA_abcdnet.root"
     
     BDT_CUT = 0.56
@@ -147,9 +150,39 @@ def get_data(tree="Events"):
     c = sum(df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
     d = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
 
-    return [b, c, d]
+    up1 = round(scipy.stats.gamma.ppf(1- (1-0.9973) / 2, b+1)) #self.obs[1] + 3*(self.obs[1]**0.5)
+    up2 = round(scipy.stats.gamma.ppf(1- (1-0.9973) / 2, c+1)) #self.obs[2] + 3*(self.obs[2]**0.5)
+    up3 = round(scipy.stats.gamma.ppf(1- (1-0.9973) / 2, d+1)) #self.obs[3] + 3*(self.obs[3]**0.5)
+    dn1 = round(scipy.stats.gamma.ppf((1 - 0.9973) / 2, b)) #self.obs[1] - 3*(self.obs[1]**0.5)
+    dn2 = round(scipy.stats.gamma.ppf((1 - 0.9973) / 2, c)) #self.obs[2] - 3*(self.obs[2]**0.5)
+    dn3 = round(scipy.stats.gamma.ppf((1 - 0.9973) / 2, d)) #self.obs[3] - 3*(self.obs[3]**0.5)
+
+    return [b, c, d, up1, up2, up3, dn1, dn2, dn3]
+
+def xbb_reweight(year):
+    if (year == "2016preVFP"):
+        return "CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03010     1.03010     1.03010     1.03010"
+    elif (year == "2016postVFP"):
+        return "CMS_vbsvvh1lep_bTagFitXbb_13TeV_16postVFP         lnN   -                  -                  -                  -                  1.01200     1.01200     1.01200     1.01200"
+    elif (year == "2017"):
+        return "CMS_vbsvvh1lep_bTagFitXbb_13TeV_17                lnN   -                  -                  -                  -                  1.02560     1.02560     1.02560     1.02560"
+    elif (year == "2018"):
+        return "CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07080     1.07080     1.07080     1.07080"
+    else:
+        return
+"""
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03010     1.03010     1.03010     1.03010
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_16postVFP         lnN   -                  -                  -                  -                  1.01200     1.01200     1.01200     1.01200
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_17                lnN   -                  -                  -                  -                  1.02560     1.02560     1.02560     1.02560
+CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07080     1.07080     1.07080     1.07080
+"""
 
 if __name__ == "__main__":
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument("--output", type=str, default="datacard.txt", help="Output file name")
+    argparser.add_argument("--year", type=str, default="Run2", help="Year of data taking")
+    args = argparser.parse_args()
+
     sys = Systematics(
         sig=get_variation(),
         data=get_data(),
@@ -223,7 +256,7 @@ observation                                             1                  {sys.
 bin                                                     A                  B                  C                  D                  A           B           C           D           
 process                                                 TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalSig    TotalSig    TotalSig    TotalSig    
 process                                                 1                  1                  1                  1                  0           0           0           0           
-rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}     {sys.sig[2]}     {sys.sig[3]}    
+rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}      {sys.sig[2]}     {sys.sig[3]}    
 --------------------------------------------------------------------------------------------------------------------------------
 CMS_vbsvvh1lep_control_abcd_syst                  lnN   1.2                -                  -                  -                  -           -           -           -           
 lumi_13TeV_correlated                             lnN   -                  -                  -                  -                  1.016       1.016       1.016       1.016       
@@ -280,23 +313,20 @@ CMS_jms_pnetreg_13TeV                             lnN   -                  -    
 CMS_jmr_pnetreg_13TeV                             lnN   -                  -                  -                  -                  {sys.jmr_pnetreg[0]}     {sys.jmr_pnetreg[1]}     {sys.jmr_pnetreg[2]}     {sys.jmr_pnetreg[3]}
 CMS_btagWeightDeepJet_HF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_HF_13Tev[0]}     {sys.btagWeightDeepJet_HF_13Tev[1]}     {sys.btagWeightDeepJet_HF_13Tev[2]}     {sys.btagWeightDeepJet_HF_13Tev[3]}
 CMS_btagWeightDeepJet_LF_13Tev                    lnN   -                  -                  -                  -                  {sys.btagWeightDeepJet_LF_13Tev[0]}     {sys.btagWeightDeepJet_LF_13Tev[1]}     {sys.btagWeightDeepJet_LF_13Tev[2]}     {sys.btagWeightDeepJet_LF_13Tev[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[3]}
-CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[3]}
-CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03400     1.03400     1.03400     1.03400     
-CMS_vbsvvh1lep_bTagFitXbb_13TeV_16postVFP         lnN   -                  -                  -                  -                  1.01400     1.01400     1.01400     1.01400       
-CMS_vbsvvh1lep_bTagFitXbb_13TeV_17                lnN   -                  -                  -                  -                  1.03100     1.03100     1.03100     1.03100     
-CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07100     1.07100     1.07100     1.07100 
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP[3]}
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP     lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP[3]}
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_17            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_17[3]}
 CMS_vbsvvh1lep_qTagWeightXWqq_13TeV_18            lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[0]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[1]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[2]}     {sys.vbsvvh1lep_qTagWeightXWqq_13TeV_18[3]}                  
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP       lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP      lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_17             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_17[3]}
+CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -                  -                  -                  {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[0]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[1]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[2]}     {sys.vbsvvh1lep_bTagWeightXbb_13TeV_18[3]}
+{xbb_reweight(args.year)}
 --------------------------------------------------------------------------------------------------------------------------------
 A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]}                  
-C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]}                    
-D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]}                
+B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]} [{sys.data[3]}, {sys.data[6]}]              
+C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]} [{sys.data[4]}, {sys.data[7]}]    
+D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]} [{sys.data[5]}, {sys.data[8]}]
 """
-    with open("datacard.txt", "w") as f:
+    with open("datacards/" + args.output, "w") as f:
         f.write(datacard)

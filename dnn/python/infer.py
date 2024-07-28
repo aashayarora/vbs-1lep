@@ -111,12 +111,12 @@ if __name__ == "__main__":
         selection = config.ingress.get("selection", None)
         for pt_file in glob.glob(ingress.get_outfile(config, tag="*", subdir="datasets", msg="Globbing {}")): 
             # Get data
-            print(f"Loading {pt_file}")
+            # print(f"Loading {pt_file}")
             if config.discotype == "single":
                 data = SingleDisCoDataset.from_file(pt_file, norm=False)
             elif config.discotype == "double":
                 data = DoubleDisCoDataset.from_file(pt_file, norm=False)
-            print(data)
+            # print(data)
             loader = DataLoader(data)
             # Make file names
             name = pt_file.split(config.name+"_")[-1].split("_dataset")[0].replace(".pt", "")
@@ -165,8 +165,8 @@ if __name__ == "__main__":
             )
         test_loader = DataLoader(test_data)
         train_loader = DataLoader(train_data)
-        print(test_data)
-        print(train_data)
+        # print(test_data)
+        # print(train_data)
         # Write testing and training inferences
         csv_name = train.get_outfile(config, epoch=args.epoch, tag="REPLACE_inferences", ext="csv", subdir="inferences")
         test_csv = OutputCSV(csv_name.replace("REPLACE", "test"))
@@ -178,4 +178,4 @@ if __name__ == "__main__":
             times += infer(model1, model2, device, test_loader, test_csv)
             times += infer(model1, model2, device, train_loader, train_csv)
 
-    print("\nDone.\n")
+    # print("\nDone.\n")

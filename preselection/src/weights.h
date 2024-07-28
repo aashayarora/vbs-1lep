@@ -21,6 +21,8 @@ const auto LumiMask = lumiMask::fromJSON("corrections/goldenJson/Cert_271036-325
 // l1 prefiring weights
 RNode L1PreFiringWeight(RNode df);
 
+RNode EWKCorrections(correction::CorrectionSet cset_ewk, RNode df);
+const auto cset_ewk = *CorrectionSet::from_file("corrections/scalefactors/ewk/EWK.json");
 // pileup sfs
 RNode pileupScaleFactors(correction::CorrectionSet cset_pileup_2016preVFP, correction::CorrectionSet cset_pileup_2016postVFP, correction::CorrectionSet cset_pileup_2017, correction::CorrectionSet cset_pileup_2018, RNode df);
 const auto cset_pileup_2016preVFP = *CorrectionSet::from_file("corrections/pileup/2016preVFP_puWeights.json");

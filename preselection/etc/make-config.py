@@ -553,11 +553,7 @@ def extract_mc_sample_type(sample_name):
         return "Other"
 
 def make_config(args):
-    if args.sample_year is None:
-        config_name = args.output
-    else:
-        config_name = f"config_{args.sample_year}.json"
-    with open(config_name, "w+") as f:
+    with open(args.output, "w+") as f:
         try:
             config = json.load(f)
         except json.JSONDecodeError:
@@ -584,8 +580,7 @@ def make_config(args):
                                 "sample_category": "bkg",
                                 "sample_year" : sample_year,
                                 "sample_type": extract_mc_sample_type(sample_name),
-                                "xsec_weight": xsec,
-                                "lhe_pdf_norm": 1.0
+                                "xsec_weight": xsec
                             }
                         }
                     }
@@ -608,8 +603,7 @@ def make_config(args):
                                 "sample_category": "data",
                                 "sample_year" : sample_year,
                                 "sample_type": data_sample_type,
-                                "xsec_weight": 1.0,
-                                "lhe_pdf_norm": 1.0
+                                "xsec_weight": 1.0
                             }
                         }
                     }
@@ -626,10 +620,6 @@ def make_config(args):
                 if xsec == 0:
                     print(sample)
                     continue
-                lhe_weight = lhe_pdf_norms(sample_name.split("/")[1].split("_MJJ")[0] + "," + sample_year)
-                if lhe_weight == 0:
-                    print(sample)
-                    continue
                 config["samples"].update(
                     {
                         sample_name.split("v9/")[1] + "_" + sample_year: {
@@ -639,8 +629,7 @@ def make_config(args):
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,
                                 "sample_type": "sig_mc",
-                                "xsec_weight": xsec,
-                                "lhe_pdf_norm": lhe_weight
+                                "xsec_weight": xsec
                             }
                         }
                     }
