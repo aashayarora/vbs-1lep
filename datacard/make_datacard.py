@@ -80,10 +80,10 @@ def get_variation(correction=None, tree="Events"):
     with uproot.open(sig_file) as f:
         df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    a = sum(df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score > DNN_CUT)].weight)
-    b = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score > DNN_CUT)].weight)
-    c = sum(df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
-    d = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
+    a = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    b = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    c = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
+    d = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
 
     if correction is None:
         return ["{:.5f}".format(round(i, 5)) for i in [a, b, c, d]]
@@ -93,24 +93,20 @@ def get_variation(correction=None, tree="Events"):
     with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_up_MVA_abcdnet.root") as g:
         df2 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    a2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
-    b2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score > DNN_CUT)].weight)
-    c2 = sum(df2[(df2.VBSBDTscore > BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
-    d2 = sum(df2[(df2.VBSBDTscore < BDT_CUT) & (df2.abcdnet_score < DNN_CUT)].weight)
-
-    a2, b2, c2, d2 = [0 if x == np.inf or x == -np.inf else x for x in (a2, b2, c2, d2)]
+    a2 = df2.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    b2 = df2.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    c2 = df2.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
+    d2 = df2.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
 
     variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
 
     with uproot.open(f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_{correction}_down_MVA_abcdnet.root") as g:
         df3 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    a3 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
-    b3 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score > DNN_CUT)].weight)
-    c3 = sum(df3[(df3.VBSBDTscore > BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
-    d3 = sum(df3[(df3.VBSBDTscore < BDT_CUT) & (df3.abcdnet_score < DNN_CUT)].weight)
-
-    a3, b3, c3, d3 = [0 if (x == np.inf) or (x == -np.inf) else x for x in (a3, b3, c3, d3)]
+    a3 = df3.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    b3 = df3.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    c3 = df3.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
+    d3 = df3.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
 
     variations.append([(a - a3) / a, (b - b3) / b, (c - c3) / c, (d - d3) / d])
 
@@ -125,15 +121,15 @@ def get_stats(tree="Events"):
     with uproot.open(sig_file) as f:
         df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    df_a = df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score > DNN_CUT)]
-    df_b = df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score > DNN_CUT)]
-    df_c = df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)]
-    df_d = df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)]
+    df_a = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100")
+    df_b = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100")
+    df_c = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100")
+    df_d = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100")
 
-    a = 1 + np.sqrt(sum(df_a[["weight"]].map(lambda x: x**2).weight)) / sum(df_a.weight)
-    b = 1 + np.sqrt(sum(df_b[["weight"]].map(lambda x: x**2).weight)) / sum(df_b.weight)
-    c = 1 + np.sqrt(sum(df_c[["weight"]].map(lambda x: x**2).weight)) / sum(df_c.weight)
-    d = 1 + np.sqrt(sum(df_d[["weight"]].map(lambda x: x**2).weight)) / sum(df_d.weight)
+    a = 1 + np.sqrt((df_a.weight ** 2).sum()) / df_a.weight.sum()
+    b = 1 + np.sqrt((df_b.weight ** 2).sum()) / df_b.weight.sum()
+    c = 1 + np.sqrt((df_c.weight ** 2).sum()) / df_c.weight.sum()
+    d = 1 + np.sqrt((df_d.weight ** 2).sum()) / df_d.weight.sum()
 
     return ["{:.4f}".format(round(i, 4)) for i in [a, b, c, d]]
 
@@ -146,9 +142,9 @@ def get_data(tree="Events"):
     with uproot.open(data_file) as f:
         df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
-    b = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score > DNN_CUT)].weight)
-    c = sum(df[(df.VBSBDTscore > BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
-    d = sum(df[(df.VBSBDTscore < BDT_CUT) & (df.abcdnet_score < DNN_CUT)].weight)
+    b = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT} & abs(weight) < 100").weight.sum()
+    c = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
+    d = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score < {DNN_CUT} & abs(weight) < 100").weight.sum()
 
     up1 = round(scipy.stats.gamma.ppf(1- (1-0.9973) / 2, b+1)) #self.obs[1] + 3*(self.obs[1]**0.5)
     up2 = round(scipy.stats.gamma.ppf(1- (1-0.9973) / 2, c+1)) #self.obs[2] + 3*(self.obs[2]**0.5)
@@ -169,9 +165,7 @@ def xbb_reweight(year):
     elif (year == "2018"):
         return "CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07080     1.07080     1.07080     1.07080"
     else:
-        return
-"""
-CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03010     1.03010     1.03010     1.03010
+        return """CMS_vbsvvh1lep_bTagFitXbb_13TeV_16preVFP          lnN   -                  -                  -                  -                  1.03010     1.03010     1.03010     1.03010
 CMS_vbsvvh1lep_bTagFitXbb_13TeV_16postVFP         lnN   -                  -                  -                  -                  1.01200     1.01200     1.01200     1.01200
 CMS_vbsvvh1lep_bTagFitXbb_13TeV_17                lnN   -                  -                  -                  -                  1.02560     1.02560     1.02560     1.02560
 CMS_vbsvvh1lep_bTagFitXbb_13TeV_18                lnN   -                  -                  -                  -                  1.07080     1.07080     1.07080     1.07080
@@ -256,7 +250,7 @@ observation                                             1                  {sys.
 bin                                                     A                  B                  C                  D                  A           B           C           D           
 process                                                 TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalBkg_OneLep    TotalSig    TotalSig    TotalSig    TotalSig    
 process                                                 1                  1                  1                  1                  0           0           0           0           
-rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}      {sys.sig[2]}     {sys.sig[3]}    
+rate                                                    1                  1                  1                  1                  {sys.sig[0]}     {sys.sig[1]}     {sys.sig[2]}     {sys.sig[3]}    
 --------------------------------------------------------------------------------------------------------------------------------
 CMS_vbsvvh1lep_control_abcd_syst                  lnN   1.2                -                  -                  -                  -           -           -           -           
 lumi_13TeV_correlated                             lnN   -                  -                  -                  -                  1.016       1.016       1.016       1.016       
@@ -324,9 +318,9 @@ CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -    
 {xbb_reweight(args.year)}
 --------------------------------------------------------------------------------------------------------------------------------
 A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]} [{sys.data[3]}, {sys.data[6]}]              
-C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]} [{sys.data[4]}, {sys.data[7]}]    
-D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]} [{sys.data[5]}, {sys.data[8]}]
+B_OneLep rateParam                  B  TotalBkg_OneLep    {sys.data[0]} [{sys.data[6]} {sys.data[3]}]              
+C_OneLep rateParam                  C  TotalBkg_OneLep    {sys.data[1]} [{sys.data[7]} {sys.data[4]}]    
+D_OneLep rateParam                  D  TotalBkg_OneLep    {sys.data[2]} [{sys.data[8]} {sys.data[5]}]
 """
     with open("datacards/" + args.output, "w") as f:
         f.write(datacard)

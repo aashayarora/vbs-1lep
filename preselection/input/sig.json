@@ -10,8 +10,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016preVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0002190144
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 19.52,
+                "nevents": 250000.0
             }
         },
         "VBSWWH_SSWW_MJJ-100_4f_2016preVFP": {
@@ -24,8 +26,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016preVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001184474
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 19.52,
+                "nevents": 250000.0
             }
         },
         "VBSWZH_MJJ-100_4f_2016preVFP": {
@@ -38,8 +42,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016preVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001273485
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 19.52,
+                "nevents": 250000.0
             }
         },
         "VBSZZH_MJJ-100_4f_2016preVFP": {
@@ -52,8 +58,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016preVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 8.82407e-05
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 19.52,
+                "nevents": 249086.0
             }
         },
         "VBSWWH_OSWW_MJJ-100_4f_2016postVFP": {
@@ -66,8 +74,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016postVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001886082
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 16.81,
+                "nevents": 250000.0
             }
         },
         "VBSWWH_SSWW_MJJ-100_4f_2016postVFP": {
@@ -80,8 +90,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016postVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001023823
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 16.81,
+                "nevents": 249074.0
             }
         },
         "VBSWZH_MJJ-100_4f_2016postVFP": {
@@ -94,8 +106,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016postVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001100731
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 16.81,
+                "nevents": 249081.0
             }
         },
         "VBSZZH_MJJ-100_4f_2016postVFP": {
@@ -108,8 +122,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2016postVFP",
-                "sample_type": "sig_mc",
-                "xsec_weight": 7.77209e-05
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 16.81,
+                "nevents": 243539.0
             }
         },
         "VBSWWH_OSWW_MJJ-100_4f_2017": {
@@ -122,8 +138,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2017",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0002334446
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 41.529,
+                "nevents": 499000.0
             }
         },
         "VBSWWH_SSWW_MJJ-100_4f_2017": {
@@ -136,8 +154,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2017",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.000125999
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 41.529,
+                "nevents": 500000.0
             }
         },
         "VBSWZH_MJJ-100_4f_2017": {
@@ -150,8 +170,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2017",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001357391
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 41.529,
+                "nevents": 499000.0
             }
         },
         "VBSZZH_MJJ-100_4f_2017": {
@@ -164,8 +186,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2017",
-                "sample_type": "sig_mc",
-                "xsec_weight": 9.46592e-05
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 41.529,
+                "nevents": 494000.0
             }
         },
         "VBSWWH_OSWW_MJJ-100_4f_2018": {
@@ -178,8 +202,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2018",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0002300254
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 59.7,
+                "nevents": 728000.0
             }
         },
         "VBSWWH_SSWW_MJJ-100_4f_2018": {
@@ -192,8 +218,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2018",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001240615
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 59.7,
+                "nevents": 730000.0
             }
         },
         "VBSWZH_MJJ-100_4f_2018": {
@@ -206,8 +234,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2018",
-                "sample_type": "sig_mc",
-                "xsec_weight": 0.0001333845
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 59.7,
+                "nevents": 730000.0
             }
         },
         "VBSZZH_MJJ-100_4f_2018": {
@@ -220,8 +250,10 @@
             "metadata": {
                 "sample_category": "sig",
                 "sample_year": "2018",
-                "sample_type": "sig_mc",
-                "xsec_weight": 9.3494e-05
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 59.7,
+                "nevents": 719000.0
             }
         }
     }

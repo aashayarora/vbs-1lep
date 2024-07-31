@@ -193,6 +193,13 @@ function runAnalysis() {
 #     runAnalysis $c2v 2018
 # done
 
-for c2v in $(seq -1 35); do
-    runAnalysis $c2v
-done
+# for c2v in $(seq -1 35); do
+#     runAnalysis $c2v
+# done
+
+runAnalysis 4 2016preVFP
+runAnalysis 16 2016preVFP
+runAnalysis 34 2016preVFP
+runAnalysis 4
+runAnalysis 16
+runAnalysis 34

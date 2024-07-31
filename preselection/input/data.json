@@ -11,7 +11,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "EGamma_Run2018B-UL2018_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -25,7 +27,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "EGamma_Run2018C-UL2018_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -39,7 +43,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "EGamma_Run2018D-UL2018_MiniAODv2_NanoAODv9-v3_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -53,7 +59,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -67,7 +75,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -81,7 +91,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016C-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -95,7 +107,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016D-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -109,7 +123,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016E-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -123,7 +139,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016F-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -137,7 +155,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -151,7 +171,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016G-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -165,7 +187,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2016H-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -179,7 +203,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2017B-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -193,7 +219,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2017C-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -207,7 +235,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2017D-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -221,7 +251,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2017E-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -235,7 +267,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleElectron_Run2017F-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -249,7 +283,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleElectron",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -263,7 +299,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -277,7 +315,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016C-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -291,7 +331,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016D-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -305,7 +347,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016E-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -319,7 +363,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016F-HIPM_UL2016_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016preVFP": {
@@ -333,7 +379,9 @@
                 "sample_category": "data",
                 "sample_year": "2016preVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016F-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -347,7 +395,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016G-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -361,7 +411,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2016H-UL2016_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2016postVFP": {
@@ -375,7 +427,9 @@
                 "sample_category": "data",
                 "sample_year": "2016postVFP",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017B-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -389,7 +443,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017C-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -403,7 +459,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017D-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -417,7 +475,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017E-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -431,7 +491,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017F-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -445,7 +507,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017G-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -459,7 +523,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2017H-UL2017_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2017": {
@@ -473,7 +539,9 @@
                 "sample_category": "data",
                 "sample_year": "2017",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2018A-UL2018_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -487,7 +555,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2018B-UL2018_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -501,7 +571,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2018C-UL2018_MiniAODv2_NanoAODv9-v2_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -515,7 +587,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         },
         "SingleMuon_Run2018D-UL2018_MiniAODv2_NanoAODv9-v1_NANOAOD_data_1lep_4ak4_or_1ak8_2ak4_v1_2018": {
@@ -529,7 +603,9 @@
                 "sample_category": "data",
                 "sample_year": "2018",
                 "sample_type": "SingleMuon",
-                "xsec_weight": 1.0
+                "xsec": 1.0,
+                "lumi": 1.0,
+                "nevents": 1.0
             }
         }
     }

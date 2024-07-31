@@ -88,7 +88,8 @@ RNode leptonSelections(RNode df) {
     auto df_leps = df_mu.Define("GLepton_pt", "isElectron ? GElectron_pt[0] : GMuon_pt[0]")
             .Define("GLepton_eta", "isElectron ? GElectron_eta[0] : GMuon_eta[0]")
             .Define("GLepton_phi", "isElectron ? GElectron_phi[0] : GMuon_phi[0]")
-            .Define("GLepton_mass", "isElectron ? GElectron_mass[0] : GMuon_mass[0]");
+            .Define("GLepton_mass", "isElectron ? GElectron_mass[0] : GMuon_mass[0]")
+            .Define("leptonpt", "GLepton_pt");
     return df_leps;
 }
 
@@ -107,7 +108,10 @@ RNode higgsSelections(RNode df) {
             .Define("GHiggs_pt", "CorrFatJet_pt[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_eta", "FatJet_eta[HCandidateJets][HighestHScoreIdx]")
             .Define("GHiggs_phi", "FatJet_phi[HCandidateJets][HighestHScoreIdx]")
-            .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]");
+            .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
+            .Define("Hbbmass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
+            .Define("Hbbscore", "HighestHScore")
+            .Define("HbbPt", "CorrFatJet_pt[HCandidateJets][HighestHScoreIdx]");
     return df_higgs;
 }
 
@@ -132,7 +136,8 @@ RNode WZSelections(RNode df) {
             .Define("GW_eta", "FatJet_eta[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_mass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + CorrMET_pt");
+            .Define("Wjetmass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
+            .Define("WjetPt", "CorrFatJet_pt[WZCandidateJets][HighestWjetScoreIdx]");
     return df_wz;
 }
 
@@ -190,37 +195,11 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSjet2mass", "VBSJets_mass[VBSjetidxs[1]]")
             .Define("VBSptjj", "VBSjet1pt + VBSjet2pt")
             .Define("VBSdetajj", "abs(VBSjet1eta - VBSjet2eta)")
-            .Define("VBSMjj", fInvariantMass, {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet1mass", "VBSjet2pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2mass"});
+            .Define("VBSMjj", fInvariantMass, {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet1mass", "VBSjet2pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2mass"})
+            .Define("MET", "CorrMET_pt")
+            .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + CorrMET_pt");;
             // .Define("VBSbtagAK4DeltaR1", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet1eta", "VBSjet1phi"})
             // .Define("VBSbtagAK4DeltaR2", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet2eta", "VBSjet2phi"})
             // Maybe remove the minMlb b jet from the VBS jet selections
     return df_vbs;
-}
-
-RNode finalSelections(RNode df) {
-    auto df1 = flagSelections(df);
-    auto df2 = triggerSelections(df1);
-    auto df3 = leptonSelections(df2);
-    auto df4 = higgsSelections(df3);
-    auto df5 = WZSelections(df4);
-    auto df6 = AK4Selections(df5);
-    auto df7 = VBSJetsSelections(df6);
-    return df7.Filter("passesFlags", "PASSED FLAGS")
-            .Filter("passesTriggers", "PASSED TRIGGERS")
-            .Filter("((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
-            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
-            "(GLepton_pt > 40)", "ONLY ONE LEPTON PT > 40")
-            .Filter("HighestHScore > 0", "HIGGS CANDIDATE EXISTS")
-            .Filter("HighestWjetScore > 0", "W CANDIDATE EXISTS")
-            .Filter("Sum(ak4FromBJet) == 0", "NO TIGHT B-TAGGED AK4 JETS")
-            .Filter("Sum(goodVBSJets) >= 2", "AT LEAST TWO VBS JETS")
-            // .Filter("All(VBSbtagAK4DeltaR1 > 0.4) && All(VBSbtagAK4DeltaR2 > 0.4)")
-            .Filter("ST > 1000", "ST > 1000")
-            .Define("Hbbmass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
-            .Define("Hbbscore", "HighestHScore")
-            .Define("HbbPt", "CorrFatJet_pt[HCandidateJets][HighestHScoreIdx]")
-            .Define("Wjetmass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("WjetPt", "CorrFatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("leptonpt", "GLepton_pt")
-            .Define("MET", "MET_pt");
 }

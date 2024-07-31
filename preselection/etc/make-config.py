@@ -1,6 +1,7 @@
 from glob import glob
 import json
 import argparse
+import uproot
 
 def extract_sample_year(sample):
     if "UL16" in sample and "APV" in sample:
@@ -19,529 +20,538 @@ def extract_sample_year(sample):
         print("Error: year not found for " + sample)
         return None
 
-def get_xsec_weight(InputYear):
-    weight_xsec = 0
-    if(InputYear == "DYJetsToLL_M-10to50,2016preVFP"):
-        weight_xsec = 15.6291
-    elif(InputYear == "DYJetsToLL_M-10to50,2016postVFP"):
-        weight_xsec = 15.5099
-    elif(InputYear == "DYJetsToLL_M-10to50,2017"):
-        weight_xsec = 12.5272
-    elif(InputYear == "DYJetsToLL_M-10to50,2018"):
-        weight_xsec = 13.0565
-    elif(InputYear == "DYJetsToLL_M-50,2016preVFP"):
-        weight_xsec = 1.27124
-    elif(InputYear == "DYJetsToLL_M-50,2016postVFP"):
-        weight_xsec = 1.26368
-    elif(InputYear == "DYJetsToLL_M-50,2017"):
-        weight_xsec = 2.5023
-    elif(InputYear == "DYJetsToLL_M-50,2018"):
-        weight_xsec = 3.84504
-    elif(InputYear == "EWKWMinus2Jets_WToLNu_M-50,2016preVFP"):
-        weight_xsec = 0.280122
-    elif(InputYear == "EWKWMinus2Jets_WToLNu_M-50,2016postVFP"):
-        weight_xsec = 0.246272
-    elif(InputYear == "EWKWMinus2Jets_WToLNu_M-50,2017"):
-        weight_xsec = 0.328606
-    elif(InputYear == "EWKWMinus2Jets_WToLNu_M-50,2018"):
-        weight_xsec = 0.429989
-    elif(InputYear == "EWKWPlus2Jets_WToLNu_M-50,2016preVFP"):
-        weight_xsec = 0.35136
-    elif(InputYear == "EWKWPlus2Jets_WToLNu_M-50,2016postVFP"):
-        weight_xsec = 0.325203
-    elif(InputYear == "EWKWPlus2Jets_WToLNu_M-50,2017"):
-        weight_xsec = 0.454335
-    elif(InputYear == "EWKWPlus2Jets_WToLNu_M-50,2018"):
-        weight_xsec = 0.523173
-    elif(InputYear == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2016preVFP"):
-        weight_xsec = 0.041664
-    elif(InputYear == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2016postVFP"):
-        weight_xsec = 0.035886
-    elif(InputYear == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2017"):
-        weight_xsec = 0.0562756
-    elif(InputYear == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2018"):
-        weight_xsec = 0.0659761
-    elif(InputYear == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2016preVFP"):
-        weight_xsec = 0.042136
-    elif(InputYear == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2016postVFP"):
-        weight_xsec = 0.035886
-    elif(InputYear == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2017"):
-        weight_xsec = 0.0554309
-    elif(InputYear == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2018"):
-        weight_xsec = 0.0637573
-    elif(InputYear == "EWKZ2Jets_ZToLL_M-50,2016preVFP"):
-        weight_xsec = 0.242829
-    elif(InputYear == "EWKZ2Jets_ZToLL_M-50,2016postVFP"):
-        weight_xsec = 0.230813
-    elif(InputYear == "EWKZ2Jets_ZToLL_M-50,2017"):
-        weight_xsec = 0.446132
-    elif(InputYear == "EWKZ2Jets_ZToLL_M-50,2018"):
-        weight_xsec = 0.371334
-    elif(InputYear == "EWKZ2Jets_ZToNuNu_M-50,2016preVFP"):
-        weight_xsec = 0.144313
-    elif(InputYear == "EWKZ2Jets_ZToNuNu_M-50,2016postVFP"):
-        weight_xsec = 0.120135
-    elif(InputYear == "EWKZ2Jets_ZToNuNu_M-50,2017"):
-        weight_xsec = 0.149594
-    elif(InputYear == "EWKZ2Jets_ZToNuNu_M-50,2018"):
-        weight_xsec = 0.215555
-    elif(InputYear == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2016preVFP"):
-        weight_xsec = 0.0418314
-    elif(InputYear == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2016postVFP"):
-        weight_xsec = 0.036396
-    elif(InputYear == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2017"):
-        weight_xsec = 0.0553893
-    elif(InputYear == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2018"):
-        weight_xsec = 0.0637956
-    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2016preVFP"):
-        weight_xsec = 0.000796498
-    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2016postVFP"):
-        weight_xsec = 0.000695234
-    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2017"):
-        weight_xsec = 0.000753276
-    elif(InputYear == "ST_t-channel_antitop_4f_InclusiveDecays,2018"):
-        weight_xsec = 0.000790311
-    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2016preVFP"):
-        weight_xsec = 0.000446377
-    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2016postVFP"):
-        weight_xsec = 0.000341075
-    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2017"):
-        weight_xsec = 0.000409094
-    elif(InputYear == "ST_t-channel_top_4f_InclusiveDecays,2018"):
-        weight_xsec = 0.000428382
-    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2016preVFP"):
-        weight_xsec = 0.00510646
-    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2016postVFP"):
-        weight_xsec = 0.00396013
-    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2017"):
-        weight_xsec = 0.00440381
-    elif(InputYear == "ST_tW_antitop_5f_inclusiveDecays,2018"):
-        weight_xsec = 0.00463542
-    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2016preVFP"):
-        weight_xsec = 0.00511616
-    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2016postVFP"):
-        weight_xsec = 0.00406806
-    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2017"):
-        weight_xsec = 0.00443171
-    elif(InputYear == "ST_tW_top_5f_inclusiveDecays,2018"):
-        weight_xsec = 0.00452345
-    elif(InputYear == "TTTo2L2Nu,2016preVFP"):
-        weight_xsec = 0.000637235
-    elif(InputYear == "TTTo2L2Nu,2016postVFP"):
-        weight_xsec = 0.000472642
-    elif(InputYear == "TTTo2L2Nu,2017"):
-        weight_xsec = 0.000476439
-    elif(InputYear == "TTTo2L2Nu,2018"):
-        weight_xsec = 0.000508988
-    elif(InputYear == "TTToHadronic,2016preVFP"):
-        weight_xsec = 0.000241649
-    elif(InputYear == "TTToHadronic,2016postVFP"):
-        weight_xsec = 0.000189043
-    elif(InputYear == "TTToHadronic,2017"):
-        weight_xsec = 0.000214604
-    elif(InputYear == "TTToHadronic,2018"):
-        weight_xsec = 0.000216954
-    elif(InputYear == "TTToSemiLeptonic,2016preVFP"):
-        weight_xsec = 0.000179307
-    elif(InputYear == "TTToSemiLeptonic,2016postVFP"):
-        weight_xsec = 0.000141024
-    elif(InputYear == "TTToSemiLeptonic,2017"):
-        weight_xsec = 0.000145705
-    elif(InputYear == "TTToSemiLeptonic,2018"):
-        weight_xsec = 0.00015504
-    elif(InputYear == "TTWJetsToLNu,2016preVFP"):
-        weight_xsec = 0.0041804
-    elif(InputYear == "TTWJetsToLNu,2016postVFP"):
-        weight_xsec = 0.00308519
-    elif(InputYear == "TTWJetsToLNu,2017"):
-        weight_xsec = 0.00354575
-    elif(InputYear == "TTWJetsToLNu,2018"):
-        weight_xsec = 0.00348217
-    elif(InputYear == "TTWW,2016preVFP"):
-        weight_xsec = 0.000807482
-    elif(InputYear == "TTWW,2016postVFP"):
-        weight_xsec = 0.000625615
-    elif(InputYear == "TTWW,2017"):
-        weight_xsec = 0.000684217
-    elif(InputYear == "TTWW,2018"):
-        weight_xsec = 0.000727278
-    elif(InputYear == "TTWZ,2016preVFP"):
-        weight_xsec = 0.000541541
-    elif(InputYear == "TTWZ,2016postVFP"):
-        weight_xsec = 0.000410629
-    elif(InputYear == "TTWZ,2017"):
-        weight_xsec = 0.000460853
-    elif(InputYear == "TTWZ,2018"):
-        weight_xsec = 0.000465612
-    elif(InputYear == "TTZToLLNuNu_M-10,2016preVFP"):
-        weight_xsec = 0.00348729
-    elif(InputYear == "TTZToLLNuNu_M-10,2016postVFP"):
-        weight_xsec = 0.00289547
-    elif(InputYear == "TTZToLLNuNu_M-10,2017"):
-        weight_xsec = 0.0030665
-    elif(InputYear == "TTZToLLNuNu_M-10,2018"):
-        weight_xsec = 0.00315665
-    elif(InputYear == "TTbb_4f_TTTo2L2Nu,2016preVFP"):
-        weight_xsec = 0.00012262
-    elif(InputYear == "TTbb_4f_TTTo2L2Nu,2016postVFP"):
-        weight_xsec = 9.32674e-05
-    elif(InputYear == "TTbb_4f_TTTo2L2Nu,2017"):
-        weight_xsec = 0.000104273
-    elif(InputYear == "TTbb_4f_TTTo2L2Nu,2018"):
-        weight_xsec = 0.000108612
-    elif(InputYear == "TTbb_4f_TTToSemiLeptonic,2016preVFP"):
-        weight_xsec = 0.000211376
-    elif(InputYear == "TTbb_4f_TTToSemiLeptonic,2016postVFP"):
-        weight_xsec = 0.000168898
-    elif(InputYear == "TTbb_4f_TTToSemiLeptonic,2017"):
-        weight_xsec = 0.000167415
-    elif(InputYear == "TTbb_4f_TTToSemiLeptonic,2018"):
-        weight_xsec = 0.000158203
-    elif(InputYear == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2016preVFP"):
-        weight_xsec = 0.000193669
-    elif(InputYear == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2016postVFP"):
-        weight_xsec = 0.000194278
-    elif(InputYear == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2017"):
-        weight_xsec = 0.000221399
-    elif(InputYear == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2018"):
-        weight_xsec = 0.000318081
-    elif(InputYear == "VHToNonbb_M125,2016preVFP"):
-        weight_xsec = 0.01682
-    elif(InputYear == "VHToNonbb_M125,2016postVFP"):
-        weight_xsec = 0.0193468
-    elif(InputYear == "VHToNonbb_M125,2017"):
-        weight_xsec = 0.018091
-    elif(InputYear == "VHToNonbb_M125,2018"):
-        weight_xsec = 0.0187589
-    elif(InputYear == "WJetsToLNu_HT-100To200,2016preVFP"):
-        weight_xsec = 1.1908
-    elif(InputYear == "WJetsToLNu_HT-100To200,2016postVFP"):
-        weight_xsec = 1.10886
-    elif(InputYear == "WJetsToLNu_HT-100To200,2017"):
-        weight_xsec = 1.16881
-    elif(InputYear == "WJetsToLNu_HT-100To200,2018"):
-        weight_xsec = 1.55112
-    elif(InputYear == "WJetsToLNu_HT-1200To2500,2016preVFP"):
-        weight_xsec = 0.0109394
-    elif(InputYear == "WJetsToLNu_HT-1200To2500,2016postVFP"):
-        weight_xsec = 0.00929078
-    elif(InputYear == "WJetsToLNu_HT-1200To2500,2017"):
-        weight_xsec = 0.0103383
-    elif(InputYear == "WJetsToLNu_HT-1200To2500,2018"):
-        weight_xsec = 0.0108959
-    elif(InputYear == "WJetsToLNu_HT-200To400,2016preVFP"):
-        weight_xsec = 0.380737
-    elif(InputYear == "WJetsToLNu_HT-200To400,2016postVFP"):
-        weight_xsec = 0.380484
-    elif(InputYear == "WJetsToLNu_HT-200To400,2017"):
-        weight_xsec = 0.344194
-    elif(InputYear == "WJetsToLNu_HT-200To400,2018"):
-        weight_xsec = 0.360594
-    elif(InputYear == "WJetsToLNu_HT-2500ToInf,2016preVFP"):
-        weight_xsec = 0.000581703
-    elif(InputYear == "WJetsToLNu_HT-2500ToInf,2016postVFP"):
-        weight_xsec = 0.000512308
-    elif(InputYear == "WJetsToLNu_HT-2500ToInf,2017"):
-        weight_xsec = 0.000903933
-    elif(InputYear == "WJetsToLNu_HT-2500ToInf,2018"):
-        weight_xsec = 0.000726316
-    elif(InputYear == "WJetsToLNu_HT-400To600,2016preVFP"):
-        weight_xsec = 0.374249
-    elif(InputYear == "WJetsToLNu_HT-400To600,2016postVFP"):
-        weight_xsec = 0.36104
-    elif(InputYear == "WJetsToLNu_HT-400To600,2017"):
-        weight_xsec = 0.353684
-    elif(InputYear == "WJetsToLNu_HT-400To600,2018"):
-        weight_xsec = 0.378267
-    elif(InputYear == "WJetsToLNu_HT-600To800,2016preVFP"):
-        weight_xsec = 0.0945842
-    elif(InputYear == "WJetsToLNu_HT-600To800,2016postVFP"):
-        weight_xsec = 0.0821543
-    elif(InputYear == "WJetsToLNu_HT-600To800,2017"):
-        weight_xsec = 0.0834916
-    elif(InputYear == "WJetsToLNu_HT-600To800,2018"):
-        weight_xsec = 0.0883237
-    elif(InputYear == "WJetsToLNu_HT-70To100,2016preVFP"):
-        weight_xsec = 1.51115
-    elif(InputYear == "WJetsToLNu_HT-70To100,2016postVFP"):
-        weight_xsec = 1.11022
-    elif(InputYear == "WJetsToLNu_HT-70To100,2017"):
-        weight_xsec = 1.22953
-    elif(InputYear == "WJetsToLNu_HT-70To100,2018"):
-        weight_xsec = 1.19107
-    elif(InputYear == "WJetsToLNu_HT-800To1200,2016preVFP"):
-        weight_xsec = 0.0404996
-    elif(InputYear == "WJetsToLNu_HT-800To1200,2016postVFP"):
-        weight_xsec = 0.0389598
-    elif(InputYear == "WJetsToLNu_HT-800To1200,2017"):
-        weight_xsec = 0.0409902
-    elif(InputYear == "WJetsToLNu_HT-800To1200,2018"):
-        weight_xsec = 0.0418681
-    elif(InputYear == "WWJJToLNuLNu_EWK_noTop,2016preVFP"):
-        weight_xsec = 0.0110874
-    elif(InputYear == "WWJJToLNuLNu_EWK_noTop,2016postVFP"):
-        weight_xsec = 0.00954808
-    elif(InputYear == "WWJJToLNuLNu_EWK_noTop,2017"):
-        weight_xsec = 0.0117942
-    elif(InputYear == "WWJJToLNuLNu_EWK_noTop,2018"):
-        weight_xsec = 0.0084774
-    elif(InputYear == "WWTo1L1Nu2Q_4f,2016preVFP"):
-        weight_xsec = 0.000577134
-    elif(InputYear == "WWTo1L1Nu2Q_4f,2016postVFP"):
-        weight_xsec = 0.000499039
-    elif(InputYear == "WWTo1L1Nu2Q_4f,2017"):
-        weight_xsec = 0.000617156
-    elif(InputYear == "WWTo1L1Nu2Q_4f,2018"):
-        weight_xsec = 0.000879532
-    elif(InputYear == "WWTo2L2Nu,2016preVFP"):
-        weight_xsec = 0.00710518
-    elif(InputYear == "WWTo2L2Nu,2016postVFP"):
-        weight_xsec = 0.00636799
-    elif(InputYear == "WWTo2L2Nu,2017"):
-        weight_xsec = 0.00642716
-    elif(InputYear == "WWTo2L2Nu,2018"):
-        weight_xsec = 0.00656189
-    elif(InputYear == "WWTolnulnu,2016preVFP"):
-        weight_xsec = 10.0838
-    elif(InputYear == "WWTolnulnu,2016postVFP"):
-        weight_xsec = 8.68625
-    elif(InputYear == "WWTolnulnu,2017"):
-        weight_xsec = 33.0717
-    elif(InputYear == "WWTolnulnu,2018"):
-        weight_xsec = 45.852
-    elif(InputYear == "WWW_4F,2016preVFP"):
-        weight_xsec = 0.00363464
-    elif(InputYear == "WWW_4F,2016postVFP"):
-        weight_xsec = 0.00390494
-    elif(InputYear == "WWW_4F,2017"):
-        weight_xsec = 0.00407266
-    elif(InputYear == "WWW_4F,2018"):
-        weight_xsec = 0.00583093
-    elif(InputYear == "WWZ_4F,2016preVFP"):
-        weight_xsec = 0.00372044
-    elif(InputYear == "WWZ_4F,2016postVFP"):
-        weight_xsec = 0.00353674
-    elif(InputYear == "WWZ_4F,2017"):
-        weight_xsec = 0.225642
-    elif(InputYear == "WWZ_4F,2018"):
-        weight_xsec = 0.0057934
-    elif(InputYear == "WZJJ_EWK_InclusivePolarization,2016preVFP"):
-        weight_xsec = 0.0107987
-    elif(InputYear == "WZJJ_EWK_InclusivePolarization,2016postVFP"):
-        weight_xsec = 0.0100226
-    elif(InputYear == "WZJJ_EWK_InclusivePolarization,2017"):
-        weight_xsec = 0.0226449
-    elif(InputYear == "WZJJ_EWK_InclusivePolarization,2018"):
-        weight_xsec = 0.0347331
-    elif(InputYear == "WZTo1L1Nu2Q_4f,2016preVFP"):
-        weight_xsec = 0.0174781
-    elif(InputYear == "WZTo1L1Nu2Q_4f,2016postVFP"):
-        weight_xsec = 0.0150804
-    elif(InputYear == "WZTo1L1Nu2Q_4f,2017"):
-        weight_xsec = 0.0187296
-    elif(InputYear == "WZTo1L1Nu2Q_4f,2018"):
-        weight_xsec = 0.0267372
-    elif(InputYear == "WZTo1L3Nu_4f,2016preVFP"):
-        weight_xsec = 0.00855474
-    elif(InputYear == "WZTo1L3Nu_4f,2016postVFP"):
-        weight_xsec = 0.00741616
-    elif(InputYear == "WZTo1L3Nu_4f,2017"):
-        weight_xsec = 0.00907468
-    elif(InputYear == "WZTo1L3Nu_4f,2018"):
-        weight_xsec = 0.0129612
-    elif(InputYear == "WZTo2Q2L_mllmin4p0,2016preVFP"):
-        weight_xsec = 0.000726511
-    elif(InputYear == "WZTo2Q2L_mllmin4p0,2016postVFP"):
-        weight_xsec = 0.000725481
-    elif(InputYear == "WZTo2Q2L_mllmin4p0,2017"):
-        weight_xsec = 0.000833521
-    elif(InputYear == "WZTo2Q2L_mllmin4p0,2018"):
-        weight_xsec = 0.0012195
-    elif(InputYear == "WZTo3LNu,2016preVFP"):
-        weight_xsec = 0.00106073
-    elif(InputYear == "WZTo3LNu,2016postVFP"):
-        weight_xsec = 0.000842635
-    elif(InputYear == "WZTo3LNu,2017"):
-        weight_xsec = 0.00210097
-    elif(InputYear == "WZTo3LNu,2018"):
-        weight_xsec = 0.00318055
-    elif(InputYear == "WZZ,2016preVFP"):
-        weight_xsec = 0.00352214
-    elif(InputYear == "WZZ,2016postVFP"):
-        weight_xsec = 0.00359348
-    elif(InputYear == "WZZ,2017"):
-        weight_xsec = 0.00408461
-    elif(InputYear == "WZZ,2018"):
-        weight_xsec = 0.00581363
-    elif(InputYear == "WminusH_HToBB_WToLNu_M-125,2016preVFP"):
-        weight_xsec = 0.00209656
-    elif(InputYear == "WminusH_HToBB_WToLNu_M-125,2016postVFP"):
-        weight_xsec = 0.00207706
-    elif(InputYear == "WminusH_HToBB_WToLNu_M-125,2017"):
-        weight_xsec = 0.00242768
-    elif(InputYear == "WminusH_HToBB_WToLNu_M-125,2018"):
-        weight_xsec = 0.00339087
-    elif(InputYear == "WplusH_HToBB_WToLNu_M-125,2016preVFP"):
-        weight_xsec = 0.00222174
-    elif(InputYear == "WplusH_HToBB_WToLNu_M-125,2016postVFP"):
-        weight_xsec = 0.00226259
-    elif(InputYear == "WplusH_HToBB_WToLNu_M-125,2017"):
-        weight_xsec = 0.00255594
-    elif(InputYear == "WplusH_HToBB_WToLNu_M-125,2018"):
-        weight_xsec = 0.0036796
-    elif(InputYear == "ZH_HToBB_ZToLL_M-125,2016preVFP"):
-        weight_xsec = 0.00241384
-    elif(InputYear == "ZH_HToBB_ZToLL_M-125,2016postVFP"):
-        weight_xsec = 0.00250719
-    elif(InputYear == "ZH_HToBB_ZToLL_M-125,2017"):
-        weight_xsec = 0.00296544
-    elif(InputYear == "ZH_HToBB_ZToLL_M-125,2018"):
-        weight_xsec = 0.00402611
-    elif(InputYear == "ZZJJTo4L,2016preVFP"):
-        weight_xsec = 8.63572e-05
-    elif(InputYear == "ZZJJTo4L,2016postVFP"):
-        weight_xsec = 7.46111e-05
-    elif(InputYear == "ZZJJTo4L,2017"):
-        weight_xsec = 9.1802e-05
-    elif(InputYear == "ZZJJTo4L,2018"):
-        weight_xsec = 0.000131937
-    elif(InputYear == "ZZTo2L2Nu,2016preVFP"):
-        weight_xsec = 0.000670512
-    elif(InputYear == "ZZTo2L2Nu,2016postVFP"):
-        weight_xsec = 0.000611274
-    elif(InputYear == "ZZTo2L2Nu,2017"):
-        weight_xsec = 0.000588983
-    elif(InputYear == "ZZTo2L2Nu,2018"):
-        weight_xsec = 0.000607852
-    elif(InputYear == "ZZTo2Q2L_mllmin4p0,2016preVFP"):
-        weight_xsec = 0.000276734
-    elif(InputYear == "ZZTo2Q2L_mllmin4p0,2016postVFP"):
-        weight_xsec = 0.000278632
-    elif(InputYear == "ZZTo2Q2L_mllmin4p0,2017"):
-        weight_xsec = 0.000320208
-    elif(InputYear == "ZZTo2Q2L_mllmin4p0,2018"):
-        weight_xsec = 0.000463075
-    elif(InputYear == "ZZTo4L_M-1toInf,2016preVFP"):
-        weight_xsec = 9.02688e-05
-    elif(InputYear == "ZZTo4L_M-1toInf,2016postVFP"):
-        weight_xsec = 8.40114e-05
-    elif(InputYear == "ZZTo4L_M-1toInf,2017"):
-        weight_xsec = 9.03515e-05
-    elif(InputYear == "ZZTo4L_M-1toInf,2018"):
-        weight_xsec = 8.44991e-05
-    elif(InputYear == "ZZZ,2016preVFP"):
-        weight_xsec = 0.00348442
-    elif(InputYear == "ZZZ,2016postVFP"):
-        weight_xsec = 0.00351073
-    elif(InputYear == "ZZZ,2017"):
-        weight_xsec = 0.00412841
-    elif(InputYear == "ZZZ,2018"):
-        weight_xsec = 0.0057154
-    elif(InputYear == "ggZH_HToBB_ZToLL_M-125,2016preVFP"):
-        weight_xsec = 0.0032155
-    elif(InputYear == "ggZH_HToBB_ZToLL_M-125,2016postVFP"):
-        weight_xsec = 0.00305625
-    elif(InputYear == "ggZH_HToBB_ZToLL_M-125,2017"):
-        weight_xsec = 0.00353689
-    elif(InputYear == "ggZH_HToBB_ZToLL_M-125,2018"):
-        weight_xsec = 0.00485784
-    elif(InputYear == "ttHToNonbb_M125,2016preVFP"):
-        weight_xsec = 0.00423661
-    elif(InputYear == "ttHToNonbb_M125,2016postVFP"):
-        weight_xsec = 0.00321883
-    elif(InputYear == "ttHToNonbb_M125,2017"):
-        weight_xsec = 0.00351483
-    elif(InputYear == "ttHToNonbb_M125,2018"):
-        weight_xsec = 0.00349592
-    elif(InputYear == "ttHTobb_M125,2016preVFP"):
-        weight_xsec = 0.00107828
-    elif(InputYear == "ttHTobb_M125,2016postVFP"):
-        weight_xsec = 0.000869231
-    elif(InputYear == "ttHTobb_M125,2017"):
-        weight_xsec = 0.00135507
-    elif(InputYear == "ttHTobb_M125,2018"):
-        weight_xsec = 0.00157649
+def get_xsec_weight(sample):
+    xsec = 0
+    if(sample == "DYJetsToLL_M-10to50,2016preVFP"):
+        xsec = 20657.0
+    elif(sample == "DYJetsToLL_M-10to50,2016postVFP"):
+        xsec = 20657.0
+    elif(sample == "DYJetsToLL_M-10to50,2017"):
+        xsec = 20657.0
+    elif(sample == "DYJetsToLL_M-10to50,2018"):
+        xsec = 20657.0
+    elif(sample == "DYJetsToLL_M-50,2016preVFP"):
+        xsec = 6198.0
+    elif(sample == "DYJetsToLL_M-50,2016postVFP"):
+        xsec = 6198.0
+    elif(sample == "DYJetsToLL_M-50,2017"):
+        xsec = 6198.0
+    elif(sample == "DYJetsToLL_M-50,2018"):
+        xsec = 6198.0
+    elif(sample == "EWKWMinus2Jets_WToLNu_M-50,2016preVFP"):
+        xsec = 32.26
+    elif(sample == "EWKWMinus2Jets_WToLNu_M-50,2016postVFP"):
+        xsec = 32.26
+    elif(sample == "EWKWMinus2Jets_WToLNu_M-50,2017"):
+        xsec = 32.26
+    elif(sample == "EWKWMinus2Jets_WToLNu_M-50,2018"):
+        xsec = 32.26
+    elif(sample == "EWKWPlus2Jets_WToLNu_M-50,2016preVFP"):
+        xsec = 39.33
+    elif(sample == "EWKWPlus2Jets_WToLNu_M-50,2016postVFP"):
+        xsec = 39.33
+    elif(sample == "EWKWPlus2Jets_WToLNu_M-50,2017"):
+        xsec = 39.33
+    elif(sample == "EWKWPlus2Jets_WToLNu_M-50,2018"):
+        xsec = 39.33
+    elif(sample == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2016preVFP"):
+        xsec = 10.67
+    elif(sample == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2016postVFP"):
+        xsec = 10.67
+    elif(sample == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2017"):
+        xsec = 10.67
+    elif(sample == "EWKWminus2Jets_WToQQ_dipoleRecoilOn,2018"):
+        xsec = 10.67
+    elif(sample == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2016preVFP"):
+        xsec = 10.67
+    elif(sample == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2016postVFP"):
+        xsec = 10.67
+    elif(sample == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2017"):
+        xsec = 10.67
+    elif(sample == "EWKWplus2Jets_WToQQ_dipoleRecoilOn,2018"):
+        xsec = 10.67
+    elif(sample == "EWKZ2Jets_ZToLL_M-50,2016preVFP"):
+        xsec = 6.22
+    elif(sample == "EWKZ2Jets_ZToLL_M-50,2016postVFP"):
+        xsec = 6.22
+    elif(sample == "EWKZ2Jets_ZToLL_M-50,2017"):
+        xsec = 6.22
+    elif(sample == "EWKZ2Jets_ZToLL_M-50,2018"):
+        xsec = 6.22
+    elif(sample == "EWKZ2Jets_ZToNuNu_M-50,2016preVFP"):
+        xsec = 10.72
+    elif(sample == "EWKZ2Jets_ZToNuNu_M-50,2016postVFP"):
+        xsec = 10.72
+    elif(sample == "EWKZ2Jets_ZToNuNu_M-50,2017"):
+        xsec = 10.72
+    elif(sample == "EWKZ2Jets_ZToNuNu_M-50,2018"):
+        xsec = 10.72
+    elif(sample == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2016preVFP"):
+        xsec = 10.67
+    elif(sample == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2016postVFP"):
+        xsec = 10.67
+    elif(sample == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2017"):
+        xsec = 10.67
+    elif(sample == "EWKZ2Jets_ZToQQ_dipoleRecoilOn,2018"):
+        xsec = 10.67
+    elif(sample == "ST_t-channel_antitop_4f_InclusiveDecays,2016preVFP"):
+        xsec = 80.95
+    elif(sample == "ST_t-channel_antitop_4f_InclusiveDecays,2016postVFP"):
+        xsec = 80.95
+    elif(sample == "ST_t-channel_antitop_4f_InclusiveDecays,2017"):
+        xsec = 80.95
+    elif(sample == "ST_t-channel_antitop_4f_InclusiveDecays,2018"):
+        xsec = 80.95
+    elif(sample == "ST_t-channel_top_4f_InclusiveDecays,2016preVFP"):
+        xsec = 136.02
+    elif(sample == "ST_t-channel_top_4f_InclusiveDecays,2016postVFP"):
+        xsec = 136.02
+    elif(sample == "ST_t-channel_top_4f_InclusiveDecays,2017"):
+        xsec = 136.02
+    elif(sample == "ST_t-channel_top_4f_InclusiveDecays,2018"):
+        xsec = 136.02
+    elif(sample == "ST_tW_antitop_5f_inclusiveDecays,2016preVFP"):
+        xsec = 19.559
+    elif(sample == "ST_tW_antitop_5f_inclusiveDecays,2016postVFP"):
+        xsec = 19.559
+    elif(sample == "ST_tW_antitop_5f_inclusiveDecays,2017"):
+        xsec = 19.559
+    elif(sample == "ST_tW_antitop_5f_inclusiveDecays,2018"):
+        xsec = 19.559
+    elif(sample == "ST_tW_top_5f_inclusiveDecays,2016preVFP"):
+        xsec = 19.559
+    elif(sample == "ST_tW_top_5f_inclusiveDecays,2016postVFP"):
+        xsec = 19.559
+    elif(sample == "ST_tW_top_5f_inclusiveDecays,2017"):
+        xsec = 19.559
+    elif(sample == "ST_tW_top_5f_inclusiveDecays,2018"):
+        xsec = 19.559
+    elif(sample == "TTTo2L2Nu,2016preVFP"):
+        xsec = 88.29
+    elif(sample == "TTTo2L2Nu,2016postVFP"):
+        xsec = 88.29
+    elif(sample == "TTTo2L2Nu,2017"):
+        xsec = 88.29
+    elif(sample == "TTTo2L2Nu,2018"):
+        xsec = 88.29
+    elif(sample == "TTToHadronic,2016preVFP"):
+        xsec = 377.96
+    elif(sample == "TTToHadronic,2016postVFP"):
+        xsec = 377.96
+    elif(sample == "TTToHadronic,2017"):
+        xsec = 377.96
+    elif(sample == "TTToHadronic,2018"):
+        xsec = 377.96
+    elif(sample == "TTToSemiLeptonic,2016preVFP"):
+        xsec = 365.34
+    elif(sample == "TTToSemiLeptonic,2016postVFP"):
+        xsec = 365.34
+    elif(sample == "TTToSemiLeptonic,2017"):
+        xsec = 365.34
+    elif(sample == "TTToSemiLeptonic,2018"):
+        xsec = 365.34
+    elif(sample == "TTWJetsToLNu,2016preVFP"):
+        xsec = 0.2043
+    elif(sample == "TTWJetsToLNu,2016postVFP"):
+        xsec = 0.2043
+    elif(sample == "TTWJetsToLNu,2017"):
+        xsec = 0.2043
+    elif(sample == "TTWJetsToLNu,2018"):
+        xsec = 0.2043
+    elif(sample == "TTWW,2016preVFP"):
+        xsec = 0.0115
+    elif(sample == "TTWW,2016postVFP"):
+        xsec = 0.0115
+    elif(sample == "TTWW,2017"):
+        xsec = 0.0115
+    elif(sample == "TTWW,2018"):
+        xsec = 0.0115
+    elif(sample == "TTWZ,2016preVFP"):
+        xsec = 0.003884
+    elif(sample == "TTWZ,2016postVFP"):
+        xsec = 0.003884
+    elif(sample == "TTWZ,2017"):
+        xsec = 0.003884
+    elif(sample == "TTWZ,2018"):
+        xsec = 0.003884
+    elif(sample == "TTZToLLNuNu_M-10,2016preVFP"):
+        xsec = 0.2529
+    elif(sample == "TTZToLLNuNu_M-10,2016postVFP"):
+        xsec = 0.2529
+    elif(sample == "TTZToLLNuNu_M-10,2017"):
+        xsec = 0.2529
+    elif(sample == "TTZToLLNuNu_M-10,2018"):
+        xsec = 0.2529
+    elif(sample == "TTbb_4f_TTTo2L2Nu,2016preVFP"):
+        xsec = 0.04
+    elif(sample == "TTbb_4f_TTTo2L2Nu,2016postVFP"):
+        xsec = 0.04
+    elif(sample == "TTbb_4f_TTTo2L2Nu,2017"):
+        xsec = 0.04
+    elif(sample == "TTbb_4f_TTTo2L2Nu,2018"):
+        xsec = 0.04
+    elif(sample == "TTbb_4f_TTToSemiLeptonic,2016preVFP"):
+        xsec = 0.62
+    elif(sample == "TTbb_4f_TTToSemiLeptonic,2016postVFP"):
+        xsec = 0.62
+    elif(sample == "TTbb_4f_TTToSemiLeptonic,2017"):
+        xsec = 0.62
+    elif(sample == "TTbb_4f_TTToSemiLeptonic,2018"):
+        xsec = 0.62
+    elif(sample == "ttHToNonbb_M125,2016preVFP"):
+        xsec = 0.215
+    elif(sample == "ttHToNonbb_M125,2016postVFP"):
+        xsec = 0.215
+    elif(sample == "ttHToNonbb_M125,2017"):
+        xsec = 0.215
+    elif(sample == "ttHToNonbb_M125,2018"):
+        xsec = 0.215
+    elif(sample == "ttHTobb_M125,2016preVFP"):
+        xsec = 0.1279
+    elif(sample == "ttHTobb_M125,2016postVFP"):
+        xsec = 0.1279
+    elif(sample == "ttHTobb_M125,2017"):
+        xsec = 0.1279
+    elif(sample == "ttHTobb_M125,2018"):
+        xsec = 0.1279
+    elif(sample == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2016preVFP"):
+        xsec = 0.02656
+    elif(sample == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2016postVFP"):
+        xsec = 0.02656
+    elif(sample == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2017"):
+        xsec = 0.02656
+    elif(sample == "VBFWH_HToBB_WToLNu_M-125_dipoleRecoilOn,2018"):
+        xsec = 0.02656
+    elif(sample == "VHToNonbb_M125,2016preVFP"):
+        xsec = 2.207
+    elif(sample == "VHToNonbb_M125,2016postVFP"):
+        xsec = 2.207
+    elif(sample == "VHToNonbb_M125,2017"):
+        xsec = 2.207
+    elif(sample == "VHToNonbb_M125,2018"):
+        xsec = 2.207
+    elif(sample == "WJetsToLNu_HT-70To100,2016preVFP"):
+        xsec = 1310.78
+    elif(sample == "WJetsToLNu_HT-70To100,2016postVFP"):
+        xsec = 1283.91
+    elif(sample == "WJetsToLNu_HT-70To100,2017"):
+        xsec = 1319.76
+    elif(sample == "WJetsToLNu_HT-70To100,2018"):
+        xsec = 1321.16
+    elif(sample == "WJetsToLNu_HT-100To200,2016preVFP"):
+        xsec = 1325.9
+    elif(sample == "WJetsToLNu_HT-100To200,2016postVFP"):
+        xsec = 1303.06
+    elif(sample == "WJetsToLNu_HT-100To200,2017"):
+        xsec = 1334.74
+    elif(sample == "WJetsToLNu_HT-100To200,2018"):
+        xsec = 1335.7
+    elif(sample == "WJetsToLNu_HT-200To400,2016preVFP"):
+        xsec = 348.57030
+    elif(sample == "WJetsToLNu_HT-200To400,2016postVFP"):
+        xsec = 341.046
+    elif(sample == "WJetsToLNu_HT-200To400,2017"):
+        xsec = 350.435
+    elif(sample == "WJetsToLNu_HT-200To400,2018"):
+        xsec = 351.689
+    elif(sample == "WJetsToLNu_HT-400To600,2016preVFP"):
+        xsec = 47.308275
+    elif(sample == "WJetsToLNu_HT-400To600,2016postVFP"):
+        xsec = 45.4362
+    elif(sample == "WJetsToLNu_HT-400To600,2017"):
+        xsec = 46.5726
+    elif(sample == "WJetsToLNu_HT-400To600,2018"):
+        xsec = 47.1663
+    elif(sample == "WJetsToLNu_HT-600To800,2016preVFP"):
+        xsec = 11.358487
+    elif(sample == "WJetsToLNu_HT-600To800,2016postVFP"):
+        xsec = 11.0051
+    elif(sample == "WJetsToLNu_HT-600To800,2017"):
+        xsec = 11.1485
+    elif(sample == "WJetsToLNu_HT-600To800,2018"):
+        xsec = 11.4196
+    elif(sample == "WJetsToLNu_HT-800To1200,2016preVFP"):
+        xsec = 5.2086934
+    elif(sample == "WJetsToLNu_HT-800To1200,2016postVFP"):
+        xsec = 4.94177
+    elif(sample == "WJetsToLNu_HT-800To1200,2017"):
+        xsec = 5.02246
+    elif(sample == "WJetsToLNu_HT-800To1200,2018"):
+        xsec = 5.12389
+    elif(sample == "WJetsToLNu_HT-1200To2500,2016preVFP"):
+        xsec = 1.1880809
+    elif(sample == "WJetsToLNu_HT-1200To2500,2016postVFP"):
+        xsec = 1.15544
+    elif(sample == "WJetsToLNu_HT-1200To2500,2017"):
+        xsec = 1.183
+    elif(sample == "WJetsToLNu_HT-1200To2500,2018"):
+        xsec = 1.18295
+    elif(sample == "WJetsToLNu_HT-2500ToInf,2016preVFP"):
+        xsec = 0.024098031
+    elif(sample == "WJetsToLNu_HT-2500ToInf,2016postVFP"):
+        xsec = 0.0216234
+    elif(sample == "WJetsToLNu_HT-2500ToInf,2017"):
+        xsec = 0.0258083
+    elif(sample == "WJetsToLNu_HT-2500ToInf,2018"):
+        xsec = 0.0255202
+    elif(sample == "WWJJToLNuLNu_EWK_noTop,2016preVFP"):
+        xsec = 0.284
+    elif(sample == "WWJJToLNuLNu_EWK_noTop,2016postVFP"):
+        xsec = 0.284
+    elif(sample == "WWJJToLNuLNu_EWK_noTop,2017"):
+        xsec = 0.284
+    elif(sample == "WWJJToLNuLNu_EWK_noTop,2018"):
+        xsec = 0.284
+    elif(sample == "WWTo1L1Nu2Q_4f,2016preVFP"):
+        xsec = 49.997
+    elif(sample == "WWTo1L1Nu2Q_4f,2016postVFP"):
+        xsec = 49.997
+    elif(sample == "WWTo1L1Nu2Q_4f,2017"):
+        xsec = 49.997
+    elif(sample == "WWTo1L1Nu2Q_4f,2018"):
+        xsec = 49.997
+    elif(sample == "WWTo2L2Nu,2016preVFP"):
+        xsec = 12.178
+    elif(sample == "WWTo2L2Nu,2016postVFP"):
+        xsec = 12.178
+    elif(sample == "WWTo2L2Nu,2017"):
+        xsec = 12.178
+    elif(sample == "WWTo2L2Nu,2018"):
+        xsec = 12.178
+    elif(sample == "WWTolnulnu,2016preVFP"):
+        xsec = 12.178
+    elif(sample == "WWTolnulnu,2016postVFP"):
+        xsec = 12.178
+    elif(sample == "WWTolnulnu,2017"):
+        xsec = 12.178
+    elif(sample == "WWTolnulnu,2018"):
+        xsec = 12.178
+    elif(sample == "WWW_4F,2016preVFP"):
+        xsec = 0.2086
+    elif(sample == "WWW_4F,2016postVFP"):
+        xsec = 0.2086
+    elif(sample == "WWW_4F,2017"):
+        xsec = 0.2086
+    elif(sample == "WWW_4F,2018"):
+        xsec = 0.2086
+    elif(sample == "WWZ_4F,2016preVFP"):
+        xsec = 0.1651
+    elif(sample == "WWZ_4F,2016postVFP"):
+        xsec = 0.1651
+    elif(sample == "WWZ_4F,2017"):
+        xsec = 0.1651
+    elif(sample == "WWZ_4F,2018"):
+        xsec = 0.1651
+    elif(sample == "WZJJ_EWK_InclusivePolarization,2016preVFP"):
+        xsec = 0.01701
+    elif(sample == "WZJJ_EWK_InclusivePolarization,2016postVFP"):
+        xsec = 0.01701
+    elif(sample == "WZJJ_EWK_InclusivePolarization,2017"):
+        xsec = 0.01701
+    elif(sample == "WZJJ_EWK_InclusivePolarization,2018"):
+        xsec = 0.01701
+    elif(sample == "WZTo1L1Nu2Q_4f,2016preVFP"):
+        xsec = 49.997
+    elif(sample == "WZTo1L1Nu2Q_4f,2016postVFP"):
+        xsec = 49.997
+    elif(sample == "WZTo1L1Nu2Q_4f,2017"):
+        xsec = 49.997
+    elif(sample == "WZTo1L1Nu2Q_4f,2018"):
+        xsec = 49.997
+    elif(sample == "WZTo1L3Nu_4f,2016preVFP"):
+        xsec = 3.05402
+    elif(sample == "WZTo1L3Nu_4f,2016postVFP"):
+        xsec = 3.05402
+    elif(sample == "WZTo1L3Nu_4f,2017"):
+        xsec = 3.05402
+    elif(sample == "WZTo1L3Nu_4f,2018"):
+        xsec = 3.05402
+    elif(sample == "WZTo2Q2L_mllmin4p0,2016preVFP"):
+        xsec = 5.6
+    elif(sample == "WZTo2Q2L_mllmin4p0,2016postVFP"):
+        xsec = 5.6
+    elif(sample == "WZTo2Q2L_mllmin4p0,2017"):
+        xsec = 5.6
+    elif(sample == "WZTo2Q2L_mllmin4p0,2018"):
+        xsec = 5.6
+    elif(sample == "WZTo3LNu,2016preVFP"):
+        xsec = 4.42965
+    elif(sample == "WZTo3LNu,2016postVFP"):
+        xsec = 4.42965
+    elif(sample == "WZTo3LNu,2017"):
+        xsec = 4.42965
+    elif(sample == "WZTo3LNu,2018"):
+        xsec = 4.42965
+    elif(sample == "WZZ,2016preVFP"):
+        xsec = 0.05565
+    elif(sample == "WZZ,2016postVFP"):
+        xsec = 0.05565
+    elif(sample == "WZZ,2017"):
+        xsec = 0.05565
+    elif(sample == "WZZ,2018"):
+        xsec = 0.05565
+    elif(sample == "WminusH_HToBB_WToLNu_M-125,2016preVFP"):
+        xsec = 0.0490124
+    elif(sample == "WminusH_HToBB_WToLNu_M-125,2016postVFP"):
+        xsec = 0.0490124
+    elif(sample == "WminusH_HToBB_WToLNu_M-125,2017"):
+        xsec = 0.0490124
+    elif(sample == "WminusH_HToBB_WToLNu_M-125,2018"):
+        xsec = 0.0490124
+    elif(sample == "WplusH_HToBB_WToLNu_M-125,2016preVFP"):
+        xsec = 0.084876
+    elif(sample == "WplusH_HToBB_WToLNu_M-125,2016postVFP"):
+        xsec = 0.084876
+    elif(sample == "WplusH_HToBB_WToLNu_M-125,2017"):
+        xsec = 0.084876
+    elif(sample == "WplusH_HToBB_WToLNu_M-125,2018"):
+        xsec = 0.084876
+    elif(sample == "ZH_HToBB_ZToLL_M-125,2016preVFP"):
+        xsec = 0.0262749
+    elif(sample == "ZH_HToBB_ZToLL_M-125,2016postVFP"):
+        xsec = 0.0262749
+    elif(sample == "ZH_HToBB_ZToLL_M-125,2017"):
+        xsec = 0.0262749
+    elif(sample == "ZH_HToBB_ZToLL_M-125,2018"):
+        xsec = 0.0262749
+    elif(sample == "ZZJJTo4L,2016preVFP"):
+        xsec = 0.00884
+    elif(sample == "ZZJJTo4L,2016postVFP"):
+        xsec = 0.00884
+    elif(sample == "ZZJJTo4L,2017"):
+        xsec = 0.00884
+    elif(sample == "ZZJJTo4L,2018"):
+        xsec = 0.00884
+    elif(sample == "ZZTo2L2Nu,2016preVFP"):
+        xsec = 0.564
+    elif(sample == "ZZTo2L2Nu,2016postVFP"):
+        xsec = 0.564
+    elif(sample == "ZZTo2L2Nu,2017"):
+        xsec = 0.564
+    elif(sample == "ZZTo2L2Nu,2018"):
+        xsec = 0.564
+    elif(sample == "ZZTo2Q2L_mllmin4p0,2016preVFP"):
+        xsec = 3.28
+    elif(sample == "ZZTo2Q2L_mllmin4p0,2016postVFP"):
+        xsec = 3.28
+    elif(sample == "ZZTo2Q2L_mllmin4p0,2017"):
+        xsec = 3.28
+    elif(sample == "ZZTo2Q2L_mllmin4p0,2018"):
+        xsec = 3.28
+    elif(sample == "ZZTo4L_M-1toInf,2016preVFP"):
+        xsec = 1.256
+    elif(sample == "ZZTo4L_M-1toInf,2016postVFP"):
+        xsec = 1.256
+    elif(sample == "ZZTo4L_M-1toInf,2017"):
+        xsec = 1.256
+    elif(sample == "ZZTo4L_M-1toInf,2018"):
+        xsec = 1.256
+    elif(sample == "ZZZ,2016preVFP"):
+        xsec = 0.01398
+    elif(sample == "ZZZ,2016postVFP"):
+        xsec = 0.01398
+    elif(sample == "ZZZ,2017"):
+        xsec = 0.01398
+    elif(sample == "ZZZ,2018"):
+        xsec = 0.01398
+    elif(sample == "ggZH_HToBB_ZToLL_M-125,2016preVFP"):
+        xsec = 0.0024614
+    elif(sample == "ggZH_HToBB_ZToLL_M-125,2016postVFP"):
+        xsec = 0.0024614
+    elif(sample == "ggZH_HToBB_ZToLL_M-125,2017"):
+        xsec = 0.0024614
+    elif(sample == "ggZH_HToBB_ZToLL_M-125,2018"):
+        xsec = 0.0024614
     # sig
-    elif(InputYear == "VBSZZH,2017"):
-        weight_xsec = 0.0000946592
-    elif(InputYear == "VBSWWH_SSWW,2017"):
-        weight_xsec = 0.0001259990
-    elif(InputYear == "VBSWZH,2017"):
-        weight_xsec = 0.0001357391
-    elif(InputYear == "VBSWWH_OSWW,2017"):
-        weight_xsec = 0.0002334446
-    elif(InputYear == "VBSZZH,2018"):
-        weight_xsec = 0.0000934940
-    elif(InputYear == "VBSWWH_SSWW,2018"):
-        weight_xsec = 0.0001240615
-    elif(InputYear == "VBSWZH,2018"):
-        weight_xsec = 0.0001333845
-    elif(InputYear == "VBSWWH_OSWW,2018"):
-        weight_xsec = 0.0002300254
-    elif(InputYear == "VBSZZH,2016postVFP"):
-        weight_xsec = 0.0000777209
-    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
-        weight_xsec = 0.0001023823
-    elif(InputYear == "VBSWZH,2016postVFP"):
-        weight_xsec = 0.0001100731
-    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
-        weight_xsec = 0.0001886082
-    elif(InputYear == "VBSZZH,2016preVFP"):
-        weight_xsec = 0.0000882407
-    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
-        weight_xsec = 0.0001184474
-    elif(InputYear == "VBSWZH,2016preVFP"):
-        weight_xsec = 0.0001273485
-    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
-        weight_xsec = 0.0002190144
+    elif(sample == "VBSWWH_SSWW,2016preVFP"):
+        xsec = 0.001517
+    elif(sample == "VBSWWH_SSWW,2016postVFP"):
+        xsec = 0.001517
+    elif(sample == "VBSWWH_SSWW,2017"):
+        xsec = 0.001517
+    elif(sample == "VBSWWH_SSWW,2018"):
+        xsec = 0.001517
+    elif(sample == "VBSWWH_OSWW,2016preVFP"):
+        xsec = 0.002805
+    elif(sample == "VBSWWH_OSWW,2016postVFP"):
+        xsec = 0.002805
+    elif(sample == "VBSWWH_OSWW,2017"):
+        xsec = 0.002805
+    elif(sample == "VBSWWH_OSWW,2018"):
+        xsec = 0.002805
+    elif(sample == "VBSWZH,2016preVFP"):
+        xsec = 0.001631
+    elif(sample == "VBSWZH,2016postVFP"):
+        xsec = 0.001631
+    elif(sample == "VBSWZH,2017"):
+        xsec = 0.001631
+    elif(sample == "VBSWZH,2018"):
+        xsec = 0.001631
+    elif(sample == "VBSZZH,2016preVFP"):
+        xsec = 0.001126
+    elif(sample == "VBSZZH,2016postVFP"):
+        xsec = 0.001126
+    elif(sample == "VBSZZH,2017"):
+        xsec = 0.001126
+    elif(sample == "VBSZZH,2018"):
+        xsec = 0.001126
     else:
-        print("Error: xsec not found for " + InputYear)
-    return weight_xsec
+        print("Error: xsec not found for " + sample)
+    return xsec
 
-def lhe_pdf_norms(InputYear):
+def lhe_pdf_norms(sample):
     pdf_norm = 0
-    if(InputYear == "VBSZZH,2017"):
+    if(sample == "VBSZZH,2017"):
         pdf_norm = 1.2980920185943707
-    elif(InputYear == "VBSWWH_SSWW,2017"):
+    elif(sample == "VBSWWH_SSWW,2017"):
         pdf_norm = 1.2205882825144703
-    elif(InputYear == "VBSWZH,2017"):
+    elif(sample == "VBSWZH,2017"):
         pdf_norm = 1.2566551045188934
-    elif(InputYear == "VBSWWH_OSWW,2017"):
+    elif(sample == "VBSWWH_OSWW,2017"):
         pdf_norm = 1.2507539374406431
-    elif(InputYear == "VBSZZH,2018"):
+    elif(sample == "VBSZZH,2018"):
         pdf_norm = 1.2985744198332958
-    elif(InputYear == "VBSWWH_SSWW,2018"):
+    elif(sample == "VBSWWH_SSWW,2018"):
         pdf_norm = 1.2189417248705572
-    elif(InputYear == "VBSWZH,2018"):
+    elif(sample == "VBSWZH,2018"):
         pdf_norm = 1.2543030646199427
-    elif(InputYear == "VBSWWH_OSWW,2018"):
+    elif(sample == "VBSWWH_OSWW,2018"):
         pdf_norm = 1.2486530419157191
-    elif(InputYear == "VBSZZH,2016postVFP"):
+    elif(sample == "VBSZZH,2016postVFP"):
         pdf_norm = 1.297558141585914
-    elif(InputYear == "VBSWWH_SSWW,2016postVFP"):
+    elif(sample == "VBSWWH_SSWW,2016postVFP"):
         pdf_norm = 1.2196977423067406
-    elif(InputYear == "VBSWZH,2016postVFP"):
+    elif(sample == "VBSWZH,2016postVFP"):
         pdf_norm = 1.2576042114971981
-    elif(InputYear == "VBSWWH_OSWW,2016postVFP"):
+    elif(sample == "VBSWWH_OSWW,2016postVFP"):
         pdf_norm = 1.2473127695051147
-    elif(InputYear == "VBSZZH,2016preVFP"):
+    elif(sample == "VBSZZH,2016preVFP"):
         pdf_norm = 1.2993650469217064
-    elif(InputYear == "VBSWWH_SSWW,2016preVFP"):
+    elif(sample == "VBSWWH_SSWW,2016preVFP"):
         pdf_norm = 1.218872708226821
-    elif(InputYear == "VBSWZH,2016preVFP"):
+    elif(sample == "VBSWZH,2016preVFP"):
         pdf_norm = 1.2528598974228045
-    elif(InputYear == "VBSWWH_OSWW,2016preVFP"):
+    elif(sample == "VBSWWH_OSWW,2016preVFP"):
         pdf_norm = 1.2507993077851738
     else:
         print("Error")
     return pdf_norm
+
+def get_lumi(year):
+    lumi = {
+            "2016preVFP": 19.52,
+            "2016postVFP": 16.81,
+            "2017": 41.529,
+            "2018": 59.7
+        }
+    return lumi[year]
 
 def extract_mc_sample_type(sample_name):
     if "DY" in sample_name:
         return "DY"
     elif sample_name.startswith("TTTo"):
         return "ttbar"
-    elif "TT" in sample_name:
+    elif "TT" in sample_name or "tt" in sample_name:
         return "ttx"
     elif "ST" in sample_name:
         return "ST"
@@ -554,6 +564,7 @@ def extract_mc_sample_type(sample_name):
 
 def make_config(args):
     with open(args.output, "w+") as f:
+        glob_n = 0
         try:
             config = json.load(f)
         except json.JSONDecodeError:
@@ -571,6 +582,11 @@ def make_config(args):
                     continue
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
+                num_events = 0
+                files = glob(sample + "/output*.root")
+                for file in files:
+                    with uproot.open(file) as upf:
+                        num_events += sum(upf.get("Runs")["genEventSumw"].array())
                 config["samples"].update(
                     {
                         sample_name + "_" + sample_year: {
@@ -580,7 +596,9 @@ def make_config(args):
                                 "sample_category": "bkg",
                                 "sample_year" : sample_year,
                                 "sample_type": extract_mc_sample_type(sample_name),
-                                "xsec_weight": xsec
+                                "xsec": xsec,
+                                "lumi": get_lumi(sample_year),
+                                "nevents": num_events
                             }
                         }
                     }
@@ -603,7 +621,9 @@ def make_config(args):
                                 "sample_category": "data",
                                 "sample_year" : sample_year,
                                 "sample_type": data_sample_type,
-                                "xsec_weight": 1.0
+                                "xsec": 1.0,
+                                "lumi": 1.0,
+                                "nevents": 1.0
                             }
                         }
                     }
@@ -620,6 +640,11 @@ def make_config(args):
                 if xsec == 0:
                     print(sample)
                     continue
+                num_events = 0
+                
+                with uproot.open(sample) as upf:
+                    num_events += sum(upf.get("Runs")["genEventSumw"].array())
+
                 config["samples"].update(
                     {
                         sample_name.split("v9/")[1] + "_" + sample_year: {
@@ -628,8 +653,10 @@ def make_config(args):
                             "metadata": {
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,
-                                "sample_type": "sig_mc",
-                                "xsec_weight": xsec
+                                "sample_type": sample_name.split("/")[1].split("_MJJ")[0],
+                                "xsec": xsec,
+                                "lumi": get_lumi(sample_year),
+                                "nevents": num_events
                             }
                         }
                     }
@@ -641,6 +668,7 @@ if __name__ == "__main__":
     argparser.add_argument("--categories", help="categories", default="bkg,data,sig")
     argparser.add_argument("--sample_year", help="sample year", default=None)
     argparser.add_argument("--output", help="output config file", default="input.json")
+    argparser.add_argument("--type", help="type", default=None)
     args = argparser.parse_args()
 
     config = make_config(args)

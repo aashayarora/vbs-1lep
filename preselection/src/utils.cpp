@@ -43,10 +43,13 @@ RNode removeDuplicates(RNode df){
 */
 
 RNode defineMetadata(RNode df){
-    return df.DefinePerSample("xsec_weight", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec_weight");})
+    return df.DefinePerSample("xsec", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("xsec");})
+            .DefinePerSample("lumi", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("lumi");})
+            .DefinePerSample("nevents", [](unsigned int slot, const RSampleInfo &id) { return id.GetD("nevents");})
             .DefinePerSample("sample_category", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_category");})
             .DefinePerSample("sample_type", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_type");})
             .DefinePerSample("sample_year", [](unsigned int slot, const RSampleInfo &id) { return id.GetS("sample_year");})
+            .Define("xsec_weight", "1000 * xsec * lumi / nevents")
             .Define("isData", "sample_category == \"data\"")
             .Define("is2016", "sample_year == \"2016preVFP\" || sample_year == \"2016postVFP\"")
             .Define("is2017", "sample_year == \"2017\"")
@@ -156,15 +159,21 @@ RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_
     return good_jet_idx;
 }
 
-void saveSnapshot(RNode df, const std::string& finalFile) {
+void saveSnapshot(RNode df, const std::string& finalFile, bool plot) {
     auto ColNames = df.GetDefinedColumnNames();
     std::vector<std::string> final_variables;
     final_variables.push_back("event");
+    
+    ROOT::RDF::RSnapshotOptions opts;
+
+    if (plot) opts.fLazy = true;
+    else opts.fLazy = false;
+
     for (auto &&ColName : ColNames)
         {
             TString colName = ColName;
             std::string name = colName.Data();
             final_variables.push_back(name);
         }
-    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables);
+    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables, opts);
 }

@@ -73,7 +73,8 @@ const auto cset_pnet_w = *CorrectionSet::from_file("corrections/scalefactors/par
 const auto cset_pnet_h = *CorrectionSet::from_file("corrections/scalefactors/particlenet/pnet.json");
 
 // btagging sfs
-RNode bTaggingScaleFactors(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df);
+RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df);
+RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, correction::CorrectionSet cset_btag_2016postVFP, correction::CorrectionSet cset_btag_2017, correction::CorrectionSet cset_btag_2018, correction::CorrectionSet cset_btag_eff, RNode df);
 const auto cset_btag_2016preVFP = *CorrectionSet::from_file("corrections/scalefactors/btagging/2016preVFP.json");
 const auto cset_btag_2016postVFP = *CorrectionSet::from_file("corrections/scalefactors/btagging/2016postVFP.json");
 const auto cset_btag_2017 = *CorrectionSet::from_file("corrections/scalefactors/btagging/2017.json");
@@ -85,9 +86,5 @@ RNode PSWeight_ISR(RNode df);
 RNode LHEScaleWeight_muF(RNode df);
 RNode LHEScaleWeight_muR(RNode df);
 RNode LHEWeights_pdf(RNode df);
-
-// final weights
-RNode finalDataWeight(RNode df);
-RNode finalMCWeight(RNode df);
 
 #endif
