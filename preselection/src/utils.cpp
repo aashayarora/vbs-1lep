@@ -159,21 +159,16 @@ RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_
     return good_jet_idx;
 }
 
-void saveSnapshot(RNode df, const std::string& finalFile, bool plot) {
+void saveSnapshot(RNode df, const std::string& finalFile) {
     auto ColNames = df.GetDefinedColumnNames();
     std::vector<std::string> final_variables;
     final_variables.push_back("event");
     
-    ROOT::RDF::RSnapshotOptions opts;
-
-    if (plot) opts.fLazy = true;
-    else opts.fLazy = false;
-
     for (auto &&ColName : ColNames)
         {
             TString colName = ColName;
             std::string name = colName.Data();
             final_variables.push_back(name);
         }
-    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile, final_variables, opts);
+    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile + std::string(".root"), final_variables);
 }

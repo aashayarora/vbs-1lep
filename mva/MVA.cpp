@@ -32,7 +32,8 @@ int main(int argc, char** argv){
     ROOT::RDF::Experimental::AddProgressBar(df);
     // Make final cuts before running MVA
 
-    auto df1 = df.Define("VBSBDTscore", predict, {"event", "VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"});
+    auto df1 = df.Filter("passCut9")
+            .Define("VBSBDTscore", predict, {"event", "VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"});
 
     auto filter_year = [](RNode df, MyArgs args){
         if (args.year.empty()) {return df.Filter("event > 0");}
@@ -42,7 +43,7 @@ int main(int argc, char** argv){
     };
     auto df2 = filter_year(df1, args);
 
-    std::vector<std::string> final_vars = {"event", "Hbbscore", "HighestWjetScore", "HbbPt", "Hbbmass", "MET", "Mlbminloose", "VBSBDTscore", "VBSMjj", "VBSdetajj", "VBSjet1eta", "VBSjet1phi", "VBSjet1pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2pt", "WjetPt", "Wjetmass", "leptonpt", "weight"};
+    std::vector<std::string> final_vars = {"event", "sample_type", "passCut9", "Hbbscore", "HighestWjetScore", "HbbPt", "Hbbmass", "MET", "Mlbminloose", "VBSBDTscore", "VBSMjj", "VBSdetajj", "VBSjet1eta", "VBSjet1phi", "VBSjet1pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2pt", "WjetPt", "Wjetmass", "leptonpt", "weight"};
     df2.Snapshot("Events", output_file, final_vars);
 
     return 0;

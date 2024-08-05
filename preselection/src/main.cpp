@@ -14,6 +14,7 @@
 struct MyArgs : public argparse::Args {
     std::string &spec = kwarg("i,input", "spec.json path");
     bool &cutflow = flag("cutflow", "print cutflow");
+    bool &plot = flag("plot", "save additional ntuples for plotting");
     bool &JEC = flag("jec", "JEC");
     bool &JER = flag("jer", "JER");
     bool &JMS = flag("jms", "JMS");
@@ -54,7 +55,6 @@ void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto df_cut8 = df_cut7.Filter("ST > 1000", "ST > 1000");
     auto df_cut9 = df_cut8.Filter("HighestHScore > 0.5", "HIGGS SCORE > 0.5");
     auto df_cut10 = df_cut9.Filter("HighestWjetScore > 0.7", "WJET SCORE > 0.7");
-
     auto df_cut9_cr = df_cut8.Filter("HighestHScore < 0.95", "HIGGS SCORE < 0.95");
     auto df_cut10_cr = df_cut9.Filter("HighestWjetScore < 0.7", "WJET SCORE < 0.7");
 
@@ -71,7 +71,22 @@ void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto cf_hbb_cr = df_cut9_cr.Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");
     auto cf_vqq_cr = df_cut10_cr.Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");
 
-    saveSnapshot(df_cut10, output_file);
+    auto df_snap = df_weights.Define("passCut1", "passesFlags && passesTriggers")
+        .Define("passCut2", "passCut1 && ((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
+            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
+            "(GLepton_pt > 40)")
+        .Define("passCut3", "passCut2 && HighestHScore > 0")
+        .Define("passCut4", "passCut3 && HighestWjetScore > 0")
+        .Define("passCut5", "passCut4 && Sum(ak4FromBJet) == 0")
+        .Define("passCut6", "passCut5 && Sum(goodVBSJets) >= 2")
+        .Define("passCut7", "passCut6 && ST > 1000")
+        .Define("passCut8", "passCut7 && HighestHScore > 0.5")
+        .Define("passCut9", "passCut8 && HighestWjetScore > 0.7")
+        .Define("passCut8_cr", "passCut7 && HighestHScore < 0.95")
+        .Define("passCut9_cr", "passCut8_cr && HighestWjetScore < 0.7")    
+        .Filter("passCut4");
+    
+    saveSnapshot(df_snap, std::string(output_file));
 
     if (args.cutflow){
         auto h_weight = cf_weights.GetValue(); h_weight.Sumw2();
@@ -257,7 +272,22 @@ void runBkgAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto cf_hbb_other = df_cut9.Filter("sample_type != \"ttbar\" && sample_type != \"ttx\" && sample_type != \"WJets\"").Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");
     auto cf_vqq_other = df_cut10.Filter("sample_type != \"ttbar\" && sample_type != \"ttx\" && sample_type != \"WJets\"").Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");
 
-    saveSnapshot(df_cut10, output_file);
+    auto df_snap = df_weights.Define("passCut1", "passesFlags && passesTriggers")
+        .Define("passCut2", "passCut1 && ((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
+            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
+            "(GLepton_pt > 40)")
+        .Define("passCut3", "passCut2 && HighestHScore > 0")
+        .Define("passCut4", "passCut3 && HighestWjetScore > 0")
+        .Define("passCut5", "passCut4 && Sum(ak4FromBJet) == 0")
+        .Define("passCut6", "passCut5 && Sum(goodVBSJets) >= 2")
+        .Define("passCut7", "passCut6 && ST > 1000")
+        .Define("passCut8", "passCut7 && HighestHScore > 0.5")
+        .Define("passCut9", "passCut8 && HighestWjetScore > 0.7")
+        .Define("passCut8_cr", "passCut7 && HighestHScore < 0.95")
+        .Define("passCut9_cr", "passCut8_cr && HighestWjetScore < 0.7")    
+        .Filter("passCut4");
+    
+    saveSnapshot(df_snap, std::string(output_file));
 
     if (args.cutflow){
         auto h_weight = cf_xsec.GetValue(); h_weight.Sumw2();
@@ -514,7 +544,22 @@ void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto cf_hbb = df_cut9.Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");
     auto cf_vqq = df_cut10.Histo1D({"h", "h", 1,-10, 10}, "weight", "weight");        
 
-    saveSnapshot(df_c2v, output_file);
+    auto df_snap = df_weights.Define("passCut1", "passesFlags && passesTriggers")
+        .Define("passCut2", "passCut1 && ((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
+            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
+            "(GLepton_pt > 40)")
+        .Define("passCut3", "passCut2 && HighestHScore > 0")
+        .Define("passCut4", "passCut3 && HighestWjetScore > 0")
+        .Define("passCut5", "passCut4 && Sum(ak4FromBJet) == 0")
+        .Define("passCut6", "passCut5 && Sum(goodVBSJets) >= 2")
+        .Define("passCut7", "passCut6 && ST > 1000")
+        .Define("passCut8", "passCut7 && HighestHScore > 0.5")
+        .Define("passCut9", "passCut8 && HighestWjetScore > 0.7")
+        .Define("passCut8_cr", "passCut7 && HighestHScore < 0.95")
+        .Define("passCut9_cr", "passCut8_cr && HighestWjetScore < 0.7")        
+        .Filter("passCut4");
+    
+    saveSnapshot(df_snap, std::string(output_file));
 
     if (args.cutflow){
         auto h_weight = cf_xsec.GetValue(); h_weight.Sumw2();
@@ -557,19 +602,19 @@ int main(int argc, char** argv) {
     // run analysis
     if (input_spec.find("data") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "data.root";
+            output_file = "data";
         }
         runDataAnalysis(df, args, output_file);
     }
     else if (input_spec.find("bkg") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "bkg.root";
+            output_file = "bkg";
         }
         runBkgAnalysis(df, args, output_file);
     }
     else if (input_spec.find("sig") != std::string::npos) {
         if (output_file.empty()) {
-            output_file = "sig.root";
+            output_file = "sig";
         }
         runSigAnalysis(df, args, output_file);
     }

@@ -41,6 +41,9 @@ class OutputROOT(VBSOutput):
             tree = old_baby[self.ttree_name].arrays(cut=self.selection)
             # Add the new branch to the copy
             tree[f"{self.algo_name}_score"] = np.array(self.__scores)
+            if "sample_type" in dir(tree):
+                sample_dict = {"ttbar": 0, "WJets": 1, "ttx": 2, "ST": 3, "DY": 4, "EWK": 5, "Other": 6}
+                tree["sample_type"] = np.array([sample_dict[sample] if sample in sample_dict else -1 for sample in tree["sample_type"]])
             # Write the updated TTree to a new ROOT file
             with uproot.recreate(self.new_baby) as new_baby:
                 new_baby[self.ttree_name] = tree

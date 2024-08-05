@@ -111,7 +111,11 @@ RNode higgsSelections(RNode df) {
             .Define("GHiggs_mass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
             .Define("Hbbmass", "FatJet_particleNet_mass[HCandidateJets][HighestHScoreIdx]")
             .Define("Hbbscore", "HighestHScore")
-            .Define("HbbPt", "CorrFatJet_pt[HCandidateJets][HighestHScoreIdx]");
+            .Define("HbbPt", "CorrFatJet_pt[HCandidateJets][HighestHScoreIdx]")
+            .Define("Htau2", "FatJet_tau2[HCandidateJets][HighestHScoreIdx]")
+            .Define("Htau1", "FatJet_tau1[HCandidateJets][HighestHScoreIdx]")
+            .Define("Htau21", "Htau2 / Htau1")
+            .Define("Hsoftdrop", "FatJet_msoftdrop[HCandidateJets][HighestHScoreIdx]");
     return df_higgs;
 }
 
@@ -137,7 +141,11 @@ RNode WZSelections(RNode df) {
             .Define("GW_phi", "FatJet_phi[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("GW_mass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
             .Define("Wjetmass", "FatJet_particleNet_mass[WZCandidateJets][HighestWjetScoreIdx]")
-            .Define("WjetPt", "CorrFatJet_pt[WZCandidateJets][HighestWjetScoreIdx]");
+            .Define("WjetPt", "CorrFatJet_pt[WZCandidateJets][HighestWjetScoreIdx]")
+            .Define("Wtau2", "FatJet_tau2[WZCandidateJets][HighestWjetScoreIdx]")
+            .Define("Wtau1", "FatJet_tau1[WZCandidateJets][HighestWjetScoreIdx]")
+            .Define("Wtau21", "Wtau2 / Wtau1")
+            .Define("Wsoftdrop", "FatJet_msoftdrop[WZCandidateJets][HighestWjetScoreIdx]");
     return df_wz;
 }
 
@@ -159,12 +167,21 @@ RNode AK4Selections(RNode df) {
             .Define("LnTBJets", "goodJets && Jet_btagDeepFlavB > ak4looseBjetScore && Jet_btagDeepFlavB <= ak4tightBjetScore")
             .Define("LnTBJet_pt", "CorrJet_pt[LnTBJets]")
             .Define("LnTBJet_eta", "Jet_eta[LnTBJets]")
-            .Define("sortedBJets", "Argsort(-CorrJet_pt[goodLooseBJets])")
-            .Define("GExtraBJet_pt", "Take(CorrJet_pt[goodLooseBJets], sortedBJets)")
-            .Define("GExtraBJet_eta", "Take(Jet_eta[goodLooseBJets], sortedBJets)")
-            .Define("GExtraBJet_phi", "Take(Jet_phi[goodLooseBJets], sortedBJets)")
-            .Define("GExtraBJet_mass", "Take(CorrJet_mass[goodLooseBJets], sortedBJets)")
-            .Define("Mlb", VfInvariantMass, {"GExtraBJet_pt", "GExtraBJet_eta", "GExtraBJet_phi", "GExtraBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
+            .Define("sortedBJets", "Argsort(-Jet_btagDeepFlavB[goodLooseBJets])")
+            .Define("GBJet_pt", "Take(CorrJet_pt[goodLooseBJets], sortedBJets)")
+            .Define("GBJet_eta", "Take(Jet_eta[goodLooseBJets], sortedBJets)")
+            .Define("GBJet_phi", "Take(Jet_phi[goodLooseBJets], sortedBJets)")
+            .Define("GBJet_mass", "Take(CorrJet_mass[goodLooseBJets], sortedBJets)")
+            .Define("GBJet_score", "Take(Jet_btagDeepFlavB[goodLooseBJets], sortedBJets)")
+            .Define("bjet1pt", "GBJet_pt.size() > 0 ? GBJet_pt[0] : -999")
+            .Define("bjet1eta", "GBJet_pt.size() > 0 ? GBJet_eta[0] : -999")
+            .Define("bjet1phi", "GBJet_pt.size() > 0 ? GBJet_phi[0] : -999")
+            .Define("bjet1score", "GBJet_pt.size() > 0 ? GBJet_score[0] : -999")
+            .Define("bjet2pt", "GBJet_pt.size() > 1 ? GBJet_pt[1] : -999")
+            .Define("bjet2eta", "GBJet_pt.size() > 1 ? GBJet_eta[1] : -999")
+            .Define("bjet2phi", "GBJet_pt.size() > 1 ? GBJet_phi[1] : -999")
+            .Define("bjet2score", "GBJet_pt.size() > 1 ? GBJet_score[1] : -999")
+            .Define("Mlb", VfInvariantMass, {"GBJet_pt", "GBJet_eta", "GBJet_phi", "GBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
             .Define("MinMlbJetIdx", "Mlb.size() != 0 ? ArgMin(Mlb) : -1")
             .Define("Mlbminloose", "Mlb.size() != 0 ? Mlb[MinMlbJetIdx] : 1000");
     return df_ak4;
