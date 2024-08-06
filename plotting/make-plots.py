@@ -2,7 +2,6 @@
 # %%
 from dataclasses import dataclass, field
 import argparse
-import os
 
 import ROOT as r
 

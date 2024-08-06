@@ -120,9 +120,8 @@ if __name__ == "__main__":
                     df_bkg.Filter(f"sample_type == {sample_dict.get(sample)}").Filter("pass_dnn").Histo1D((histogram.var, histogram.var, *histogram.binning), "VBSBDTscore", "weight")
                 )
             histogram.hist_sig = [df_sig.Filter("pass_dnn").Histo1D((histogram.var, histogram.var, *histogram.binning), "VBSBDTscore", "weight")]
-# %%
-
-    plot(hists[0], scale=10)
-    plot(hists[1], scale=1)
-    plot(hists[2], scale=1)
-    plot(hists[3], scale=10)
+            
+    plot(hists[0], scale=100)
+    plot(hists[1], scale=100)
+    plot(hists[2], scale=100)
+    plot(hists[3], scale=100)
