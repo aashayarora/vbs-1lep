@@ -261,9 +261,9 @@ CMS_vbsvvh1lep_bTagWeightXbb_13TeV_18             lnN   -                  -    
 {xbb_reweight(args.year)}
 --------------------------------------------------------------------------------------------------------------------------------
 A_OneLep rateParam                  A  TotalBkg_OneLep    (@0*@1/@2) B_OneLep,C_OneLep,D_OneLep    
-B_OneLep rateParam                  B  TotalBkg_OneLep    {sys["data"][0]} [{sys["data"][6]} {sys["data"][3]}]              
-C_OneLep rateParam                  C  TotalBkg_OneLep    {sys["data"][1]} [{sys["data"][7]} {sys["data"][4]}]    
-D_OneLep rateParam                  D  TotalBkg_OneLep    {sys["data"][2]} [{sys["data"][8]} {sys["data"][5]}]
+B_OneLep rateParam                  B  TotalBkg_OneLep    {sys["data"][0]} [{sys["data"][6]},{sys["data"][3]}]              
+C_OneLep rateParam                  C  TotalBkg_OneLep    {sys["data"][1]} [{sys["data"][7]},{sys["data"][4]}]    
+D_OneLep rateParam                  D  TotalBkg_OneLep    {sys["data"][2]} [{sys["data"][8]},{sys["data"][5]}]
 """
 
     names=["scan_CV_1p0_C2V_m2p0_C3_1p0",
