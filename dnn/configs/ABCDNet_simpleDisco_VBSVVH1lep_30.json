@@ -50,7 +50,6 @@
         "extra_files": [
             "/data/userdata/aaarora/output/run2/data_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_MVA.root",
-            "/data/userdata/aaarora/output/run2/bkg_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_met_unclustered_up_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_met_unclustered_down_MVA.root",
             "/data/userdata/aaarora/output/run2/sig_jec_absolute_up_MVA.root",

@@ -214,7 +214,7 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSdetajj", "abs(VBSjet1eta - VBSjet2eta)")
             .Define("VBSMjj", fInvariantMass, {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet1mass", "VBSjet2pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2mass"})
             .Define("MET", "CorrMET_pt")
-            .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + CorrMET_pt");;
+            .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + CorrMET_pt");
             // .Define("VBSbtagAK4DeltaR1", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet1eta", "VBSjet1phi"})
             // .Define("VBSbtagAK4DeltaR2", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet2eta", "VBSjet2phi"})
             // Maybe remove the minMlb b jet from the VBS jet selections

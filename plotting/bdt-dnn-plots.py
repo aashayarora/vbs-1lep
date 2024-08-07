@@ -65,9 +65,9 @@ if __name__ == "__main__":
 
     r.EnableImplicitMT()
 
-    data = [f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/data_MVA_abcdnet.root"]
-    bkg = [f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/bkg_MVA_abcdnet.root"]
-    sig = [f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/sig_MVA_abcdnet.root"]
+    data = [f"/data/userdata/aaarora/output/run2/plotting/data_MVA_abcdnet.root"]
+    bkg = [f"/data/userdata/aaarora/output/run2/plotting/bkg_MVA_abcdnet.root"]
+    sig = [f"/data/userdata/aaarora/output/run2/plotting/sig_MVA_abcdnet.root"]
 
     df_data = r.RDataFrame("Events", data)
     df_bkg = r.RDataFrame("Events", bkg)
@@ -121,7 +121,7 @@ if __name__ == "__main__":
                 )
             histogram.hist_sig = [df_sig.Filter("pass_dnn").Histo1D((histogram.var, histogram.var, *histogram.binning), "VBSBDTscore", "weight")]
             
-    plot(hists[0], scale=100)
-    plot(hists[1], scale=100)
-    plot(hists[2], scale=100)
-    plot(hists[3], scale=100)
+    plot(hists[0], scale=10)
+    plot(hists[1], scale=1)
+    plot(hists[2], scale=1)
+    plot(hists[3], scale=10)

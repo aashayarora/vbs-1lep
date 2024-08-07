@@ -10,7 +10,7 @@ hep.style.use(hep.style.CMS)
 import ROOT as r
 
 def plot(category):
-    df = r.RDataFrame("Events", f"/data/userdata/aaarora/output/run2/ABCDNet_simpleDisco_VBSVVH1lep_30/output/{category}_MVA_abcdnet.root")
+    df = r.RDataFrame("Events", f"/data/userdata/aaarora/output/run2/plotting/{category}_MVA_abcdnet.root")
     cols = df.AsNumpy(["abcdnet_score", "VBSBDTscore", "weight"])
 
     h = hist.Hist.new.Reg(10, 0, 1, name="abcdnet_score").Reg(10, 0, 1, name="VBSBDTscore").Double()

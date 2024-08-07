@@ -97,9 +97,9 @@ if __name__ == "__main__":
 
     r.EnableImplicitMT()
 
-    data = [f"/data/userdata/aaarora/output/run2/data.root"]
-    bkg = [f"/data/userdata/aaarora/output/run2/bkg.root"]
-    sig = [f"/data/userdata/aaarora/output/run2/sig.root"]
+    data = [f"/data/userdata/aaarora/output/run2/plotting/data.root"]
+    bkg = [f"/data/userdata/aaarora/output/run2/plotting/bkg.root"]
+    sig = [f"/data/userdata/aaarora/output/run2/plotting/sig.root"]
 
     df_data = r.RDataFrame("Events", data)
     df_bkg = r.RDataFrame("Events", bkg)

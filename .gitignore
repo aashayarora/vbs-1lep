@@ -7,3 +7,4 @@ add_branches
 plotting/plots/
 __pycache__/
 datacard/datacards/
+old/

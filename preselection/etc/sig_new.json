@@ -1,0 +1,260 @@
+{
+    "samples": {
+        "VBSWWH_OS_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_OS_VBSCuts_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN/skimmed/output0.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWWH_OS",
+                "xsec": 0.002805,
+                "lumi": 16.81,
+                "nevents": 99200.0
+            }
+        },
+        "VBSWWH_OS_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_OS_VBSCuts_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN/skimmed/output1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWWH_OS",
+                "xsec": 0.002805,
+                "lumi": 19.52,
+                "nevents": 98500.0
+            }
+        },
+        "VBSWWH_OS_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_OS_VBSCuts_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN/skimmed/output2.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWWH_OS",
+                "xsec": 0.002805,
+                "lumi": 41.529,
+                "nevents": 98300.0
+            }
+        },
+        "VBSWWH_OS_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_OS_VBSCuts_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN/skimmed/output3.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWWH_OS",
+                "xsec": 0.002805,
+                "lumi": 59.7,
+                "nevents": 98700.0
+            }
+        },
+        "VBSWWH_SS_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_SS_VBSCuts_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN/skimmed/output4.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWWH_SS",
+                "xsec": 0.001517,
+                "lumi": 16.81,
+                "nevents": 99900.0
+            }
+        },
+        "VBSWWH_SS_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_SS_VBSCuts_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN/skimmed/output5.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWWH_SS",
+                "xsec": 0.001517,
+                "lumi": 19.52,
+                "nevents": 99800.0
+            }
+        },
+        "VBSWWH_SS_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_SS_VBSCuts_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN/skimmed/output6.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWWH_SS",
+                "xsec": 0.001517,
+                "lumi": 41.529,
+                "nevents": 99800.0
+            }
+        },
+        "VBSWWH_SS_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWWH_SS_VBSCuts_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN/skimmed/output7.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWWH_SS",
+                "xsec": 0.001517,
+                "lumi": 59.7,
+                "nevents": 99800.0
+            }
+        },
+        "VBSWZH_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWZH_VBSCuts_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN/skimmed/output8.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 16.81,
+                "nevents": 99700.0
+            }
+        },
+        "VBSWZH_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWZH_VBSCuts_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN/skimmed/output9.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 19.52,
+                "nevents": 99000.0
+            }
+        },
+        "VBSWZH_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWZH_VBSCuts_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN/skimmed/output10.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 41.529,
+                "nevents": 99800.0
+            }
+        },
+        "VBSWZH_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSWZH_VBSCuts_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN/skimmed/output11.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 59.7,
+                "nevents": 99600.0
+            }
+        },
+        "VBSZZH_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSZZH_VBSCuts_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN/skimmed/output12.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 16.81,
+                "nevents": 98400.0
+            }
+        },
+        "VBSZZH_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSZZH_VBSCuts_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN/skimmed/output13.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 19.52,
+                "nevents": 99700.0
+            }
+        },
+        "VBSZZH_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSZZH_VBSCuts_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN/skimmed/output14.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 41.529,
+                "nevents": 99800.0
+            }
+        },
+        "VBSZZH_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/legianni/SignalGeneration/v2_merged/VBSZZH_VBSCuts_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN/skimmed/output15.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 59.7,
+                "nevents": 99400.0
+            }
+        }
+    }
+}
