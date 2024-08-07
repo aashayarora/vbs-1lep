@@ -20,12 +20,10 @@ struct MyArgs : public argparse::Args {
     bool &JMR = flag("jmr", "JMR");
     bool &METUnclustered = flag("met", "MET unclustered");
     int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
-    int &c2v = kwarg("c2v", "c2v value").set_default(-1);
     std::string &output = kwarg("o,output", "output root file").set_default("");
     std::string &variation = kwarg("var", "variation").set_default("nominal");
     std::string &JERvariation = kwarg("jervar", "JER variation").set_default("nominal");
     std::string &JEC_type = kwarg("jec_type", "JEC type").set_default("");
-    std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
 };
 
 void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
@@ -85,7 +83,7 @@ void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
         .Define("passCut9_cr", "passCut8_cr && HighestWjetScore < 0.7")    
         .Filter("passCut9");
     
-    saveSnapshot(df_snap, std::string(output_file));
+    saveSnapshot(df_snap, std::string(output_file), true);
 
     if (args.cutflow){
         auto h_weight = cf_weights.GetValue(); h_weight.Sumw2();
@@ -514,23 +512,6 @@ void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto df_cut9 = df_cut8.Filter("HighestHScore > 0.5", "HIGGS SCORE > 0.5");
     auto df_cut10 = df_cut9.Filter("HighestWjetScore > 0.7", "WJET SCORE > 0.7");
 
-    auto applySFVariations = [](RNode df, MyArgs args) {
-        if (args.SFvariation.empty()) { return df;}
-        else {
-            if (args.variation == "up") {return df.Redefine("weight", Form("weight * %s[1] / %s[0]", args.SFvariation.c_str(), args.SFvariation.c_str()));}
-            else if (args.variation == "down") {return df.Redefine("weight", Form("weight * %s[2] / %s[0]", args.SFvariation.c_str(), args.SFvariation.c_str()));}
-            else {return df;}
-        }
-    };
-    auto df_sfvar = applySFVariations(df_cut10, args);
-    auto C2VReweighting = [](RNode df, MyArgs args) {
-        if (args.c2v == -1) {return df;}
-        else {
-            return df.Redefine("weight", Form("weight * LHEReweightingWeight[%d]", args.c2v));
-        }
-    };
-    auto df_c2v = C2VReweighting(df_sfvar, args);
-
     auto cf_xsec = df_weights.Histo1D({"h", "h", 1,-100, 100}, "weight", "weight");
     auto cf_flags = df_cut1.Histo1D({"h", "h", 1,-100, 100}, "weight", "weight");
     auto cf_trigger = df_cut2.Histo1D({"h", "h", 1,-100, 100}, "weight", "weight");
@@ -543,7 +524,7 @@ void runSigAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto cf_hbb = df_cut9.Histo1D({"h", "h", 1,-100, 100}, "weight", "weight");
     auto cf_vqq = df_cut10.Histo1D({"h", "h", 1,-100, 100}, "weight", "weight");        
 
-    auto df_snap = df_c2v.Define("passCut1", "passesFlags && passesTriggers")
+    auto df_snap = df_cut10.Define("passCut1", "passesFlags && passesTriggers")
         .Define("passCut2", "passCut1 && ((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
             "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
             "(GLepton_pt > 40)")

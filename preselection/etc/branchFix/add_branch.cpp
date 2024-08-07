@@ -9,8 +9,8 @@ using namespace std;
 
 int main(int argc, char** argv) {
     TFile f(argv[1], "update");
- 
-    Bool_t new_v;
+    
+    bool new_v;
     auto events = f.Get<TTree>("Events");
     vector<const char*> branches = {"HLT_Ele32_WPTight_Gsf", "HLT_Ele32_WPTight_Gsf_L1DoubleEG", "HLT_IsoMu24", "HLT_IsoTkMu24", "HLT_IsoMu27", "HLT_Ele27_eta2p1_WPTight_Gsf"};
     vector<TBranch*> newBranches;

@@ -6,5 +6,6 @@ junk/
 add_branches
 plotting/plots/
 __pycache__/
-datacard/datacards/
+datacard/
+!datacard/make_datacard.py
 old/

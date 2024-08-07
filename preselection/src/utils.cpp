@@ -159,16 +159,19 @@ RVec<int> VBS_MaxEtaJJ(RVec<float> Jet_pt, RVec<float> Jet_eta, RVec<float> Jet_
     return good_jet_idx;
 }
 
-void saveSnapshot(RNode df, const std::string& finalFile) {
+void saveSnapshot(RNode df, const std::string& finalFile, bool isData) {
     auto ColNames = df.GetDefinedColumnNames();
     std::vector<std::string> final_variables;
     final_variables.push_back("event");
     
-    for (auto &&ColName : ColNames)
-        {
-            TString colName = ColName;
-            std::string name = colName.Data();
-            final_variables.push_back(name);
-        }
+    for (auto &&ColName : ColNames) {
+        TString colName = ColName;
+        std::string name = colName.Data();
+        final_variables.push_back(name);
+    }
+
+    if (!isData)
+        final_variables.push_back("LHEReweightingWeight");
+
     df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile + std::string(".root"), final_variables);
 }
