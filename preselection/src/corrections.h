@@ -15,7 +15,6 @@ using correction::CorrectionSet;
 using RNode = ROOT::RDF::RNode;
 using ROOT::VecOps::RVec;
 
-
 float looseDFBtagWP(std::string year);
 float mediumDFBtagWP(std::string year);
 float tightDFBtagWP(std::string year);

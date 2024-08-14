@@ -39,6 +39,37 @@ RNode removeDuplicates(RNode df){
 }
 
 /*
+    CUTFLOW
+*/
+
+Cutflow::Cutflow(RNode df, const std::vector<std::string>& cuts) : _df(df), _cuts(cuts){
+    _df = _df.Define("weight2", "weight * weight");
+    _cutflow.push_back(std::make_pair(_df.Sum<double>("weight"), _df.Sum<double>("weight2")));
+    for (size_t i = 0; i < _cuts.size(); i++) {
+        _df = _df.Filter(_cuts[i]);
+        _cutflow.push_back(std::make_pair(_df.Sum<double>("weight"), _df.Sum<double>("weight2")));
+    }
+}
+
+void Cutflow::Print(std::string output_file) {
+    if (!output_file.empty()) {
+        std::ofstream out(output_file);
+        out << "Cutflow\n";
+        out << "initialCount: " << _cutflow[0].first.GetValue() << " \\pm " << std::sqrt(_cutflow[0].second.GetValue()) << "\n";
+        for (size_t i = 0; i < _cuts.size(); i++) {
+            out << _cuts[i] << ": " << _cutflow[i+1].first.GetValue() << " \\pm " << std::sqrt(_cutflow[i+1].second.GetValue()) << "\n";
+        }
+        out.close();
+    }
+    else {
+        printf("%-15s: %10.2f \\pm %10.2f\n", "initialCount", _cutflow[0].first.GetValue(), std::sqrt(_cutflow[0].second.GetValue()));
+        for (size_t i = 0; i < _cuts.size(); i++) {
+            printf("%-15s: %10.2f \\pm %10.2f\n", _cuts[i].c_str(), _cutflow[i+1].first.GetValue(), std::sqrt(_cutflow[i+1].second.GetValue()));
+        }
+    }
+}
+
+/*
     DEFINE METADATA
 */
 
@@ -62,8 +93,16 @@ RNode defineMetadata(RNode df){
 
 RVec<float> VfDeltaR (RVec<float> vec_eta, RVec<float> vec_phi, float obj_eta, float obj_phi) { 
     RVec<float> deltaR = {};
-    for (size_t i = 0; i < vec_eta.size(); i++) {
-        deltaR.push_back(ROOT::VecOps::DeltaR(vec_eta[i], obj_eta, vec_phi[i], obj_phi));
+    if (obj_eta == -999 || obj_phi == -999) {
+        for (size_t i = 0; i < vec_eta.size(); i++) {
+            deltaR.push_back(1);
+        }
+        return deltaR;
+    }
+    else {
+        for (size_t i = 0; i < vec_eta.size(); i++) {
+            deltaR.push_back(ROOT::VecOps::DeltaR(vec_eta[i], obj_eta, vec_phi[i], obj_phi));
+        }
     }
     return deltaR;
 }
@@ -173,5 +212,5 @@ void saveSnapshot(RNode df, const std::string& finalFile, bool isData) {
     if (!isData)
         final_variables.push_back("LHEReweightingWeight");
 
-    df.Snapshot("Events", std::string("/data/userdata/aaarora/output/run2/") + finalFile + std::string(".root"), final_variables);
+    df.Snapshot("Events", "/data/userdata/aaarora/output/run2/" + finalFile + ".root", final_variables);
 }

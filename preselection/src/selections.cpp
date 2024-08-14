@@ -183,11 +183,14 @@ RNode AK4Selections(RNode df) {
             .Define("bjet2score", "GBJet_pt.size() > 1 ? GBJet_score[1] : -999")
             .Define("Mlb", VfInvariantMass, {"GBJet_pt", "GBJet_eta", "GBJet_phi", "GBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
             .Define("MinMlbJetIdx", "Mlb.size() != 0 ? ArgMin(Mlb) : -1")
+            // .Define("MlbJeteta", "Mlb.size() != 0 ? GBJet_eta[MinMlbJetIdx] : -999")
+            // .Define("MlbJetphi", "Mlb.size() != 0 ? GBJet_phi[MinMlbJetIdx] : -999")
             .Define("Mlbminloose", "Mlb.size() != 0 ? Mlb[MinMlbJetIdx] : 1000");
     return df_ak4;
 }
 
 RNode VBSJetsSelections(RNode df) {
+    // auto df_vbs = df.Define("MlbDeltaR", VfDeltaR, {"Jet_eta", "Jet_phi", "MlbJeteta", "MlbJetphi"})
     auto df_vbs = df.Define("goodVBSJets", "CorrJet_pt >= 30 && "
                 "abs(Jet_eta) <= 4.7 && "
                 "AK4LepDeltaR >= 0.4 && "
@@ -215,8 +218,28 @@ RNode VBSJetsSelections(RNode df) {
             .Define("VBSMjj", fInvariantMass, {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet1mass", "VBSjet2pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2mass"})
             .Define("MET", "CorrMET_pt")
             .Define("ST", "GLepton_pt + GHiggs_pt + GW_pt + CorrMET_pt");
-            // .Define("VBSbtagAK4DeltaR1", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet1eta", "VBSjet1phi"})
-            // .Define("VBSbtagAK4DeltaR2", VfDeltaR, {"GExtraBJet_eta", "GExtraBJet_phi", "VBSjet2eta", "VBSjet2phi"})
-            // Maybe remove the minMlb b jet from the VBS jet selections
     return df_vbs;
+}
+
+RNode applyPreSelections(RNode df) {
+    auto df_flags = flagSelections(df);
+    auto df_trigger = triggerSelections(df_flags);
+    auto df_lepton = leptonSelections(df_trigger);
+    auto df_higgs = higgsSelections(df_lepton);
+    auto df_w = WZSelections(df_higgs);
+    auto df_ak4 = AK4Selections(df_w);
+    auto df_vbs = VBSJetsSelections(df_ak4);
+    return df_vbs.Define("passCut1", "passesFlags && passesTriggers")
+        .Define("passCut2", "passCut1 && ((nVetoMuons == 1 && nTightMuons == 1 && nVetoElectrons == 0 && nTightElectrons == 0) || "
+            "(nVetoMuons == 0 && nTightMuons == 0 && nVetoElectrons == 1 && nTightElectrons == 1)) && "
+            "(GLepton_pt > 40)")
+        .Define("passCut3", "passCut2 && HighestHScore > 0")
+        .Define("passCut4", "passCut3 && HighestWjetScore > 0")
+        .Define("passCut5", "passCut4 && Sum(ak4FromBJet) == 0")
+        .Define("passCut6", "passCut5 && Sum(goodVBSJets) >= 2")
+        .Define("passCut7", "passCut6 && ST > 1000")
+        .Define("passCut8", "passCut7 && HighestHScore > 0.5")
+        .Define("passCut9", "passCut8 && HighestWjetScore > 0.7")
+        .Define("passCut8_cr", "passCut7 && HighestHScore < 0.95")
+        .Define("passCut9_cr", "passCut8_cr && HighestWjetScore < 0.7");
 }

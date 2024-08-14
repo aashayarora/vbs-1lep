@@ -1,7 +1,5 @@
 #include "corrections.h"
 
-#include <iostream>
-
 float looseDFBtagWP(std::string year){
     if(year == "2016preVFP")
         return 0.0508;
@@ -61,11 +59,11 @@ RNode HEMCorrection(RNode df) {
         if (sample_year == "2018" && ((isData && run >= 319077) || (!isData && event % 1961 < 1286))) {
             for (size_t i = 0; i < pt.size(); i++) {
                 if (eta[i] > -3.2 && eta[i] < -1.3 && phi[i] > -1.57 && phi[i] < -0.87) {
-                    return 0;
+                    return 0.0;
                 }
             }
         }
-        return 1;
+        return 1.0;
     };
 
     return df1.Define("HEMweight", HEMCorrections, {"run", "event", "sample_year", "sample_category", "HEMJet_pt", "HEMJet_eta", "HEMJet_phi"});
@@ -189,7 +187,7 @@ RNode JetEnergyCorrection(correction::CorrectionSet cset_jerc_2016preVFP, correc
         }
         return jec_factors;
     };
-    auto df_jetcorr =  df.Redefine("CorrJet_pt", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_pt"})
+    auto df_jetcorr = df.Redefine("CorrJet_pt", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_pt"})
                         .Redefine("CorrJet_mass", eval_correction, {"sample_year", "Jet_pt", "Jet_eta", "Jet_mass"})
                         .Redefine("CorrFatJet_pt", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_pt"})
                         .Redefine("CorrFatJet_mass", eval_correction, {"sample_year", "FatJet_pt", "FatJet_eta", "FatJet_mass"});

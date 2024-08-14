@@ -8,6 +8,7 @@
 #include "ROOT/RVec.hxx"
 
 #include "utils.h"
+#include "corrections.h"
 #include "correction.h"
 
 using correction::CorrectionSet;
@@ -86,5 +87,8 @@ RNode PSWeight_ISR(RNode df);
 RNode LHEScaleWeight_muF(RNode df);
 RNode LHEScaleWeight_muR(RNode df);
 RNode LHEWeights_pdf(RNode df);
+
+RNode applyDataWeights(RNode df);
+RNode applyMCWeights(RNode df);
 
 #endif

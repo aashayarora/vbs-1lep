@@ -18,4 +18,6 @@ RNode WZSelections(RNode df);
 RNode AK4Selections(RNode df);
 RNode VBSJetsSelections(RNode df);
 
+RNode applyPreSelections(RNode df);
+
 #endif // SELECTIONS_H

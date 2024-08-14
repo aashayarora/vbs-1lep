@@ -3,11 +3,7 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <algorithm>
 #include <limits>
-#include <unordered_map>
 
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RVec.hxx"
@@ -86,6 +82,20 @@ public:
 };
 
 RNode removeDuplicates(RNode df);
+
+/*
+    CUTFLOW
+*/
+
+class Cutflow {
+public:
+    Cutflow(RNode df, const std::vector<std::string>& cuts);
+    void Print(std::string output_file);
+private:
+    RNode _df;
+    std::vector<std::string> _cuts;
+    std::vector<std::pair<ROOT::RDF::RResultPtr<double>, ROOT::RDF::RResultPtr<double>>> _cutflow;
+};
 
 /*
     METADATA DEFINE
