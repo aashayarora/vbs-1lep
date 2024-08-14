@@ -1,7 +1,6 @@
 CXX = g++
-CPPFLAGS = -g -Wall -O2
-
-MYINCLUDES = -I include/
+CPPFLAGS = -g -Wall -O2 -lpthread
+CPPFLAGS += -I include/
 
 ROOTFLAGS = $(shell root-config --libs --cflags)
 ROOTFLAGS += -lTMVA -lMinuit -lFoam -lMathMore -lXMLIO

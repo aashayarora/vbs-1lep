@@ -62,13 +62,13 @@ void runMCAnalysis(RNode df, MyArgs args, std::string output_file) {
     df_weights = df_weights.Filter(args.cut);
 
     std::vector<std::string> cuts = {"passCut1", "passCut2", "passCut3", "passCut4", "passCut5", "passCut6", "passCut7", "passCut8", "passCut9", "passCut8_cr", "passCut9_cr"};
-    // auto cutflow = Cutflow(df_weights, cuts);
+    auto cutflow = Cutflow(df_weights, cuts);
     
     saveSnapshot(df_weights, std::string(output_file));
 
-    // if (args.cutflow){
-        // cutflow.Print(output_file + "_cutflow.txt");
-    // }
+    if (args.cutflow){
+        cutflow.Print(output_file + "_cutflow.txt");
+    }
 }
 
 int main(int argc, char** argv) {

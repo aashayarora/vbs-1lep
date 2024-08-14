@@ -46,8 +46,7 @@ Cutflow::Cutflow(RNode df, const std::vector<std::string>& cuts) : _df(df), _cut
     _df = _df.Define("weight2", "weight * weight");
     _cutflow.push_back(std::make_pair(_df.Sum<double>("weight"), _df.Sum<double>("weight2")));
     for (size_t i = 0; i < _cuts.size(); i++) {
-        _df = _df.Filter(_cuts[i]);
-        _cutflow.push_back(std::make_pair(_df.Sum<double>("weight"), _df.Sum<double>("weight2")));
+        _cutflow.push_back(std::make_pair(_df.Filter(_cuts[i]).Sum<double>("weight"), _df.Filter(_cuts[i]).Sum<double>("weight2")));
     }
 }
 
