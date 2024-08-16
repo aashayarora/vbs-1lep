@@ -3,8 +3,8 @@ CPPFLAGS = -g -Wall -O2
 
 MYINCLUDES = -I include/
 
-ROOTFLAGS = $(shell root-config --libs --cflags)
-ROOTFLAGS += -lRooFit -lRooFitCore -lRooStats -lMinuit -lFoam -lMathMore -lTMVA -lXMLIO
+ROOTFLAGS = $(shell root-config --libs --cflags --auxcflags)
+ROOTFLAGS += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO  -lMLP -lm
 CORRECTIONLIBFLAGS = -I $(shell correction config --incdir --ldflags --rpath)
 
 MAKEFLAGS := --jobs=8

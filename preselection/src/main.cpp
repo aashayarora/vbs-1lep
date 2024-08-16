@@ -33,7 +33,6 @@ void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto cutflow = Cutflow(df_weights, cuts);
 
     df_weights = df_weights.Filter(args.cut);
-
     saveSnapshot(df_weights, std::string(output_file), true);
 
     if (args.cutflow) {
@@ -59,11 +58,10 @@ void runMCAnalysis(RNode df, MyArgs args, std::string output_file) {
         df_preselec = JMR_Corrections(cset_jmr, df_preselec, args.variation);
     auto df_weights = applyMCWeights(df_preselec);
     
-    df_weights = df_weights.Filter(args.cut);
-
     std::vector<std::string> cuts = {"passCut1", "passCut2", "passCut3", "passCut4", "passCut5", "passCut6", "passCut7", "passCut8", "passCut9", "passCut8_cr", "passCut9_cr"};
     auto cutflow = Cutflow(df_weights, cuts);
     
+    df_weights = df_weights.Filter(args.cut);
     saveSnapshot(df_weights, std::string(output_file));
 
     if (args.cutflow){

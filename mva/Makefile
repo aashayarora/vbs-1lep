@@ -1,9 +1,9 @@
 CXX = g++
-CPPFLAGS = -g -Wall -O2 -lpthread
+CPPFLAGS = -g -Wall -O2 -lstdc++fs
 CPPFLAGS += -I include/
 
 ROOTFLAGS = $(shell root-config --libs --cflags)
-ROOTFLAGS += -lTMVA -lMinuit -lFoam -lMathMore -lXMLIO
+ROOTFLAGS += -lMLP -lMinuit -lTreePlayer -lTMVA -lXMLIO  -lMLP -lm -lTMVAUtils
 
 MAKEFLAGS := --jobs=8
 
