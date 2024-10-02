@@ -450,21 +450,9 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
         if (eta.size() == 0) {
             return btag_sf_weights;
         }
-
-        float num = 1.;
-        float num_up = 1.;
-        float num_down = 1.;
-        float den = 1.;
-
+        float num = 1., num_up = 1., num_down = 1., den = 1.;
         for (size_t i = 0; i < eta.size(); i++) {
-            float btag_sf_tight = -1.;
-            float btag_sf_loose = -1.;
-            float btag_sf_tight_up = -1.;
-            float btag_sf_loose_up = -1.;
-            float btag_sf_tight_down = -1.;
-            float btag_sf_loose_down = -1.;
-            float btag_eff_tight = -1.;
-            float btag_eff_loose = -1.;
+            float btag_sf_tight = 0, btag_sf_loose = 0, btag_sf_tight_up = 0, btag_sf_loose_up = 0, btag_sf_tight_down = 0, btag_sf_loose_down = 0, btag_eff_tight = 0, btag_eff_loose = 0;
             if (year == "2016preVFP") {
                 if (jetflavor[i] == 5) {
                     btag_sf_tight = cset_btag_2016preVFP.at("deepCSV_comb")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
@@ -486,18 +474,10 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2016preVFP")->evaluate({"C", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016preVFP")->evaluate({"C", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2016postVFP") {
                 if (jetflavor[i] == 5) {
@@ -520,18 +500,10 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2016postVFP")->evaluate({"C", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016postVFP")->evaluate({"C", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2017") {
                 if (jetflavor[i] == 5) {
@@ -554,18 +526,10 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2017")->evaluate({"C", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2017")->evaluate({"C", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2018") {
                 if (jetflavor[i] == 5) {
@@ -588,21 +552,13 @@ RNode bTaggingScaleFactors_HF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2018")->evaluate({"C", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2018")->evaluate({"C", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
         }
-         if (den == 0.) {
+        if (den == 0.) {
             btag_sf_weights[0] = 1.;
             btag_sf_weights[1] = 1.;
             btag_sf_weights[2] = 1.;
@@ -623,21 +579,9 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
         if (eta.size() == 0) {
             return btag_sf_weights;
         }
-
-        float num = 1.;
-        float num_up = 1.;
-        float num_down = 1.;
-        float den = 1.;
-
+        float num = 1., num_up = 1., num_down = 1., den = 1.;
         for (size_t i = 0; i < eta.size(); i++) {
-            float btag_sf_tight = -1.;
-            float btag_sf_loose = -1.;
-            float btag_sf_tight_up = -1.;
-            float btag_sf_loose_up = -1.;
-            float btag_sf_tight_down = -1.;
-            float btag_sf_loose_down = -1.;
-            float btag_eff_tight = -1.;
-            float btag_eff_loose = -1.;
+            float btag_sf_tight = 0, btag_sf_loose = 0, btag_sf_tight_up = 0, btag_sf_loose_up = 0, btag_sf_tight_down = 0, btag_sf_loose_down = 0, btag_eff_tight = 0, btag_eff_loose = 0;
             if (year == "2016preVFP") {
                 if (jetflavor[i] == 0) {
                     btag_sf_tight = cset_btag_2016preVFP.at("deepCSV_incl")->evaluate({"central", "T", jetflavor[i], abs(eta[i]), pt[i]});
@@ -649,18 +593,10 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2016preVFP")->evaluate({"L", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016preVFP")->evaluate({"L", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2016postVFP") {
                 if (jetflavor[i] == 0) {
@@ -673,18 +609,10 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2016postVFP")->evaluate({"L", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2016postVFP")->evaluate({"L", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2017") {
                 if (jetflavor[i] == 0) {
@@ -697,18 +625,10 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2017")->evaluate({"L", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2017")->evaluate({"L", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
             if (year == "2018") {
                 if (jetflavor[i] == 0) {
@@ -721,18 +641,10 @@ RNode bTaggingScaleFactors_LF(correction::CorrectionSet cset_btag_2016preVFP, co
                     btag_eff_tight = cset_btag_eff.at("btag_2018")->evaluate({"L", "T", pt[i], eta[i]});
                     btag_eff_loose = cset_btag_eff.at("btag_2018")->evaluate({"L", "L", pt[i], eta[i]});
                 }
-                if (btag_sf_tight + btag_sf_loose + btag_sf_tight_up + btag_sf_loose_up + btag_sf_tight_down + btag_sf_loose_down + btag_eff_tight + btag_eff_loose == -8.) {
-                    num = 1.;
-                    num_up = 1.;
-                    num_down = 1.;
-                    den = 1.;
-                }
-                else {
-                    num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
-                    num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
-                    num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
-                    den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
-                }
+                num *= (btag_sf_tight * btag_eff_tight) * (btag_sf_loose * btag_eff_loose - btag_sf_tight * btag_eff_tight) * (1. - btag_sf_loose * btag_eff_loose);
+                num_up *= (btag_sf_tight_up * btag_eff_tight) * (btag_sf_loose_up * btag_eff_loose - btag_sf_tight_up * btag_eff_tight) * (1. - btag_sf_loose_up * btag_eff_loose);
+                num_down *= (btag_sf_tight_down * btag_eff_tight) * (btag_sf_loose_down * btag_eff_loose - btag_sf_tight_down * btag_eff_tight) * (1. - btag_sf_loose_down * btag_eff_loose);
+                den *= (btag_eff_tight) * (btag_eff_loose - btag_eff_tight) * (1. - btag_eff_loose);
             }
         }
         if (den == 0.) {

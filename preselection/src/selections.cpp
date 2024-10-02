@@ -183,8 +183,10 @@ RNode AK4Selections(RNode df) {
             .Define("bjet2score", "GBJet_pt.size() > 1 ? GBJet_score[1] : -999")
             .Define("Mlb", VfInvariantMass, {"GBJet_pt", "GBJet_eta", "GBJet_phi", "GBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
             .Define("MinMlbJetIdx", "Mlb.size() != 0 ? ArgMin(Mlb) : -1")
-            // .Define("MlbJeteta", "Mlb.size() != 0 ? GBJet_eta[MinMlbJetIdx] : -999")
-            // .Define("MlbJetphi", "Mlb.size() != 0 ? GBJet_phi[MinMlbJetIdx] : -999")
+            // .Define("Ptlb", VfInvariantPt, {"GBJet_pt", "GBJet_eta", "GBJet_phi", "GBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
+            // .Define("Philb", VfInvariantPhi, {"GBJet_pt", "GBJet_eta", "GBJet_phi", "GBJet_mass", "GLepton_pt", "GLepton_eta", "GLepton_phi", "GLepton_mass"})
+            // .Define("MT", MT, {"Ptlb", "Philb", "CorrMET_pt", "MET_phi"})
+            // .Define("MinMT", "MT.size() != 0 ? Min(MT) : 1000")
             .Define("Mlbminloose", "Mlb.size() != 0 ? Mlb[MinMlbJetIdx] : 1000");
     return df_ak4;
 }

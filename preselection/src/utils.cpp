@@ -117,6 +117,36 @@ RVec<float> VfInvariantMass(RVec<float> vec_pt, RVec<float> vec_eta, RVec<float>
     return invMass;
 }
 
+RVec<float> VfInvariantPt(RVec<float> vec_pt, RVec<float> vec_eta, RVec<float> vec_phi, RVec<float> vec_mass, float obj_pt, float obj_eta, float obj_phi, float obj_mass) {
+    RVec<float> invMass = {};
+    for (size_t i = 0; i < vec_pt.size(); i++) {
+        TLorentzVector obj1, obj2;
+        obj1.SetPtEtaPhiM(obj_pt, obj_eta, obj_phi, obj_mass);
+        obj2.SetPtEtaPhiM(vec_pt[i], vec_eta[i], vec_phi[i], vec_mass[i]);
+        invMass.push_back((obj1 + obj2).Pt());
+    }
+    return invMass;
+}
+
+RVec<float> VfInvariantPhi(RVec<float> vec_pt, RVec<float> vec_eta, RVec<float> vec_phi, RVec<float> vec_mass, float obj_pt, float obj_eta, float obj_phi, float obj_mass) {
+    RVec<float> invMass = {};
+    for (size_t i = 0; i < vec_pt.size(); i++) {
+        TLorentzVector obj1, obj2;
+        obj1.SetPtEtaPhiM(obj_pt, obj_eta, obj_phi, obj_mass);
+        obj2.SetPtEtaPhiM(vec_pt[i], vec_eta[i], vec_phi[i], vec_mass[i]);
+        invMass.push_back((obj1 + obj2).Phi());
+    }
+    return invMass;
+}
+
+RVec<float> MT(RVec<float> vec_pt, RVec<float> vec_phi, float obj_pt, float obj_phi) {
+    RVec<float> mt = {};
+    for (size_t i = 0; i < vec_pt.size(); i++) {
+        mt.push_back(std::sqrt(2 * vec_pt[i] * obj_pt * (1 - std::cos(ROOT::VecOps::DeltaPhi(vec_phi[i], obj_phi)))));
+    }
+    return mt;
+}
+
 float fInvariantMass(float obj1_pt, float obj1_eta, float obj1_phi, float obj1_mass, float obj2_pt, float obj2_eta, float obj2_phi, float obj2_mass) {
     RVec<float> invMass = {};
     TLorentzVector obj1, obj2;
