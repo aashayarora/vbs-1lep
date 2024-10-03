@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     std::string output_file = args.output;
 
     // TMVA::Experimental::RBDT bdt("VBSBDT", "/home/users/aaarora/phys/analysis/vbs-1lep/training/BDT/BDT_Weights.root");
-    // TMVA::Experimental::RSofieReader dnn("/home/users/aaarora/phys/analysis/vbs-1lep/junk/model.onnx");
+    TMVA::Experimental::RSofieReader dnn("weights/DNN/model.pt", {{1, 7}});
 
     TMVA::Experimental::RReader reader_AB("weights/BDT/BDT_AB/TMVAClassification_BDT.weights.xml");
     TMVA::Experimental::RReader reader_BA("weights/BDT/BDT_BA/TMVAClassification_BDT.weights.xml");
@@ -38,11 +38,13 @@ int main(int argc, char** argv){
     ROOT::RDF::Experimental::AddProgressBar(df);
     // auto df1_ = df.Filter(args.cut)
             // .Define("VBSBDTOutput", Compute<8, float>(bdt), {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"})
-            // .Define("VBSBDTscore", "VBSBDTOutput[0]");
+            // .Define("VBSBDTscore", "VBSBDTOutput[0]")
+            // .Define("abcdnet_output", Compute<7, float>(dnn), {"Hbbmass", "HbbPt", "Wjetmass", "WjetPt",  "leptonpt", "Mlbminloose", "MET"})
+            // .Define("abcdnet_score", "abcdnet_output[0]");
 
     auto df1_ = df.Filter(args.cut)
             .Define("VBSBDTscore", predict, {"event", "VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"});
-
+    
     auto df1 = RNode(df1_);
     
     if (!args.year.empty()) {
@@ -62,7 +64,30 @@ int main(int argc, char** argv){
         df1 = df1.Redefine("weight", Form("weight * LHEReweightingWeight[%d]", args.c2v));
     }
 
-    std::vector<std::string> final_vars = {"event", "sample_type", args.cut, "Hbbscore", "HighestWjetScore", "HbbPt", "Hbbmass", "MET", "Mlbminloose", "VBSBDTscore", "VBSMjj", "VBSdetajj", "VBSjet1eta", "VBSjet1phi", "VBSjet1pt", "VBSjet2eta", "VBSjet2phi", "VBSjet2pt", "WjetPt", "Wjetmass", "leptonpt", "weight"};
+    std::vector<std::string> final_vars = {"event", 
+                                        "sample_type", 
+                                        args.cut, 
+                                        "Hbbscore", 
+                                        "HighestWjetScore", 
+                                        "HbbPt", 
+                                        "Hbbmass", 
+                                        "MET", 
+                                        "Mlbminloose", 
+                                        "VBSBDTscore",
+                                        // "abcdnet_score",
+                                        "VBSMjj", 
+                                        "VBSdetajj", 
+                                        "VBSjet1eta", 
+                                        "VBSjet1phi", 
+                                        "VBSjet1pt", 
+                                        "VBSjet2eta", 
+                                        "VBSjet2phi", 
+                                        "VBSjet2pt", 
+                                        "WjetPt", 
+                                        "Wjetmass", 
+                                        "leptonpt", 
+                                        "weight"};
+
     df1.Snapshot("Events", output_file, final_vars);
 
     return 0;
