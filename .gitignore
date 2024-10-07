@@ -11,3 +11,4 @@ datacard/
 old/
 **/*.txt
 **.pt
+**.root
