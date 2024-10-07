@@ -10,3 +10,4 @@ datacard/
 !datacard/make_datacard.py
 old/
 **/*.txt
+**.pt

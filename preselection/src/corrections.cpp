@@ -42,7 +42,8 @@ RNode defineCorrectedCols(RNode df) {
             .Define("CorrJet_mass", "Jet_mass")
             .Define("CorrFatJet_pt", "FatJet_pt")
             .Define("CorrFatJet_mass", "FatJet_mass")
-            .Define("CorrMET_pt", "MET_pt");
+            .Define("CorrMET_pt", "MET_pt")
+            .Define("CorrMET_phi", "MET_phi");
 }
 
 RNode HEMCorrection(RNode df) {
@@ -88,15 +89,67 @@ RNode JMR_Corrections(correction::CorrectionSet cset_jet_mass_resolution, RNode 
              .Redefine("Wjetmass", eval_correction, {"sample_year", "GW_mass", "luminosityBlock", "event"});
 }
 
+RNode METPhiCorrections(correction::CorrectionSet cset_met_2016preVFP, correction::CorrectionSet cset_met_2016postVFP, correction::CorrectionSet cset_met_2017, correction::CorrectionSet cset_met_2018, RNode df) {
+    auto eval_correction = [cset_met_2016preVFP, cset_met_2016postVFP, cset_met_2017, cset_met_2018] (std::string sample_category, std::string year, float pt, float phi, int npvs, long long run) {
+        bool isData = false;
+        double pt_corr = 0, phi_corr = 0;
+        if (sample_category == "data") isData = true;
+        if (year == "2016preVFP") {
+            if (isData) {
+                pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+            }
+            else {
+                pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+            }
+        }
+        else if (year == "2016postVFP") {
+            if (isData) {
+                pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+            }
+            else {
+                pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+            }
+        }
+        else if (year == "2017") {
+            if (isData) {
+                pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+            }
+            else {
+                pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+            }
+        }
+        else if (year == "2018") {
+            if (isData) {
+                pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+            }
+            else {
+                pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+                phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+            }
+        }
+        return std::make_pair(pt_corr, phi_corr);
+    };
+    return df.Define("MET_phicorr", eval_correction, {"sample_category", "sample_year", "MET_pt", "MET_phi", "PV_npvs", "run"})
+            .Redefine("CorrMET_pt", "MET_phicorr.first")
+            .Redefine("CorrMET_phi", "MET_phicorr.second");
+}
+
 RNode METUnclusteredCorrections(RNode df, std::string variation) {
     if (variation == "up") {
-        return df.Define("MET_uncert_dx", "MET_pt * TMath::Cos(MET_phi) + MET_MetUnclustEnUpDeltaX")
-                .Define("MET_uncert_dy", "MET_pt * TMath::Sin(MET_phi) + MET_MetUnclustEnUpDeltaY")
+        return df.Define("MET_uncert_dx", "CorrMET_pt * TMath::Cos(CorrMET_phi) + MET_MetUnclustEnUpDeltaX")
+                .Define("MET_uncert_dy", "CorrMET_pt * TMath::Sin(CorrMET_phi) + MET_MetUnclustEnUpDeltaY")
                 .Redefine("CorrMET_pt", "TMath::Sqrt(MET_uncert_dx * MET_uncert_dx + MET_uncert_dy * MET_uncert_dy)");
     }
     else if (variation == "down") {
-        return df.Define("MET_uncert_dx", "MET_pt * TMath::Cos(MET_phi) - MET_MetUnclustEnUpDeltaX")
-                .Define("MET_uncert_dy", "MET_pt * TMath::Sin(MET_phi) - MET_MetUnclustEnUpDeltaY")
+        return df.Define("MET_uncert_dx", "CorrMET_pt * TMath::Cos(CorrMET_phi) - MET_MetUnclustEnUpDeltaX")
+                .Define("MET_uncert_dy", "CorrMET_pt * TMath::Sin(CorrMET_phi) - MET_MetUnclustEnUpDeltaY")
                 .Redefine("CorrMET_pt", "TMath::Sqrt(MET_uncert_dx * MET_uncert_dx + MET_uncert_dy * MET_uncert_dy)");
     }
     return df;

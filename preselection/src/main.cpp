@@ -26,7 +26,8 @@ struct MyArgs : public argparse::Args {
 
 void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
     auto df1 = defineCorrectedCols(df);
-    auto df_preselec = applyPreSelections(df1);
+    auto df_metcorr = METPhiCorrections(cset_met_2016preVFP, cset_met_2016postVFP, cset_met_2017, cset_met_2018, df1);
+    auto df_preselec = applyPreSelections(df_metcorr);
     auto df_weights = applyDataWeights(df_preselec);
     
     std::vector<std::string> cuts = {"passCut1", "passCut2", "passCut3", "passCut4", "passCut5", "passCut6", "passCut7", "passCut8", "passCut9", "passCut8_cr", "passCut9_cr"};
@@ -36,7 +37,7 @@ void runDataAnalysis(RNode df, MyArgs args, std::string output_file) {
     saveSnapshot(df_weights, std::string(output_file), true);
 
     if (args.cutflow) {
-        cutflow.Print(output_file + "_cutflow.txt");
+        cutflow.Print("cutflow/" + output_file + "_cutflow.txt");
     }
 }
 
@@ -44,6 +45,7 @@ void runMCAnalysis(RNode df, MyArgs args, std::string output_file) {
     // corrections
     auto df1 = defineCorrectedCols(df);
     // apply pre preselection corrections
+    df1 = METPhiCorrections(cset_met_2016preVFP, cset_met_2016postVFP, cset_met_2017, cset_met_2018, df1);
     if (args.JER)
         df1 = JetEnergyResolution(cset_jerc_2016preVFP, cset_jerc_2016postVFP, cset_jerc_2017, cset_jerc_2018, cset_jer_smear, df1, args.JERvariation);
     else if (args.METUnclustered)
@@ -65,7 +67,7 @@ void runMCAnalysis(RNode df, MyArgs args, std::string output_file) {
     saveSnapshot(df_weights, std::string(output_file));
 
     if (args.cutflow){
-        cutflow.Print(output_file + "_cutflow.txt");
+        cutflow.Print("cutflow/" + output_file + "_cutflow.txt");
     }
 }
 
