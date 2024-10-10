@@ -151,13 +151,13 @@ def get_xsec_weight(sample):
     elif(sample == "TTToSemiLeptonic,2018"):
         xsec = 365.34
     elif(sample == "TTWJetsToLNu,2016preVFP"):
-        xsec = 0.2043
+        xsec = 0.2043 * 1.21
     elif(sample == "TTWJetsToLNu,2016postVFP"):
-        xsec = 0.2043
+        xsec = 0.2043 * 1.21
     elif(sample == "TTWJetsToLNu,2017"):
-        xsec = 0.2043
+        xsec = 0.2043 * 1.21
     elif(sample == "TTWJetsToLNu,2018"):
-        xsec = 0.2043
+        xsec = 0.2043 * 1.21
     elif(sample == "TTWW,2016preVFP"):
         xsec = 0.0115
     elif(sample == "TTWW,2016postVFP"):
@@ -231,69 +231,69 @@ def get_xsec_weight(sample):
     elif(sample == "VHToNonbb_M125,2018"):
         xsec = 2.207
     elif(sample == "WJetsToLNu_HT-70To100,2016preVFP"):
-        xsec = 1310.78
+        xsec = 1310.78 * 1.21
     elif(sample == "WJetsToLNu_HT-70To100,2016postVFP"):
-        xsec = 1283.91
+        xsec = 1283.91 * 1.21
     elif(sample == "WJetsToLNu_HT-70To100,2017"):
-        xsec = 1319.76
+        xsec = 1319.76 * 1.21
     elif(sample == "WJetsToLNu_HT-70To100,2018"):
-        xsec = 1321.16
+        xsec = 1321.16 * 1.21
     elif(sample == "WJetsToLNu_HT-100To200,2016preVFP"):
-        xsec = 1325.9
+        xsec = 1325.9 * 1.21
     elif(sample == "WJetsToLNu_HT-100To200,2016postVFP"):
-        xsec = 1303.06
+        xsec = 1303.06 * 1.21
     elif(sample == "WJetsToLNu_HT-100To200,2017"):
-        xsec = 1334.74
+        xsec = 1334.74 * 1.21
     elif(sample == "WJetsToLNu_HT-100To200,2018"):
-        xsec = 1335.7
+        xsec = 1335.7 * 1.21
     elif(sample == "WJetsToLNu_HT-200To400,2016preVFP"):
-        xsec = 348.57030
+        xsec = 348.57030 * 1.21
     elif(sample == "WJetsToLNu_HT-200To400,2016postVFP"):
-        xsec = 341.046
+        xsec = 341.046 * 1.21
     elif(sample == "WJetsToLNu_HT-200To400,2017"):
-        xsec = 350.435
+        xsec = 350.435 * 1.21
     elif(sample == "WJetsToLNu_HT-200To400,2018"):
-        xsec = 351.689
+        xsec = 351.689 * 1.21
     elif(sample == "WJetsToLNu_HT-400To600,2016preVFP"):
-        xsec = 47.308275
+        xsec = 47.308275 * 1.21
     elif(sample == "WJetsToLNu_HT-400To600,2016postVFP"):
-        xsec = 45.4362
+        xsec = 45.4362 * 1.21
     elif(sample == "WJetsToLNu_HT-400To600,2017"):
-        xsec = 46.5726
+        xsec = 46.5726 * 1.21
     elif(sample == "WJetsToLNu_HT-400To600,2018"):
-        xsec = 47.1663
+        xsec = 47.1663 * 1.21
     elif(sample == "WJetsToLNu_HT-600To800,2016preVFP"):
-        xsec = 11.358487
+        xsec = 11.358487 * 1.21
     elif(sample == "WJetsToLNu_HT-600To800,2016postVFP"):
-        xsec = 11.0051
+        xsec = 11.0051 * 1.21
     elif(sample == "WJetsToLNu_HT-600To800,2017"):
-        xsec = 11.1485
+        xsec = 11.1485 * 1.21
     elif(sample == "WJetsToLNu_HT-600To800,2018"):
-        xsec = 11.4196
+        xsec = 11.4196 * 1.21
     elif(sample == "WJetsToLNu_HT-800To1200,2016preVFP"):
-        xsec = 5.2086934
+        xsec = 5.2086934 * 1.21
     elif(sample == "WJetsToLNu_HT-800To1200,2016postVFP"):
-        xsec = 4.94177
+        xsec = 4.94177 * 1.21
     elif(sample == "WJetsToLNu_HT-800To1200,2017"):
-        xsec = 5.02246
+        xsec = 5.02246 * 1.21
     elif(sample == "WJetsToLNu_HT-800To1200,2018"):
-        xsec = 5.12389
+        xsec = 5.12389 * 1.21
     elif(sample == "WJetsToLNu_HT-1200To2500,2016preVFP"):
-        xsec = 1.1880809
+        xsec = 1.1880809 * 1.21
     elif(sample == "WJetsToLNu_HT-1200To2500,2016postVFP"):
-        xsec = 1.15544
+        xsec = 1.15544 * 1.21
     elif(sample == "WJetsToLNu_HT-1200To2500,2017"):
-        xsec = 1.183
+        xsec = 1.183 * 1.21
     elif(sample == "WJetsToLNu_HT-1200To2500,2018"):
-        xsec = 1.18295
+        xsec = 1.18295 * 1.21
     elif(sample == "WJetsToLNu_HT-2500ToInf,2016preVFP"):
-        xsec = 0.024098031
+        xsec = 0.024098031 * 1.21
     elif(sample == "WJetsToLNu_HT-2500ToInf,2016postVFP"):
-        xsec = 0.0216234
+        xsec = 0.0216234 * 1.21
     elif(sample == "WJetsToLNu_HT-2500ToInf,2017"):
-        xsec = 0.0258083
+        xsec = 0.0258083 * 1.21
     elif(sample == "WJetsToLNu_HT-2500ToInf,2018"):
-        xsec = 0.0255202
+        xsec = 0.0255202 * 1.21
     elif(sample == "WWJJToLNuLNu_EWK_noTop,2016preVFP"):
         xsec = 0.284
     elif(sample == "WWJJToLNuLNu_EWK_noTop,2016postVFP"):
@@ -668,7 +668,6 @@ if __name__ == "__main__":
     argparser.add_argument("--categories", help="categories", default="bkg,data,sig")
     argparser.add_argument("--sample_year", help="sample year", default=None)
     argparser.add_argument("--output", help="output config file", default="input.json")
-    argparser.add_argument("--type", help="type", default=None)
     args = argparser.parse_args()
 
     config = make_config(args)

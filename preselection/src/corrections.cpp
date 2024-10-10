@@ -90,55 +90,56 @@ RNode JMR_Corrections(correction::CorrectionSet cset_jet_mass_resolution, RNode 
 }
 
 RNode METPhiCorrections(correction::CorrectionSet cset_met_2016preVFP, correction::CorrectionSet cset_met_2016postVFP, correction::CorrectionSet cset_met_2017, correction::CorrectionSet cset_met_2018, RNode df) {
-    auto eval_correction = [cset_met_2016preVFP, cset_met_2016postVFP, cset_met_2017, cset_met_2018] (std::string sample_category, std::string year, float pt, float phi, int npvs, long long run) {
-        bool isData = false;
-        double pt_corr = 0, phi_corr = 0;
-        if (sample_category == "data") isData = true;
-        if (year == "2016preVFP") {
-            if (isData) {
-                pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-            }
-            else {
-                pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-            }
-        }
-        else if (year == "2016postVFP") {
-            if (isData) {
-                pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-            }
-            else {
-                pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-            }
-        }
-        else if (year == "2017") {
-            if (isData) {
-                pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-            }
-            else {
-                pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-            }
-        }
-        else if (year == "2018") {
-            if (isData) {
-                pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
-            }
-            else {
-                pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-                phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
-            }
-        }
-        return std::make_pair(pt_corr, phi_corr);
-    };
-    return df.Define("MET_phicorr", eval_correction, {"sample_category", "sample_year", "MET_pt", "MET_phi", "PV_npvs", "run"})
-            .Redefine("CorrMET_pt", "MET_phicorr.first")
-            .Redefine("CorrMET_phi", "MET_phicorr.second");
+    // auto eval_correction = [cset_met_2016preVFP, cset_met_2016postVFP, cset_met_2017, cset_met_2018] (std::string sample_category, std::string year, float pt, float phi, int npvs, long long run) {
+    //     bool isData = false;
+    //     double pt_corr = 0, phi_corr = 0;
+    //     if (sample_category == "data") isData = true;
+    //     if (year == "2016preVFP") {
+    //         if (isData) {
+    //             pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //         }
+    //         else {
+    //             pt_corr = cset_met_2016preVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2016preVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //         }
+    //     }
+    //     else if (year == "2016postVFP") {
+    //         if (isData) {
+    //             pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //         }
+    //         else {
+    //             pt_corr = cset_met_2016postVFP.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2016postVFP.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //         }
+    //     }
+    //     else if (year == "2017") {
+    //         if (isData) {
+    //             pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //         }
+    //         else {
+    //             pt_corr = cset_met_2017.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2017.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //         }
+    //     }
+    //     else if (year == "2018") {
+    //         if (isData) {
+    //             pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_data")->evaluate({pt, phi, npvs, run});
+    //         }
+    //         else {
+    //             pt_corr = cset_met_2018.at("pt_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //             phi_corr = cset_met_2018.at("phi_metphicorr_pfmet_mc")->evaluate({pt, phi, npvs, run});
+    //         }
+    //     }
+    //     return std::make_pair(pt_corr, phi_corr);
+    // };
+    // return df.Define("MET_phicorr", eval_correction, {"sample_category", "sample_year", "MET_pt", "MET_phi", "PV_npvs", "run"})
+    //         .Redefine("CorrMET_pt", "MET_phicorr.first")
+    //         .Redefine("CorrMET_phi", "MET_phicorr.second");
+    return df;
 }
 
 RNode METUnclusteredCorrections(RNode df, std::string variation) {

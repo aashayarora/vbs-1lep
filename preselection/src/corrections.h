@@ -23,7 +23,7 @@ RNode defineCorrectedCols(RNode df);
 
 RNode HEMCorrection(RNode df);
 
-RNode METPhiCorrections(correction::CorrectionSet cset_met_2016preVFP, correction::CorrectionSet cset_met_2016postVFP, correction::CorrectionSet cset_met_2017, correction::CorrectionSet cset_met_2018, RNode df, std::string variable);
+RNode METPhiCorrections(correction::CorrectionSet cset_met_2016preVFP, correction::CorrectionSet cset_met_2016postVFP, correction::CorrectionSet cset_met_2017, correction::CorrectionSet cset_met_2018, RNode df);
 const auto cset_met_2016preVFP = *CorrectionSet::from_file("corrections/met/2016preVFP.json");
 const auto cset_met_2016postVFP = *CorrectionSet::from_file("corrections/met/2016postVFP.json");
 const auto cset_met_2017 = *CorrectionSet::from_file("corrections/met/2017.json");
