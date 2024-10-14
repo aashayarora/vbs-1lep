@@ -12,3 +12,5 @@ old/
 **/*.txt
 **.pt
 **.root
+**/*.dat
+**/model.hxx

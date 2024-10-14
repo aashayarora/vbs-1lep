@@ -31,18 +31,6 @@ def plot(histogram, output_tag, bkg_samples_labels):
 
         histogram.hist_sig[0].Scale(1000)
 
-        print("Data: ", histogram.hist_data[0].GetValue().Integral())
-
-        print("ttbar: ", histogram.hist_bkg[0].Integral())
-        print("WJets: ", histogram.hist_bkg[1].Integral())
-        print("Other: ", histogram.hist_bkg[2].Integral())
-        print("DY: ", histogram.hist_bkg[3].Integral())
-        print("ST: ", histogram.hist_bkg[4].Integral())
-        print("ttx: ", histogram.hist_bkg[5].Integral())
-        print("EWK: ", histogram.hist_bkg[6].Integral())
-
-        print("Signal: ", histogram.hist_sig[0].Integral())
-
         fig, ax = plt.subplots(2, 1, gridspec_kw={"height_ratios": (4, 1)})
         
         hep.histplot(histogram.hist_bkg, ax=ax[0], histtype="fill", stack=True, label=bkg_samples_labels.values())
@@ -93,7 +81,7 @@ def main(input_tag, output_tag):
         MyHist("VBSjet2phi", r"Subleading VBS Jet $\phi$", (40, -3.14, 3.14), "vbs2phi"),
         MyHist("MET", r"Missing $E_T$ (GeV)", (50, 0, 500), "MET"),
         MyHist("MT", r"$M_T$ (GeV)", (50, 0.001, 500), "MT"),
-        MyHist("ST", r"$S_T$ (GeV)", (50, 0, 2000), "ST"),
+        MyHist("ST", r"$S_T$ (GeV)", (50, 0, 3000), "ST"),
         MyHist("Mlbminloose", r"$M_{lb}$ (GeV)", (40, 0, 600), "Mlb"),
         MyHist("bjet1pt", r"Leading b-tagging WP AK4 jet $p_T$ (GeV)", (40, 20, 200), "bjet1pt"),
         MyHist("bjet1eta", r"Leading b-tagging WP AK4 jet $\eta$", (40, -2.5, 2.5), "bjet1eta"),
@@ -104,7 +92,6 @@ def main(input_tag, output_tag):
         MyHist("bjet2phi", r"Subleading b-tagging WP AK4 jet $\phi$", (40, -3.14, 3.14), "bjet2phi"),
         MyHist("bjet2score", r"Subleading b-tagging WP AK4 jet score", (40, 0, 1), "bjet2score"),
     ]
-
 
     data = [f"/data/userdata/aaarora/output/run2/data.root"]
     bkg = [f"/data/userdata/aaarora/output/run2/bkg.root"]
@@ -145,4 +132,3 @@ if __name__ == "__main__":
     main(input_tag="passCut5", output_tag="tightak4tag")
     main(input_tag="passCut6", output_tag="VBStag")
     main(input_tag="passCut7", output_tag="Vqq")
-    

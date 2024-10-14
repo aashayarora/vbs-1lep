@@ -6,7 +6,7 @@ struct MyArgs : public argparse::Args {
     std::string &year = kwarg("y,year", "year").set_default("");
     std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
     std::string &variation = kwarg("var", "variation").set_default("nominal");
-    std::string &cut = kwarg("cut", "cut on final snapshot").set_default("passCut7");
+    std::string &cut = kwarg("cut", "cut on final snapshot").set_default("passCut9");
     int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
     int &c2v = kwarg("c2v", "c2v value").set_default(-1);
 };
@@ -16,7 +16,21 @@ int main(int argc, char** argv){
     std::string input_file = args.input;
     std::string output_file = args.output;
 
-    TMVA::Experimental::RBDT bdt("VBSBDT", "/home/users/aaarora/phys/analysis/vbs-1lep/mva/weights/BDT/BDT_Weights.root");
+    TMVA::Experimental::RReader reader_AB("weights/BDT/AB/TMVAClassification_BDT.weights.xml");
+    TMVA::Experimental::RReader reader_BA("weights/BDT/BA/TMVAClassification_BDT.weights.xml");
+
+    auto predict = [&](unsigned long long event, float VBSjet1pt, float VBSjet1eta, float VBSjet1phi, float VBSjet2pt, float VBSjet2eta, float VBSjet2phi, float VBSMjj, float VBSdetajj){
+        if(event % 2){
+            auto score_AB = reader_AB.Compute({VBSjet1pt, VBSjet1eta, VBSjet1phi, VBSjet2pt, VBSjet2eta, VBSjet2phi, VBSMjj, VBSdetajj});
+            return score_AB[0];
+        }
+        else{
+            auto score_BA = reader_BA.Compute({VBSjet1pt, VBSjet1eta, VBSjet1phi, VBSjet2pt, VBSjet2eta, VBSjet2phi, VBSMjj, VBSdetajj});
+            return score_BA[0];
+        }
+    };
+
+    // TMVA::Experimental::RBDT bdt("VBSBDT", "/home/users/aaarora/phys/analysis/vbs-1lep/mva/weights/BDT/BDT_Weights.root");
     TMVA::Experimental::RSofieReader dnn("weights/DNN/model.pt", {{1, 7}});
 
     ROOT::EnableImplicitMT(args.nthreads);
@@ -24,8 +38,9 @@ int main(int argc, char** argv){
     ROOT::RDF::Experimental::AddProgressBar(df);
     
     auto df1_ = df.Filter(args.cut)
-            .Define("VBSBDTOutput", Compute<8, float>(bdt), {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"})
-            .Define("VBSBDTscore", "VBSBDTOutput[0]")
+            // .Define("VBSBDTOutput", Compute<8, float>(bdt), {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"})
+            // .Define("VBSBDTscore", "VBSBDTOutput[0]")
+            .Define("VBSBDTscore", predict, {"event", "VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"})
             .Define("DNN_Hbbmass", "(Hbbmass - 50) / 200")
             .Define("DNN_Wjetmass", "Wjetmass / 200")
             .Define("DNN_HbbPt", "log(HbbPt)")

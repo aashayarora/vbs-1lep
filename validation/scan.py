@@ -22,7 +22,7 @@ def calculate_significance(params):
 
     if b_a <= 0:
         return None
-    if (b_b * b_c / b_d) / b_a <= 0.95 or (b_b * b_c / b_d) / b_a >= 1.05:
+    if (b_b * b_c / b_d) / b_a <= 0.9 or (b_b * b_c / b_d) / b_a >= 1.1:
         return None 
     return (vbs, dnn, s, np.sqrt(2 * ((s + b_a) * np.log(1 + s / b_a) - s)))
 
