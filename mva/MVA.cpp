@@ -6,7 +6,7 @@ struct MyArgs : public argparse::Args {
     std::string &year = kwarg("y,year", "year").set_default("");
     std::string &SFvariation = kwarg("sfvar", "SF variation").set_default("");
     std::string &variation = kwarg("var", "variation").set_default("nominal");
-    std::string &cut = kwarg("cut", "cut on final snapshot").set_default("passCut7");
+    std::string &cut = kwarg("cut", "cut on final snapshot").set_default("passCut9");
     int &nthreads = kwarg("n,nthreads", "number of threads").set_default(1);
     int &c2v = kwarg("c2v", "c2v value").set_default(-1);
 };
@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     std::string input_file = args.input;
     std::string output_file = args.output;
 
-    TMVA::Experimental::RBDT bdt("VBSBDT", "/home/users/aaarora/phys/analysis/vbs-1lep/mva/weights/BDT/BDT_Weights.root");
+    TMVA::Experimental::RBDT bdt("VBSBDT", "weights/BDT/BDT_Weights.root");
     TMVA::Experimental::RSofieReader dnn("weights/DNN/model.pt", {{1, 7}});
 
     ROOT::EnableImplicitMT(args.nthreads);
@@ -26,13 +26,13 @@ int main(int argc, char** argv){
     auto df1_ = df.Filter(args.cut)
             .Define("VBSBDTOutput", Compute<8, float>(bdt), {"VBSjet1pt", "VBSjet1eta", "VBSjet1phi", "VBSjet2pt","VBSjet2eta", "VBSjet2phi", "VBSMjj", "VBSdetajj"})
             .Define("VBSBDTscore", "VBSBDTOutput[0]")
-            .Define("DNN_Hbbmass", "(Hbbmass - 50) / 200")
-            .Define("DNN_Wjetmass", "Wjetmass / 200")
-            .Define("DNN_HbbPt", "log(HbbPt)")
-            .Define("DNN_WjetPt", "log(WjetPt)")
-            .Define("DNN_leptonpt", "log(leptonpt)")
-            .Define("DNN_Mlbminloose", "(Mlbminloose - 0) / 1000")
-            .Define("DNN_MET", "log(MET)")
+            .Define("DNN_Hbbmass", "(float) (Hbbmass - 50) / 200")
+            .Define("DNN_Wjetmass", "(float) Wjetmass / 200")
+            .Define("DNN_HbbPt", "(float) log(HbbPt)")
+            .Define("DNN_WjetPt", "(float) log(WjetPt)")
+            .Define("DNN_leptonpt", "(float) log(leptonpt)")
+            .Define("DNN_Mlbminloose", "(float) (Mlbminloose - 0) / 1000")
+            .Define("DNN_MET", "(float) log(MET)")
             .Define("abcdnet_output", Compute<7, float>(dnn), {"DNN_Hbbmass", "DNN_HbbPt", "DNN_Wjetmass", "DNN_WjetPt",  "DNN_leptonpt", "DNN_Mlbminloose", "DNN_MET"})
             .Define("abcdnet_score", "abcdnet_output[0]");
 

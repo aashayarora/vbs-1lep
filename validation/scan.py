@@ -4,8 +4,8 @@ from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import itertools
 import numpy as np
 
-rdf_sig = r.RDataFrame("Events", "/data/userdata/aaarora/output/run2/sig_MVA_test.root").Filter("Hbbscore > 0.5 & HighestWjetScore > 0.7")
-rdf_bkg = r.RDataFrame("Events", "/data/userdata/aaarora/output/run2/bkg_MVA_test.root").Filter("Hbbscore > 0.5 & HighestWjetScore > 0.7")
+rdf_sig = r.RDataFrame("Events", "/data/userdata/aaarora/output/run2/sig_MVA.root").Filter("Hbbscore > 0.5 & HighestWjetScore > 0.7")
+rdf_bkg = r.RDataFrame("Events", "/data/userdata/aaarora/output/run2/bkg_MVA.root").Filter("Hbbscore > 0.5 & HighestWjetScore > 0.7")
 
 df_sig = pd.DataFrame(rdf_sig.AsNumpy(["event", "Hbbscore", "HighestWjetScore", "VBSBDTscore", "abcdnet_score", "weight"]))
 df_bkg = pd.DataFrame(rdf_bkg.AsNumpy(["event", "Hbbscore", "HighestWjetScore", "VBSBDTscore", "abcdnet_score", "weight"]))
@@ -20,6 +20,8 @@ def calculate_significance(params):
     b_c = df_bkg.query(f"VBSBDTscore < {vbs} & abcdnet_score > {dnn}").weight.sum()
     b_d = df_bkg.query(f"VBSBDTscore < {vbs} & abcdnet_score < {dnn}").weight.sum()
 
+    if s <= 4:
+        return None
     if b_a <= 0:
         return None
     if (b_b * b_c / b_d) / b_a <= 0.95 or (b_b * b_c / b_d) / b_a >= 1.05:

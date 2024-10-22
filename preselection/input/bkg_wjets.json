@@ -1,0 +1,516 @@
+{
+    "samples": {
+        "WJetsToLNu_HT-100To200_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 1604.3390000000002,
+                "lumi": 19.52,
+                "nevents": 21734530.0
+            }
+        },
+        "WJetsToLNu_HT-100To200_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 1576.7025999999998,
+                "lumi": 16.81,
+                "nevents": 19753958.0
+            }
+        },
+        "WJetsToLNu_HT-100To200_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 1615.0354,
+                "lumi": 41.529,
+                "nevents": 47424468.0
+            }
+        },
+        "WJetsToLNu_HT-100To200_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 1616.1970000000001,
+                "lumi": 59.7,
+                "nevents": 51408967.0
+            }
+        },
+        "WJetsToLNu_HT-1200To2500_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 1.4375778890000002,
+                "lumi": 19.52,
+                "nevents": 2119975.0
+            }
+        },
+        "WJetsToLNu_HT-1200To2500_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 1.3980824,
+                "lumi": 16.81,
+                "nevents": 2090561.0
+            }
+        },
+        "WJetsToLNu_HT-1200To2500_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 1.43143,
+                "lumi": 41.529,
+                "nevents": 4752118.0
+            }
+        },
+        "WJetsToLNu_HT-1200To2500_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 1.4313695,
+                "lumi": 59.7,
+                "nevents": 6481518.0
+            }
+        },
+        "WJetsToLNu_HT-200To400_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 421.77006299999994,
+                "lumi": 19.52,
+                "nevents": 17870845.0
+            }
+        },
+        "WJetsToLNu_HT-200To400_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 412.66566,
+                "lumi": 16.81,
+                "nevents": 15067621.0
+            }
+        },
+        "WJetsToLNu_HT-200To400_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 424.02635,
+                "lumi": 41.529,
+                "nevents": 42281979.0
+            }
+        },
+        "WJetsToLNu_HT-200To400_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 425.54369,
+                "lumi": 59.7,
+                "nevents": 58225632.0
+            }
+        },
+        "WJetsToLNu_HT-2500ToInf_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v2_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 0.02915861751,
+                "lumi": 19.52,
+                "nevents": 808649.0
+            }
+        },
+        "WJetsToLNu_HT-2500ToInf_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v2_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 0.026164314,
+                "lumi": 16.81,
+                "nevents": 709514.0
+            }
+        },
+        "WJetsToLNu_HT-2500ToInf_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v2_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 0.031228042999999997,
+                "lumi": 41.529,
+                "nevents": 1185699.0
+            }
+        },
+        "WJetsToLNu_HT-2500ToInf_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 0.030879442,
+                "lumi": 59.7,
+                "nevents": 2097648.0
+            }
+        },
+        "WJetsToLNu_HT-400To600_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 57.24301275,
+                "lumi": 19.52,
+                "nevents": 2467498.0
+            }
+        },
+        "WJetsToLNu_HT-400To600_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 54.977802,
+                "lumi": 16.81,
+                "nevents": 2115509.0
+            }
+        },
+        "WJetsToLNu_HT-400To600_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 56.352846,
+                "lumi": 41.529,
+                "nevents": 5468473.0
+            }
+        },
+        "WJetsToLNu_HT-400To600_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 57.071222999999996,
+                "lumi": 59.7,
+                "nevents": 7444030.0
+            }
+        },
+        "WJetsToLNu_HT-600To800_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 13.74376927,
+                "lumi": 19.52,
+                "nevents": 2344130.0
+            }
+        },
+        "WJetsToLNu_HT-600To800_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 13.316171,
+                "lumi": 16.81,
+                "nevents": 2251807.0
+            }
+        },
+        "WJetsToLNu_HT-600To800_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 13.489685,
+                "lumi": 41.529,
+                "nevents": 5545298.0
+            }
+        },
+        "WJetsToLNu_HT-600To800_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 13.817716,
+                "lumi": 59.7,
+                "nevents": 7718765.0
+            }
+        },
+        "WJetsToLNu_HT-70To100_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 1586.0438,
+                "lumi": 19.52,
+                "nevents": 16931765.0
+            }
+        },
+        "WJetsToLNu_HT-70To100_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 1553.5311000000002,
+                "lumi": 16.81,
+                "nevents": 19439931.0
+            }
+        },
+        "WJetsToLNu_HT-70To100_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 1596.9096,
+                "lumi": 41.529,
+                "nevents": 44576510.0
+            }
+        },
+        "WJetsToLNu_HT-70To100_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 1598.6036000000001,
+                "lumi": 59.7,
+                "nevents": 66220256.0
+            }
+        },
+        "WJetsToLNu_HT-800To1200_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "WJets",
+                "xsec": 6.302519014,
+                "lumi": 19.52,
+                "nevents": 2510487.0
+            }
+        },
+        "WJetsToLNu_HT-800To1200_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "WJets",
+                "xsec": 5.9795416999999995,
+                "lumi": 16.81,
+                "nevents": 2132228.0
+            }
+        },
+        "WJetsToLNu_HT-800To1200_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v3_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "WJets",
+                "xsec": 6.0771766,
+                "lumi": 41.529,
+                "nevents": 5088483.0
+            }
+        },
+        "WJetsToLNu_HT-800To1200_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "WJets",
+                "xsec": 6.1999069,
+                "lumi": 59.7,
+                "nevents": 7306187.0
+            }
+        }
+    }
+}

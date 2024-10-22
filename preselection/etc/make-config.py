@@ -630,13 +630,21 @@ def make_config(args):
                 )
         # sig
         if "sig" in args.categories.split(","):
-            sample_list_sig = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*/*/NANOAODSIM/*/*/skimmed/*.root"))
+            # sample_list_sig = sorted(glob("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/*/*/NANOAODSIM/*/*/skimmed/*.root"))
+            sample_list_sig = sorted(glob("/ceph/cms/store/user/jguiang/VBSVHSkim/sig_1lep_4ak4_or_1ak8_2ak4_v1/*Inclusive*/*.root"))
+            print(sample_list_sig)
             for sample in sample_list_sig:
-                sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
+                # sample_name = sample.split("/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split(",")[0].split("_TuneCP5")[0]
+                sample_name = sample.split("/ceph/cms/store/user/jguiang/VBSVHSkim/sig_1lep_4ak4_or_1ak8_2ak4_v1/")[1].split("_Inclusive")[0]
+                if (sample_name == "VBSOSWWH"):
+                    sample_name = "VBSWWH_OSWW"
+                if (sample_name == "VBSWWH"):
+                    sample_name = "VBSWWH_SSWW" 
                 sample_year = extract_sample_year(sample)
                 if args.sample_year is not None and sample_year != args.sample_year:
                     continue
-                xsec = get_xsec_weight(sample_name.split("/")[1].split("_MJJ")[0] + "," + sample_year)
+                # xsec = get_xsec_weight(sample_name.split("/")[1].split("_MJJ")[0] + "," + sample_year)
+                xsec = get_xsec_weight(sample_name + "," + sample_year)
                 if xsec == 0:
                     print(sample)
                     continue
@@ -647,13 +655,13 @@ def make_config(args):
 
                 config["samples"].update(
                     {
-                        sample_name.split("v9/")[1] + "_" + sample_year: {
+                        sample_name + "_" + sample_year: {
                             "trees": ["Events"],
                             "files": [sample],
                             "metadata": {
                                 "sample_category": "sig",
                                 "sample_year" : sample_year,
-                                "sample_type": sample_name.split("/")[1].split("_MJJ")[0],
+                                "sample_type": sample_name,
                                 "xsec": xsec,
                                 "lumi": get_lumi(sample_year),
                                 "nevents": num_events

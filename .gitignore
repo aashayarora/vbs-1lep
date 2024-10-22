@@ -3,7 +3,7 @@ build/
 .vscode/
 junk/
 **/*.log
-add_branches
+add_branch
 plotting/plots/
 __pycache__/
 datacard/
@@ -12,3 +12,4 @@ old/
 **/*.txt
 **.pt
 **.root
+model.*

@@ -1,0 +1,196 @@
+{
+    "samples": {
+        "TTTo2L2Nu_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "ttbar",
+                "xsec": 88.29,
+                "lumi": 19.52,
+                "nevents": 2704527536.2742014
+            }
+        },
+        "TTTo2L2Nu_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "ttbar",
+                "xsec": 88.29,
+                "lumi": 16.81,
+                "nevents": 3140127171.4748006
+            }
+        },
+        "TTTo2L2Nu_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "ttbar",
+                "xsec": 88.29,
+                "lumi": 41.529,
+                "nevents": 7695841311.017001
+            }
+        },
+        "TTTo2L2Nu_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "ttbar",
+                "xsec": 88.29,
+                "lumi": 59.7,
+                "nevents": 10355668843.570202
+            }
+        },
+        "TTToHadronic_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToHadronic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "ttbar",
+                "xsec": 377.96,
+                "lumi": 19.52,
+                "nevents": 30530922535.483997
+            }
+        },
+        "TTToHadronic_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToHadronic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "ttbar",
+                "xsec": 377.96,
+                "lumi": 16.81,
+                "nevents": 33608820216.924007
+            }
+        },
+        "TTToHadronic_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToHadronic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "ttbar",
+                "xsec": 377.96,
+                "lumi": 41.529,
+                "nevents": 73140765879.47008
+            }
+        },
+        "TTToHadronic_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToHadronic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "ttbar",
+                "xsec": 377.96,
+                "lumi": 59.7,
+                "nevents": 104004534378.64798
+            }
+        },
+        "TTToSemiLeptonic_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016preVFP",
+                "sample_type": "ttbar",
+                "xsec": 365.34,
+                "lumi": 19.52,
+                "nevents": 39772305735.14003
+            }
+        },
+        "TTToSemiLeptonic_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL16NanoAODv9-106X_mcRun2_asymptotic_v17-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2016postVFP",
+                "sample_type": "ttbar",
+                "xsec": 365.34,
+                "lumi": 16.81,
+                "nevents": 43548253725.28401
+            }
+        },
+        "TTToSemiLeptonic_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL17NanoAODv9-106X_mc2017_realistic_v9-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2017",
+                "sample_type": "ttbar",
+                "xsec": 365.34,
+                "lumi": 41.529,
+                "nevents": 104129959042.42807
+            }
+        },
+        "TTToSemiLeptonic_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/bkg_1lep_4ak4_or_1ak8_2ak4_v1/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1_NANOAODSIM_bkg_1lep_4ak4_or_1ak8_2ak4_v1/output*.root"
+            ],
+            "metadata": {
+                "sample_category": "bkg",
+                "sample_year": "2018",
+                "sample_type": "ttbar",
+                "xsec": 365.34,
+                "lumi": 59.7,
+                "nevents": 140678677707.70004
+            }
+        }
+    }
+}

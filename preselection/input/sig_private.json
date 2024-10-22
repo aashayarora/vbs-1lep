@@ -1,0 +1,260 @@
+{
+    "samples": {
+        "VBSWWH_OSWW_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSOSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 16.81,
+                "nevents": 99998.0
+            }
+        },
+        "VBSWWH_OSWW_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSOSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 19.52,
+                "nevents": 99998.0
+            }
+        },
+        "VBSWWH_OSWW_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSOSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 41.529,
+                "nevents": 99996.0
+            }
+        },
+        "VBSWWH_OSWW_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSOSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWWH_OSWW",
+                "xsec": 0.002805,
+                "lumi": 59.7,
+                "nevents": 99994.0
+            }
+        },
+        "VBSWWH_SSWW_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 16.81,
+                "nevents": 98999.0
+            }
+        },
+        "VBSWWH_SSWW_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 19.52,
+                "nevents": 100000.0
+            }
+        },
+        "VBSWWH_SSWW_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 41.529,
+                "nevents": 100000.0
+            }
+        },
+        "VBSWWH_SSWW_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWWH_Inclusive_4f_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWWH_SSWW",
+                "xsec": 0.001517,
+                "lumi": 59.7,
+                "nevents": 100000.0
+            }
+        },
+        "VBSWZH_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWZH_Inclusive_4f_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 16.81,
+                "nevents": 99995.0
+            }
+        },
+        "VBSWZH_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWZH_Inclusive_4f_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 19.52,
+                "nevents": 99993.0
+            }
+        },
+        "VBSWZH_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWZH_Inclusive_4f_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 41.529,
+                "nevents": 99993.0
+            }
+        },
+        "VBSWZH_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSWZH_Inclusive_4f_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSWZH",
+                "xsec": 0.001631,
+                "lumi": 59.7,
+                "nevents": 99999.0
+            }
+        },
+        "VBSZZH_2016postVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSZZH_Inclusive_4f_TuneCP5_RunIISummer20UL16-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016postVFP",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 16.81,
+                "nevents": 98000.0
+            }
+        },
+        "VBSZZH_2016preVFP": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSZZH_Inclusive_4f_TuneCP5_RunIISummer20UL16APV-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2016preVFP",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 19.52,
+                "nevents": 99000.0
+            }
+        },
+        "VBSZZH_2017": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSZZH_Inclusive_4f_TuneCP5_RunIISummer20UL17-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2017",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 41.529,
+                "nevents": 98000.0
+            }
+        },
+        "VBSZZH_2018": {
+            "trees": [
+                "Events"
+            ],
+            "files": [
+                "/ceph/cms/store/user/aaarora/VBS_1lep_skims/sig_1lep_4ak4_or_1ak8_2ak4_vPrivate/VBSZZH_Inclusive_4f_TuneCP5_RunIISummer20UL18-106X_privateMC_NANOGEN_v1_sig_1lep_4ak4_or_1ak8_2ak4_v1/output_1.root"
+            ],
+            "metadata": {
+                "sample_category": "sig",
+                "sample_year": "2018",
+                "sample_type": "VBSZZH",
+                "xsec": 0.001126,
+                "lumi": 59.7,
+                "nevents": 99000.0
+            }
+        }
+    }
+}
