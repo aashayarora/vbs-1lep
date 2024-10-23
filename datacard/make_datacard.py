@@ -8,14 +8,14 @@ def max_var(variations):
     deviations = [abs(1 - x) for x in variations]
     return variations[deviations.index(max(deviations))]
 
-def get_variation(correction=None, tree="Events", bdt_cut=0.56, dnn_cut=0.92):
+def get_variation(bdt_cut, dnn_cut, correction=None):
     sig_file = "/data/userdata/aaarora/output/run2/sig_MVA.root"
     
     BDT_CUT = bdt_cut
     DNN_CUT = dnn_cut
     
     with uproot.open(sig_file) as f:
-        df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+        df = f.get("Events").arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
     
     df = df.drop(df.query("abs(weight) > 100").index)
 
@@ -30,7 +30,7 @@ def get_variation(correction=None, tree="Events", bdt_cut=0.56, dnn_cut=0.92):
     variations = []
 
     with uproot.open(f"/data/userdata/aaarora/output/run2/sig_{correction}_up_MVA.root") as g:
-        df2 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+        df2 = g.get("Events").arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
     df2 = df2.drop(df2.query("abs(weight) > 100").index)
 
@@ -42,7 +42,7 @@ def get_variation(correction=None, tree="Events", bdt_cut=0.56, dnn_cut=0.92):
     variations.append([(a - a2) / a, (b - b2) / b, (c - c2) / c, (d - d2) / d])
 
     with uproot.open(f"/data/userdata/aaarora/output/run2/sig_{correction}_down_MVA.root") as g:
-        df3 = g.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+        df3 = g.get("Events").arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
     df3 = df3.drop(df3.query("abs(weight) > 100").index)
 
@@ -55,14 +55,14 @@ def get_variation(correction=None, tree="Events", bdt_cut=0.56, dnn_cut=0.92):
 
     return ["{:.5f}".format(round(1 + abs(max_var(x)), 5)) for x in zip(*variations)]
 
-def get_stats(tree="Events", bdt_cut=0.56, dnn_cut=0.92):
+def get_stats(bdt_cut, dnn_cut):
     sig_file = "/data/userdata/aaarora/output/run2/sig_MVA.root"
     
     BDT_CUT = bdt_cut
     DNN_CUT = dnn_cut
     
     with uproot.open(sig_file) as f:
-        df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+        df = f.get("Events").arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
     df_a = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score > {DNN_CUT}")
     df_b = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT}")
@@ -76,14 +76,14 @@ def get_stats(tree="Events", bdt_cut=0.56, dnn_cut=0.92):
 
     return ["{:.4f}".format(round(i, 4)) for i in [a, b, c, d]]
 
-def get_data(tree="Events", bdt_cut=0.56, dnn_cut=0.92):
+def get_data(bdt_cut, dnn_cut):
     data_file = "/data/userdata/aaarora/output/run2/data_MVA.root"
     
     BDT_CUT = bdt_cut
     DNN_CUT = dnn_cut
     
     with uproot.open(data_file) as f:
-        df = f.get(tree).arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
+        df = f.get("Events").arrays(["VBSBDTscore", "abcdnet_score", "weight"], library="pd")
 
     b = df.query(f"VBSBDTscore < {BDT_CUT} & abcdnet_score > {DNN_CUT}").weight.sum()
     c = df.query(f"VBSBDTscore > {BDT_CUT} & abcdnet_score < {DNN_CUT}").weight.sum()
@@ -118,72 +118,72 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--output", type=str, default="-1", help="Output file name")
     argparser.add_argument("--year", type=str, default="Run2", help="Year of data taking")
-    argparser.add_argument("--bdt", type=float, default=0.56, help="BDT cut value")
-    argparser.add_argument("--dnn", type=float, default=0.92, help="DNN cut value")
+    argparser.add_argument("--bdt", type=float, help="BDT cut value")
+    argparser.add_argument("--dnn", type=float, help="DNN cut value")
     argparser.add_argument("--output_dir", type=str, default="datacards", help="Output directory")
     args = argparser.parse_args()
 
     sys = {
-        "sig": get_variation(bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "data": get_data(bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "stat_unc": get_stats(bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_elec_reco": get_variation("electron_scale_factors_Reco", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_elec_recotoloose": get_variation("electron_scale_factors_ttHID", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_elec_trig": get_variation("electron_scale_factors_trigger", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_elec_loosetoiso": get_variation("electron_scale_factors_ttHISO", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_elec_isototight": get_variation("electron_scale_factors_ID", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_muon_recotoloose": get_variation("muon_scale_factors_ttHID", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_muon_trig": get_variation("muon_scale_factors_trigger", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_muon_loosetoiso": get_variation("muon_scale_factors_ttHISO", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "ttH_muon_isototight": get_variation("muon_scale_factors_ID", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "PrefireWeight_13TeV": get_variation("L1PreFiringWeight", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh_puWeight": get_variation("pileup_weight", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh_puJetID": get_variation("pileupid_weight", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_Absolute_13TeV": get_variation("jec_absolute", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_Absolute_2016postVFP_13TeV": get_variation("jec_absolute_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_Absolute_2016preVFP_13TeV": get_variation("jec_absolute_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_Absolute_2017_13TeV": get_variation("jec_absolute_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_Absolute_2018_13TeV": get_variation("jec_absolute_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_BBEC1_13TeV": get_variation("jec_bbec1", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_BBEC1_2016postVFP_13TeV": get_variation("jec_bbec1_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_BBEC1_2016preVFP_13TeV": get_variation("jec_bbec1_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_BBEC1_2017_13TeV": get_variation("jec_bbec1_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_BBEC1_2018_13TeV": get_variation("jec_bbec1_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_EC2_13TeV": get_variation("jec_ec2", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_EC2_2016postVFP_13TeV": get_variation("jec_ec2_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_EC2_2016preVFP_13TeV": get_variation("jec_ec2_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_EC2_2017_13TeV": get_variation("jec_ec2_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_EC2_2018_13TeV": get_variation("jec_ec2_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_FlavorQCD_13TeV": get_variation("jec_flavorqcd", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_HF_13TeV": get_variation("jec_hf", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_HF_2016postVFP_13TeV": get_variation("jec_hf_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_HF_2016preVFP_13TeV": get_variation("jec_hf_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_HF_2017_13TeV": get_variation("jec_hf_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_HF_2018_13TeV": get_variation("jec_hf_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_RelativeBal_13TeV": get_variation("jec_relativebal", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_RelativeSample_2016postVFP_13TeV": get_variation("jec_relativesample_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_RelativeSample_2016preVFP_13TeV": get_variation("jec_relativesample_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_RelativeSample_2017_13TeV": get_variation("jec_relativesample_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "scale_j_RelativeSample_2018_13TeV": get_variation("jec_relativesample_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "res_j_13TeV": get_variation("jer", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "metUncl_13Tev": get_variation("met_unclustered", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "jms_pnetreg": get_variation("jms", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "jmr_pnetreg": get_variation("jmr", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "btagWeightDeepJet_HF_13Tev": get_variation("btagging_scale_factors_HF", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "btagWeightDeepJet_LF_13Tev": get_variation("btagging_scale_factors_LF", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP": get_variation("particlenet_h_weight_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP": get_variation("particlenet_h_weight_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_bTagWeightXbb_13TeV_17": get_variation("particlenet_h_weight_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_bTagWeightXbb_13TeV_18": get_variation("particlenet_h_weight_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP": get_variation("particlenet_w_weight_2016preVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP": get_variation("particlenet_w_weight_2016postVFP", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_qTagWeightXWqq_13TeV_17": get_variation("particlenet_w_weight_2017", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "vbsvvh1lep_qTagWeightXWqq_13TeV_18": get_variation("particlenet_w_weight_2018", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "PSWeight_FSR": get_variation("PSWeight_FSR", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "PSWeight_ISR": get_variation("PSWeight_ISR", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "LHEScaleWeight_muF": get_variation("LHEScaleWeight_muF", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "LHEScaleWeight_muR": get_variation("LHEScaleWeight_muR", bdt_cut=args.bdt, dnn_cut=args.dnn),
-        "LHEWeights_pdf": get_variation("LHEWeights_pdf", bdt_cut=args.bdt, dnn_cut=args.dnn)
+        "sig": get_variation(args.bdt, args.dnn),
+        "data": get_data(args.bdt, args.dnn),
+        "stat_unc": get_stats(args.bdt, args.dnn),
+        "ttH_elec_reco": get_variation(args.bdt, args.dnn, "electron_scale_factors_Reco"),
+        "ttH_elec_recotoloose": get_variation(args.bdt, args.dnn, "electron_scale_factors_ttHID"),
+        "ttH_elec_trig": get_variation(args.bdt, args.dnn, "electron_scale_factors_trigger"),
+        "ttH_elec_loosetoiso": get_variation(args.bdt, args.dnn, "electron_scale_factors_ttHISO"),
+        "ttH_elec_isototight": get_variation(args.bdt, args.dnn, "electron_scale_factors_ID"),
+        "ttH_muon_recotoloose": get_variation(args.bdt, args.dnn, "muon_scale_factors_ttHID"),
+        "ttH_muon_trig": get_variation(args.bdt, args.dnn, "muon_scale_factors_trigger"),
+        "ttH_muon_loosetoiso": get_variation(args.bdt, args.dnn, "muon_scale_factors_ttHISO"),
+        "ttH_muon_isototight": get_variation(args.bdt, args.dnn, "muon_scale_factors_ID"),
+        "PrefireWeight_13TeV": get_variation(args.bdt, args.dnn, "L1PreFiringWeight"),
+        "vbsvvh_puWeight": get_variation(args.bdt, args.dnn, "pileup_weight"),
+        "vbsvvh_puJetID": get_variation(args.bdt, args.dnn, "pileupid_weight"),
+        "scale_j_Absolute_13TeV": get_variation(args.bdt, args.dnn, "jec_absolute"),
+        "scale_j_Absolute_2016postVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_absolute_2016postVFP"),
+        "scale_j_Absolute_2016preVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_absolute_2016preVFP"),
+        "scale_j_Absolute_2017_13TeV": get_variation(args.bdt, args.dnn, "jec_absolute_2017"),
+        "scale_j_Absolute_2018_13TeV": get_variation(args.bdt, args.dnn, "jec_absolute_2018"),
+        "scale_j_BBEC1_13TeV": get_variation(args.bdt, args.dnn, "jec_bbec1"),
+        "scale_j_BBEC1_2016postVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_bbec1_2016postVFP"),
+        "scale_j_BBEC1_2016preVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_bbec1_2016preVFP"),
+        "scale_j_BBEC1_2017_13TeV": get_variation(args.bdt, args.dnn, "jec_bbec1_2017"),
+        "scale_j_BBEC1_2018_13TeV": get_variation(args.bdt, args.dnn, "jec_bbec1_2018"),
+        "scale_j_EC2_13TeV": get_variation(args.bdt, args.dnn, "jec_ec2"),
+        "scale_j_EC2_2016postVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_ec2_2016postVFP"),
+        "scale_j_EC2_2016preVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_ec2_2016preVFP"),
+        "scale_j_EC2_2017_13TeV": get_variation(args.bdt, args.dnn, "jec_ec2_2017"),
+        "scale_j_EC2_2018_13TeV": get_variation(args.bdt, args.dnn, "jec_ec2_2018"),
+        "scale_j_FlavorQCD_13TeV": get_variation(args.bdt, args.dnn, "jec_flavorqcd"),
+        "scale_j_HF_13TeV": get_variation(args.bdt, args.dnn, "jec_hf"),
+        "scale_j_HF_2016postVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_hf_2016postVFP"),
+        "scale_j_HF_2016preVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_hf_2016preVFP"),
+        "scale_j_HF_2017_13TeV": get_variation(args.bdt, args.dnn, "jec_hf_2017"),
+        "scale_j_HF_2018_13TeV": get_variation(args.bdt, args.dnn, "jec_hf_2018"),
+        "scale_j_RelativeBal_13TeV": get_variation(args.bdt, args.dnn, "jec_relativebal"),
+        "scale_j_RelativeSample_2016postVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_relativesample_2016postVFP"),
+        "scale_j_RelativeSample_2016preVFP_13TeV": get_variation(args.bdt, args.dnn, "jec_relativesample_2016preVFP"),
+        "scale_j_RelativeSample_2017_13TeV": get_variation(args.bdt, args.dnn, "jec_relativesample_2017"),
+        "scale_j_RelativeSample_2018_13TeV": get_variation(args.bdt, args.dnn, "jec_relativesample_2018"),
+        "res_j_13TeV": get_variation(args.bdt, args.dnn, "jer"),
+        "metUncl_13Tev": get_variation(args.bdt, args.dnn, "met_unclustered"),
+        "jms_pnetreg": get_variation(args.bdt, args.dnn, "jms"),
+        "jmr_pnetreg": get_variation(args.bdt, args.dnn, "jmr"),
+        "btagWeightDeepJet_HF_13Tev": get_variation(args.bdt, args.dnn, "btagging_scale_factors_HF"),
+        "btagWeightDeepJet_LF_13Tev": get_variation(args.bdt, args.dnn, "btagging_scale_factors_LF"),
+        "vbsvvh1lep_bTagWeightXbb_13TeV_16preVFP": get_variation(args.bdt, args.dnn, "particlenet_h_weight_2016preVFP"),
+        "vbsvvh1lep_bTagWeightXbb_13TeV_16postVFP": get_variation(args.bdt, args.dnn, "particlenet_h_weight_2016postVFP"),
+        "vbsvvh1lep_bTagWeightXbb_13TeV_17": get_variation(args.bdt, args.dnn, "particlenet_h_weight_2017"),
+        "vbsvvh1lep_bTagWeightXbb_13TeV_18": get_variation(args.bdt, args.dnn, "particlenet_h_weight_2018"),
+        "vbsvvh1lep_qTagWeightXWqq_13TeV_16preVFP": get_variation(args.bdt, args.dnn, "particlenet_w_weight_2016preVFP"),
+        "vbsvvh1lep_qTagWeightXWqq_13TeV_16postVFP": get_variation(args.bdt, args.dnn, "particlenet_w_weight_2016postVFP"),
+        "vbsvvh1lep_qTagWeightXWqq_13TeV_17": get_variation(args.bdt, args.dnn, "particlenet_w_weight_2017"),
+        "vbsvvh1lep_qTagWeightXWqq_13TeV_18": get_variation(args.bdt, args.dnn, "particlenet_w_weight_2018"),
+        "PSWeight_FSR": get_variation(args.bdt, args.dnn, "PSWeight_FSR"),
+        "PSWeight_ISR": get_variation(args.bdt, args.dnn, "PSWeight_ISR"),
+        "LHEScaleWeight_muF": get_variation(args.bdt, args.dnn, "LHEScaleWeight_muF"),
+        "LHEScaleWeight_muR": get_variation(args.bdt, args.dnn, "LHEScaleWeight_muR"),
+        "LHEWeights_pdf": get_variation(args.bdt, args.dnn, "LHEWeights_pdf")
     }
 
     datacard = f"""imax 4 number of channels
@@ -310,126 +310,126 @@ D_OneLep rateParam                  D  TotalBkg_OneLep    {sys["data"][2]} [{sys
     ]
 
     # names = [ 
-    #     "scan_C2W_m2p0_C2Z_m2p0", 
-    #     "scan_C2W_m2p0_C2Z_m1p0", 
-    #     "scan_C2W_m2p0_C2Z_m0p5", 
-    #     "scan_C2W_m2p0_C2Z_0p0", 
-    #     "scan_C2W_m2p0_C2Z_0p5", 
-    #     "scan_C2W_m2p0_C2Z_1p0", 
-    #     "scan_C2W_m2p0_C2Z_1p5", 
-    #     "scan_C2W_m2p0_C2Z_2p0", 
-    #     "scan_C2W_m2p0_C2Z_2p5", 
-    #     "scan_C2W_m2p0_C2Z_3p0", 
-    #     "scan_C2W_m2p0_C2Z_4p0", 
-    #     "scan_C2W_m1p0_C2Z_m2p0", 
-    #     "scan_C2W_m1p0_C2Z_m1p0", 
-    #     "scan_C2W_m1p0_C2Z_m0p5", 
-    #     "scan_C2W_m1p0_C2Z_0p0", 
-    #     "scan_C2W_m1p0_C2Z_0p5", 
-    #     "scan_C2W_m1p0_C2Z_1p0", 
-    #     "scan_C2W_m1p0_C2Z_1p5", 
-    #     "scan_C2W_m1p0_C2Z_2p0", 
-    #     "scan_C2W_m1p0_C2Z_2p5", 
-    #     "scan_C2W_m1p0_C2Z_3p0", 
-    #     "scan_C2W_m1p0_C2Z_4p0", 
-    #     "scan_C2W_m0p5_C2Z_m2p0", 
-    #     "scan_C2W_m0p5_C2Z_m1p0", 
-    #     "scan_C2W_m0p5_C2Z_m0p5", 
-    #     "scan_C2W_m0p5_C2Z_0p0", 
-    #     "scan_C2W_m0p5_C2Z_0p5", 
-    #     "scan_C2W_m0p5_C2Z_1p0", 
-    #     "scan_C2W_m0p5_C2Z_1p5", 
-    #     "scan_C2W_m0p5_C2Z_2p0", 
-    #     "scan_C2W_m0p5_C2Z_2p5", 
-    #     "scan_C2W_m0p5_C2Z_3p0", 
-    #     "scan_C2W_m0p5_C2Z_4p0", 
-    #     "scan_C2W_0p0_C2Z_m2p0", 
-    #     "scan_C2W_0p0_C2Z_m1p0", 
-    #     "scan_C2W_0p0_C2Z_m0p5", 
-    #     "scan_C2W_0p0_C2Z_0p0", 
-    #     "scan_C2W_0p0_C2Z_0p5", 
-    #     "scan_C2W_0p0_C2Z_1p0", 
-    #     "scan_C2W_0p0_C2Z_1p5", 
-    #     "scan_C2W_0p0_C2Z_2p0", 
-    #     "scan_C2W_0p0_C2Z_2p5", 
-    #     "scan_C2W_0p0_C2Z_3p0", 
-    #     "scan_C2W_0p0_C2Z_4p0", 
-    #     "scan_C2W_0p5_C2Z_m2p0", 
-    #     "scan_C2W_0p5_C2Z_m1p0", 
-    #     "scan_C2W_0p5_C2Z_m0p5", 
-    #     "scan_C2W_0p5_C2Z_0p0", 
-    #     "scan_C2W_0p5_C2Z_0p5", 
-    #     "scan_C2W_0p5_C2Z_1p0", 
-    #     "scan_C2W_0p5_C2Z_1p5", 
-    #     "scan_C2W_0p5_C2Z_2p0", 
-    #     "scan_C2W_0p5_C2Z_2p5", 
-    #     "scan_C2W_0p5_C2Z_3p0", 
-    #     "scan_C2W_0p5_C2Z_4p0", 
-    #     "scan_C2W_1p0_C2Z_m2p0", 
-    #     "scan_C2W_1p0_C2Z_m1p0", 
-    #     "scan_C2W_1p0_C2Z_m0p5", 
-    #     "scan_C2W_1p0_C2Z_0p0", 
-    #     "scan_C2W_1p0_C2Z_0p5", 
-    #     "scan_C2W_1p0_C2Z_1p0", 
-    #     "scan_C2W_1p0_C2Z_1p5", 
-    #     "scan_C2W_1p0_C2Z_2p0", 
-    #     "scan_C2W_1p0_C2Z_2p5", 
-    #     "scan_C2W_1p0_C2Z_3p0", 
-    #     "scan_C2W_1p0_C2Z_4p0", 
-    #     "scan_C2W_1p5_C2Z_m2p0", 
-    #     "scan_C2W_1p5_C2Z_m1p0", 
-    #     "scan_C2W_1p5_C2Z_m0p5", 
-    #     "scan_C2W_1p5_C2Z_0p0", 
-    #     "scan_C2W_1p5_C2Z_0p5", 
-    #     "scan_C2W_1p5_C2Z_1p0", 
-    #     "scan_C2W_1p5_C2Z_1p5", 
-    #     "scan_C2W_1p5_C2Z_2p0", 
-    #     "scan_C2W_1p5_C2Z_2p5", 
-    #     "scan_C2W_1p5_C2Z_3p0", 
-    #     "scan_C2W_1p5_C2Z_4p0", 
-    #     "scan_C2W_2p0_C2Z_m2p0", 
-    #     "scan_C2W_2p0_C2Z_m1p0", 
-    #     "scan_C2W_2p0_C2Z_m0p5", 
-    #     "scan_C2W_2p0_C2Z_0p0", 
-    #     "scan_C2W_2p0_C2Z_0p5", 
-    #     "scan_C2W_2p0_C2Z_1p0", 
-    #     "scan_C2W_2p0_C2Z_1p5", 
-    #     "scan_C2W_2p0_C2Z_2p0", 
-    #     "scan_C2W_2p0_C2Z_2p5", 
-    #     "scan_C2W_2p0_C2Z_3p0", 
-    #     "scan_C2W_2p0_C2Z_4p0", 
-    #     "scan_C2W_2p5_C2Z_m2p0", 
-    #     "scan_C2W_2p5_C2Z_m1p0", 
-    #     "scan_C2W_2p5_C2Z_m0p5", 
-    #     "scan_C2W_2p5_C2Z_0p0", 
-    #     "scan_C2W_2p5_C2Z_0p5", 
-    #     "scan_C2W_2p5_C2Z_1p0", 
-    #     "scan_C2W_2p5_C2Z_1p5", 
-    #     "scan_C2W_2p5_C2Z_2p0", 
-    #     "scan_C2W_2p5_C2Z_2p5", 
-    #     "scan_C2W_2p5_C2Z_3p0", 
-    #     "scan_C2W_2p5_C2Z_4p0", 
-    #     "scan_C2W_3p0_C2Z_m2p0", 
-    #     "scan_C2W_3p0_C2Z_m1p0", 
-    #     "scan_C2W_3p0_C2Z_m0p5", 
-    #     "scan_C2W_3p0_C2Z_0p0", 
-    #     "scan_C2W_3p0_C2Z_0p5", 
-    #     "scan_C2W_3p0_C2Z_1p0", 
-    #     "scan_C2W_3p0_C2Z_1p5", 
-    #     "scan_C2W_3p0_C2Z_2p0", 
-    #     "scan_C2W_3p0_C2Z_2p5", 
-    #     "scan_C2W_3p0_C2Z_3p0", 
-    #     "scan_C2W_3p0_C2Z_4p0", 
-    #     "scan_C2W_4p0_C2Z_m2p0", 
-    #     "scan_C2W_4p0_C2Z_m1p0", 
-    #     "scan_C2W_4p0_C2Z_m0p5", 
-    #     "scan_C2W_4p0_C2Z_0p0", 
-    #     "scan_C2W_4p0_C2Z_0p5", 
-    #     "scan_C2W_4p0_C2Z_1p0", 
-    #     "scan_C2W_4p0_C2Z_1p5", 
-    #     "scan_C2W_4p0_C2Z_2p0", 
-    #     "scan_C2W_4p0_C2Z_2p5", 
-    #     "scan_C2W_4p0_C2Z_3p0", 
+    #     "scan_C2W_m2p0_C2Z_m2p0"
+    #     "scan_C2W_m2p0_C2Z_m1p0"
+    #     "scan_C2W_m2p0_C2Z_m0p5"
+    #     "scan_C2W_m2p0_C2Z_0p0"
+    #     "scan_C2W_m2p0_C2Z_0p5"
+    #     "scan_C2W_m2p0_C2Z_1p0"
+    #     "scan_C2W_m2p0_C2Z_1p5"
+    #     "scan_C2W_m2p0_C2Z_2p0"
+    #     "scan_C2W_m2p0_C2Z_2p5"
+    #     "scan_C2W_m2p0_C2Z_3p0"
+    #     "scan_C2W_m2p0_C2Z_4p0"
+    #     "scan_C2W_m1p0_C2Z_m2p0"
+    #     "scan_C2W_m1p0_C2Z_m1p0"
+    #     "scan_C2W_m1p0_C2Z_m0p5"
+    #     "scan_C2W_m1p0_C2Z_0p0"
+    #     "scan_C2W_m1p0_C2Z_0p5"
+    #     "scan_C2W_m1p0_C2Z_1p0"
+    #     "scan_C2W_m1p0_C2Z_1p5"
+    #     "scan_C2W_m1p0_C2Z_2p0"
+    #     "scan_C2W_m1p0_C2Z_2p5"
+    #     "scan_C2W_m1p0_C2Z_3p0"
+    #     "scan_C2W_m1p0_C2Z_4p0"
+    #     "scan_C2W_m0p5_C2Z_m2p0"
+    #     "scan_C2W_m0p5_C2Z_m1p0"
+    #     "scan_C2W_m0p5_C2Z_m0p5"
+    #     "scan_C2W_m0p5_C2Z_0p0"
+    #     "scan_C2W_m0p5_C2Z_0p5"
+    #     "scan_C2W_m0p5_C2Z_1p0"
+    #     "scan_C2W_m0p5_C2Z_1p5"
+    #     "scan_C2W_m0p5_C2Z_2p0"
+    #     "scan_C2W_m0p5_C2Z_2p5"
+    #     "scan_C2W_m0p5_C2Z_3p0"
+    #     "scan_C2W_m0p5_C2Z_4p0"
+    #     "scan_C2W_0p0_C2Z_m2p0"
+    #     "scan_C2W_0p0_C2Z_m1p0"
+    #     "scan_C2W_0p0_C2Z_m0p5"
+    #     "scan_C2W_0p0_C2Z_0p0"
+    #     "scan_C2W_0p0_C2Z_0p5"
+    #     "scan_C2W_0p0_C2Z_1p0"
+    #     "scan_C2W_0p0_C2Z_1p5"
+    #     "scan_C2W_0p0_C2Z_2p0"
+    #     "scan_C2W_0p0_C2Z_2p5"
+    #     "scan_C2W_0p0_C2Z_3p0"
+    #     "scan_C2W_0p0_C2Z_4p0"
+    #     "scan_C2W_0p5_C2Z_m2p0"
+    #     "scan_C2W_0p5_C2Z_m1p0"
+    #     "scan_C2W_0p5_C2Z_m0p5"
+    #     "scan_C2W_0p5_C2Z_0p0"
+    #     "scan_C2W_0p5_C2Z_0p5"
+    #     "scan_C2W_0p5_C2Z_1p0"
+    #     "scan_C2W_0p5_C2Z_1p5"
+    #     "scan_C2W_0p5_C2Z_2p0"
+    #     "scan_C2W_0p5_C2Z_2p5"
+    #     "scan_C2W_0p5_C2Z_3p0"
+    #     "scan_C2W_0p5_C2Z_4p0"
+    #     "scan_C2W_1p0_C2Z_m2p0"
+    #     "scan_C2W_1p0_C2Z_m1p0"
+    #     "scan_C2W_1p0_C2Z_m0p5"
+    #     "scan_C2W_1p0_C2Z_0p0"
+    #     "scan_C2W_1p0_C2Z_0p5"
+    #     "scan_C2W_1p0_C2Z_1p0"
+    #     "scan_C2W_1p0_C2Z_1p5"
+    #     "scan_C2W_1p0_C2Z_2p0"
+    #     "scan_C2W_1p0_C2Z_2p5"
+    #     "scan_C2W_1p0_C2Z_3p0"
+    #     "scan_C2W_1p0_C2Z_4p0"
+    #     "scan_C2W_1p5_C2Z_m2p0"
+    #     "scan_C2W_1p5_C2Z_m1p0"
+    #     "scan_C2W_1p5_C2Z_m0p5"
+    #     "scan_C2W_1p5_C2Z_0p0"
+    #     "scan_C2W_1p5_C2Z_0p5"
+    #     "scan_C2W_1p5_C2Z_1p0"
+    #     "scan_C2W_1p5_C2Z_1p5"
+    #     "scan_C2W_1p5_C2Z_2p0"
+    #     "scan_C2W_1p5_C2Z_2p5"
+    #     "scan_C2W_1p5_C2Z_3p0"
+    #     "scan_C2W_1p5_C2Z_4p0"
+    #     "scan_C2W_2p0_C2Z_m2p0"
+    #     "scan_C2W_2p0_C2Z_m1p0"
+    #     "scan_C2W_2p0_C2Z_m0p5"
+    #     "scan_C2W_2p0_C2Z_0p0"
+    #     "scan_C2W_2p0_C2Z_0p5"
+    #     "scan_C2W_2p0_C2Z_1p0"
+    #     "scan_C2W_2p0_C2Z_1p5"
+    #     "scan_C2W_2p0_C2Z_2p0"
+    #     "scan_C2W_2p0_C2Z_2p5"
+    #     "scan_C2W_2p0_C2Z_3p0"
+    #     "scan_C2W_2p0_C2Z_4p0"
+    #     "scan_C2W_2p5_C2Z_m2p0"
+    #     "scan_C2W_2p5_C2Z_m1p0"
+    #     "scan_C2W_2p5_C2Z_m0p5"
+    #     "scan_C2W_2p5_C2Z_0p0"
+    #     "scan_C2W_2p5_C2Z_0p5"
+    #     "scan_C2W_2p5_C2Z_1p0"
+    #     "scan_C2W_2p5_C2Z_1p5"
+    #     "scan_C2W_2p5_C2Z_2p0"
+    #     "scan_C2W_2p5_C2Z_2p5"
+    #     "scan_C2W_2p5_C2Z_3p0"
+    #     "scan_C2W_2p5_C2Z_4p0"
+    #     "scan_C2W_3p0_C2Z_m2p0"
+    #     "scan_C2W_3p0_C2Z_m1p0"
+    #     "scan_C2W_3p0_C2Z_m0p5"
+    #     "scan_C2W_3p0_C2Z_0p0"
+    #     "scan_C2W_3p0_C2Z_0p5"
+    #     "scan_C2W_3p0_C2Z_1p0"
+    #     "scan_C2W_3p0_C2Z_1p5"
+    #     "scan_C2W_3p0_C2Z_2p0"
+    #     "scan_C2W_3p0_C2Z_2p5"
+    #     "scan_C2W_3p0_C2Z_3p0"
+    #     "scan_C2W_3p0_C2Z_4p0"
+    #     "scan_C2W_4p0_C2Z_m2p0"
+    #     "scan_C2W_4p0_C2Z_m1p0"
+    #     "scan_C2W_4p0_C2Z_m0p5"
+    #     "scan_C2W_4p0_C2Z_0p0"
+    #     "scan_C2W_4p0_C2Z_0p5"
+    #     "scan_C2W_4p0_C2Z_1p0"
+    #     "scan_C2W_4p0_C2Z_1p5"
+    #     "scan_C2W_4p0_C2Z_2p0"
+    #     "scan_C2W_4p0_C2Z_2p5"
+    #     "scan_C2W_4p0_C2Z_3p0"
     #     "scan_C2W_4p0_C2Z_4p0",
     # ]
 

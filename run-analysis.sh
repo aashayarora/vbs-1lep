@@ -72,9 +72,7 @@ function runPreselection() {
 
 function runAnalysis() {
     c2v=$1
-    bdt_cut=$2
-    dnn_cut=$3
-    year=$4
+    year=$2
 
     if [ $c2v -eq -1 ]; then
         path_prefix=default
@@ -90,9 +88,9 @@ function runAnalysis() {
     cd mva/
 
     if [ -z "$year" ]; then
-            sleep 1; ./bin/runMVA -i $base_dir/data.root -o $base_dir/data_MVA.root &
+            sleep 1.5; ./bin/runMVA -i $base_dir/data.root -o $base_dir/data_MVA.root &
         else
-            sleep 1; ./bin/runMVA -i $base_dir/data.root --year $year -o $base_dir/data_MVA.root &
+            sleep 1.5; ./bin/runMVA -i $base_dir/data.root --year $year -o $base_dir/data_MVA.root &
     fi
 
     for file in $(ls $base_dir/sig/si*.root)
@@ -100,74 +98,81 @@ function runAnalysis() {
         base_name=$(basename $file .root)
         # check if year is defined
         if [ -z "$year" ]; then
-            sleep 1; ./bin/runMVA --c2v $c2v -i $file -o $base_dir/${base_name}_MVA.root &
+            sleep 1.5; ./bin/runMVA --c2v $c2v -i $file -o $base_dir/${base_name}_MVA.root &
         else
-            sleep 1; ./bin/runMVA --c2v $c2v -i $file --year $year -o $base_dir/${base_name}_MVA.root &
+            sleep 1.5; ./bin/runMVA --c2v $c2v -i $file --year $year -o $base_dir/${base_name}_MVA.root &
         fi
     done
 
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar pileup_weight -o $base_dir/sig_pileup_weight_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar pileup_weight -o $base_dir/sig_pileup_weight_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar pileupid_weight -o $base_dir/sig_pileupid_weight_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar pileupid_weight -o $base_dir/sig_pileupid_weight_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar L1PreFiringWeight -o $base_dir/sig_L1PreFiringWeight_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar L1PreFiringWeight -o $base_dir/sig_L1PreFiringWeight_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ID -o $base_dir/sig_muon_scale_factors_ID_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ID -o $base_dir/sig_muon_scale_factors_ID_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_trigger -o $base_dir/sig_muon_scale_factors_trigger_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_trigger -o $base_dir/sig_muon_scale_factors_trigger_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ttHID -o $base_dir/sig_muon_scale_factors_ttHID_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ttHID -o $base_dir/sig_muon_scale_factors_ttHID_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ttHISO -o $base_dir/sig_muon_scale_factors_ttHISO_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ttHISO -o $base_dir/sig_muon_scale_factors_ttHISO_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_Reco -o $base_dir/sig_electron_scale_factors_Reco_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_Reco -o $base_dir/sig_electron_scale_factors_Reco_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ID -o $base_dir/sig_electron_scale_factors_ID_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ID -o $base_dir/sig_electron_scale_factors_ID_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ttHID -o $base_dir/sig_electron_scale_factors_ttHID_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ttHID -o $base_dir/sig_electron_scale_factors_ttHID_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ttHISO -o $base_dir/sig_electron_scale_factors_ttHISO_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ttHISO -o $base_dir/sig_electron_scale_factors_ttHISO_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_trigger -o $base_dir/sig_electron_scale_factors_trigger_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_trigger -o $base_dir/sig_electron_scale_factors_trigger_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2016preVFP -o $base_dir/sig_particlenet_w_weight_2016preVFP_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2016preVFP -o $base_dir/sig_particlenet_w_weight_2016preVFP_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2016postVFP -o $base_dir/sig_particlenet_w_weight_2016postVFP_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2016postVFP -o $base_dir/sig_particlenet_w_weight_2016postVFP_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2017 -o $base_dir/sig_particlenet_w_weight_2017_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2017 -o $base_dir/sig_particlenet_w_weight_2017_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2018 -o $base_dir/sig_particlenet_w_weight_2018_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2018 -o $base_dir/sig_particlenet_w_weight_2018_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2016preVFP -o $base_dir/sig_particlenet_h_weight_2016preVFP_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2016preVFP -o $base_dir/sig_particlenet_h_weight_2016preVFP_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2016postVFP -o $base_dir/sig_particlenet_h_weight_2016postVFP_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2016postVFP -o $base_dir/sig_particlenet_h_weight_2016postVFP_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2017 -o $base_dir/sig_particlenet_h_weight_2017_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2017 -o $base_dir/sig_particlenet_h_weight_2017_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2018 -o $base_dir/sig_particlenet_h_weight_2018_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2018 -o $base_dir/sig_particlenet_h_weight_2018_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar btagging_scale_factors_HF -o $base_dir/sig_btagging_scale_factors_HF_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar btagging_scale_factors_HF -o $base_dir/sig_btagging_scale_factors_HF_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar btagging_scale_factors_LF -o $base_dir/sig_btagging_scale_factors_LF_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar btagging_scale_factors_LF -o $base_dir/sig_btagging_scale_factors_LF_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar PSWeight_ISR -o $base_dir/sig_PSWeight_ISR_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar PSWeight_ISR -o $base_dir/sig_PSWeight_ISR_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar PSWeight_FSR -o $base_dir/sig_PSWeight_FSR_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar PSWeight_FSR -o $base_dir/sig_PSWeight_FSR_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEScaleWeight_muR -o $base_dir/sig_LHEScaleWeight_muR_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEScaleWeight_muR -o $base_dir/sig_LHEScaleWeight_muR_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEScaleWeight_muF -o $base_dir/sig_LHEScaleWeight_muF_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEScaleWeight_muF -o $base_dir/sig_LHEScaleWeight_muF_down_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEWeights_pdf -o $base_dir/sig_LHEWeights_pdf_up_MVA.root &
-    sleep 1; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEWeights_pdf -o $base_dir/sig_LHEWeights_pdf_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar pileup_weight -o $base_dir/sig_pileup_weight_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar pileup_weight -o $base_dir/sig_pileup_weight_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar pileupid_weight -o $base_dir/sig_pileupid_weight_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar pileupid_weight -o $base_dir/sig_pileupid_weight_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar L1PreFiringWeight -o $base_dir/sig_L1PreFiringWeight_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar L1PreFiringWeight -o $base_dir/sig_L1PreFiringWeight_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ID -o $base_dir/sig_muon_scale_factors_ID_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ID -o $base_dir/sig_muon_scale_factors_ID_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_trigger -o $base_dir/sig_muon_scale_factors_trigger_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_trigger -o $base_dir/sig_muon_scale_factors_trigger_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ttHID -o $base_dir/sig_muon_scale_factors_ttHID_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ttHID -o $base_dir/sig_muon_scale_factors_ttHID_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar muon_scale_factors_ttHISO -o $base_dir/sig_muon_scale_factors_ttHISO_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar muon_scale_factors_ttHISO -o $base_dir/sig_muon_scale_factors_ttHISO_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_Reco -o $base_dir/sig_electron_scale_factors_Reco_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_Reco -o $base_dir/sig_electron_scale_factors_Reco_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ID -o $base_dir/sig_electron_scale_factors_ID_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ID -o $base_dir/sig_electron_scale_factors_ID_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ttHID -o $base_dir/sig_electron_scale_factors_ttHID_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ttHID -o $base_dir/sig_electron_scale_factors_ttHID_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_ttHISO -o $base_dir/sig_electron_scale_factors_ttHISO_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_ttHISO -o $base_dir/sig_electron_scale_factors_ttHISO_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar electron_scale_factors_trigger -o $base_dir/sig_electron_scale_factors_trigger_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar electron_scale_factors_trigger -o $base_dir/sig_electron_scale_factors_trigger_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2016preVFP -o $base_dir/sig_particlenet_w_weight_2016preVFP_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2016preVFP -o $base_dir/sig_particlenet_w_weight_2016preVFP_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2016postVFP -o $base_dir/sig_particlenet_w_weight_2016postVFP_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2016postVFP -o $base_dir/sig_particlenet_w_weight_2016postVFP_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2017 -o $base_dir/sig_particlenet_w_weight_2017_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2017 -o $base_dir/sig_particlenet_w_weight_2017_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_w_weight_2018 -o $base_dir/sig_particlenet_w_weight_2018_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_w_weight_2018 -o $base_dir/sig_particlenet_w_weight_2018_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2016preVFP -o $base_dir/sig_particlenet_h_weight_2016preVFP_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2016preVFP -o $base_dir/sig_particlenet_h_weight_2016preVFP_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2016postVFP -o $base_dir/sig_particlenet_h_weight_2016postVFP_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2016postVFP -o $base_dir/sig_particlenet_h_weight_2016postVFP_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2017 -o $base_dir/sig_particlenet_h_weight_2017_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2017 -o $base_dir/sig_particlenet_h_weight_2017_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar particlenet_h_weight_2018 -o $base_dir/sig_particlenet_h_weight_2018_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar particlenet_h_weight_2018 -o $base_dir/sig_particlenet_h_weight_2018_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar btagging_scale_factors_HF -o $base_dir/sig_btagging_scale_factors_HF_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar btagging_scale_factors_HF -o $base_dir/sig_btagging_scale_factors_HF_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar btagging_scale_factors_LF -o $base_dir/sig_btagging_scale_factors_LF_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar btagging_scale_factors_LF -o $base_dir/sig_btagging_scale_factors_LF_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar PSWeight_ISR -o $base_dir/sig_PSWeight_ISR_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar PSWeight_ISR -o $base_dir/sig_PSWeight_ISR_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar PSWeight_FSR -o $base_dir/sig_PSWeight_FSR_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar PSWeight_FSR -o $base_dir/sig_PSWeight_FSR_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEScaleWeight_muR -o $base_dir/sig_LHEScaleWeight_muR_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEScaleWeight_muR -o $base_dir/sig_LHEScaleWeight_muR_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEScaleWeight_muF -o $base_dir/sig_LHEScaleWeight_muF_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEScaleWeight_muF -o $base_dir/sig_LHEScaleWeight_muF_down_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var up --sfvar LHEWeights_pdf -o $base_dir/sig_LHEWeights_pdf_up_MVA.root &
+    sleep 1.5; ./bin/runMVA -i $base_dir/sig/sig.root --c2v $c2v --var down --sfvar LHEWeights_pdf -o $base_dir/sig_LHEWeights_pdf_down_MVA.root &
 
     wait
     cd -
+}
+
+function makeDatacard {
+    c2v=$1
+    bdt_cut=$2
+    dnn_cut=$3
+    year=$4
 
     cd datacard/
     mkdir -p datacards/$bdt_cut-$dnn_cut
     if [ -z "$year" ]; then
-        python3 make_datacard.py --output $c2v --output_dir datacards/$bdt_cut-$dnn_cut
+        python3 make_datacard.py --output $c2v --bdt $bdt_cut --dnn $dnn_cut --output_dir datacards/$bdt_cut-$dnn_cut
         else
         python3 make_datacard.py --year $year --output $c2v
     fi
@@ -176,6 +181,11 @@ function runAnalysis() {
 
 runPreselection
 
-for c2v in $(seq 0 35); do
-    runAnalysis $c2v $1 $2
+for c2v in $(seq -1 35); do
+    runAnalysis $c2v
+    for bdt_cut in 0.88 0.9 0.92 0.94; do
+        for dnn_cut in 0.92 0.94 0.96; do
+            makeDatacard $c2v $bdt_cut $dnn_cut
+        done
+    done
 done
